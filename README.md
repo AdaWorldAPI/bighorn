@@ -1,3 +1,7 @@
+# Bighorn
+
+This is a fork from the original kuzu/kuzudb
+
 > [!NOTE]
 > Kuzu is working on something new!
 > 
