@@ -23,7 +23,7 @@ ENV PYTHONUNBUFFERED=1 \
     OPENBLAS_NUM_THREADS=1 \
     NUMEXPR_NUM_THREADS=1 \
     # App settings
-    PORT=8000 \
+    PORT=8080 \
     WORKERS=1 \
     LOG_LEVEL=warning
 
@@ -60,17 +60,9 @@ USER agi
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT}/health || exit 1
+    CMD curl -f http://localhost:8080/health || exit 1
 
-EXPOSE ${PORT}
+EXPOSE 8080
 
-# Optimized start command
-CMD python -m uvicorn graphql_agi.server:app \
-    --host 0.0.0.0 \
-    --port ${PORT} \
-    --workers ${WORKERS} \
-    --limit-concurrency 50 \
-    --limit-max-requests 5000 \
-    --timeout-keep-alive 5 \
-    --log-level ${LOG_LEVEL} \
-    --no-access-log
+# Optimized start command (shell form for variable expansion)
+CMD /bin/sh -c "python -m uvicorn graphql_agi.server:app --host 0.0.0.0 --port ${PORT:-8080} --workers 1 --limit-concurrency 50 --no-access-log"
