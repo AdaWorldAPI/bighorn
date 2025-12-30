@@ -1,0 +1,11 @@
+# Railway deployment for graphql_agi
+# Root directory is scripts/extension (where Dockerfile and nginx.conf live)
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "scripts/extension/Dockerfile"
+# watchPatterns = ["scripts/extension/**"]
+
+[deploy]
+healthcheckPath = "/"
+
