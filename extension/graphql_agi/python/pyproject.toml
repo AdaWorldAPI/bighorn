@@ -1,0 +1,99 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "graphql-agi"
+version = "1.0.0"
+description = "GraphQL AGI - AI-native GraphQL interface for Kuzu with LanceDB and AGI reasoning"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    { name = "GraphQL AGI Team" }
+]
+keywords = [
+    "graphql",
+    "agi",
+    "lancedb",
+    "kuzu",
+    "vector-database",
+    "knowledge-graph",
+    "reasoning",
+    "ai",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "kuzu>=0.6.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+lancedb = [
+    "lancedb>=0.4.0",
+    "pyarrow>=14.0.0",
+]
+openai = [
+    "openai>=1.0.0",
+]
+all = [
+    "lancedb>=0.4.0",
+    "pyarrow>=14.0.0",
+    "openai>=1.0.0",
+    "anthropic>=0.20.0",
+    "httpx>=0.25.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+[project.scripts]
+graphql-agi = "graphql_agi.server:main"
+
+[project.urls]
+Homepage = "https://github.com/kuzudb/kuzu"
+Documentation = "https://docs.kuzudb.com"
+Repository = "https://github.com/kuzudb/kuzu"
+
+[tool.hatch.build.targets.wheel]
+packages = ["graphql_agi"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+select = ["E", "F", "I", "N", "W", "B", "C4", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
