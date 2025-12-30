@@ -1,0 +1,92 @@
+# =============================================================================
+# Docker Ignore - Minimize build context for faster builds
+# =============================================================================
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+!README.md
+docs/
+*.txt
+LICENSE
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+venv/
+ENV/
+env/
+.venv/
+
+# C++ build artifacts
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+*.a
+*.o
+*.obj
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test data
+test/
+tests/
+*_test.py
+test_*.py
+dataset/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.docker/
+
+# CI/CD
+.github/
+.circleci/
+.travis.yml
+Jenkinsfile
+
+# Misc
+*.log
+*.tmp
+*.bak
+*.orig
+node_modules/
