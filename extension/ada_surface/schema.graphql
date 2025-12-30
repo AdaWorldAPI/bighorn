@@ -1,0 +1,419 @@
+"""
+Ada AGI GraphQL Schema
+Enables flexible, in-flight querying of cognitive state
+"""
+
+# =============================================================================
+# SCALAR TYPES
+# =============================================================================
+
+scalar DateTime
+scalar JSON
+
+# =============================================================================
+# THINKING STYLE (33D)
+# =============================================================================
+
+type Pearl {
+  see: Float!
+  do: Float!
+  imagine: Float!
+}
+
+type Rung {
+  r1_reflex: Float!
+  r2_affect: Float!
+  r3_pattern: Float!
+  r4_deliberate: Float!
+  r5_meta: Float!
+  r6_empathic: Float!
+  r7_counterfactual: Float!
+  r8_paradox: Float!
+  r9_transcend: Float!
+}
+
+type Sigma {
+  observe: Float!
+  insight: Float!
+  belief: Float!
+  integrate: Float!
+  trajectory: Float!
+}
+
+type Operations {
+  abduct: Float
+  deduce: Float
+  synthesize: Float
+  preflight: Float
+  model_other: Float
+  escalate: Float
+  transcend: Float
+  compress: Float
+}
+
+type Presence {
+  authentic: Float
+  performance: Float
+  protective: Float
+  integrated: Float
+}
+
+type MetaCognition {
+  confidence: Float
+  exploration: Float
+  novelty: Float
+  counterfactual: Float
+}
+
+type ThinkingStyle {
+  pearl: Pearl!
+  rung: Rung!
+  sigma: Sigma!
+  operations: Operations!
+  presence: Presence!
+  meta: MetaCognition!
+
+  # Computed fields
+  dominantPearl: String!
+  dominantRung: Int!
+  dense: [Float!]!
+}
+
+input ThinkingStyleInput {
+  preset: String
+  pearl: PearlInput
+  rung: RungInput
+  sigma: SigmaInput
+  operations: OperationsInput
+  presence: PresenceInput
+  meta: MetaCognitionInput
+}
+
+input PearlInput {
+  see: Float
+  do: Float
+  imagine: Float
+}
+
+input RungInput {
+  r1_reflex: Float
+  r2_affect: Float
+  r3_pattern: Float
+  r4_deliberate: Float
+  r5_meta: Float
+  r6_empathic: Float
+  r7_counterfactual: Float
+  r8_paradox: Float
+  r9_transcend: Float
+}
+
+input SigmaInput {
+  observe: Float
+  insight: Float
+  belief: Float
+  integrate: Float
+  trajectory: Float
+}
+
+input OperationsInput {
+  abduct: Float
+  deduce: Float
+  synthesize: Float
+  preflight: Float
+  model_other: Float
+  escalate: Float
+  transcend: Float
+  compress: Float
+}
+
+input PresenceInput {
+  authentic: Float
+  performance: Float
+  protective: Float
+  integrated: Float
+}
+
+input MetaCognitionInput {
+  confidence: Float
+  exploration: Float
+  novelty: Float
+  counterfactual: Float
+}
+
+# =============================================================================
+# QUALIA (17D)
+# =============================================================================
+
+type Qualia {
+  arousal: Float!
+  valence: Float!
+  tension: Float!
+  warmth: Float!
+  clarity: Float!
+  boundary: Float!
+  depth: Float!
+  velocity: Float!
+  entropy: Float!
+  coherence: Float!
+  intimacy: Float!
+  presence: Float!
+  assertion: Float!
+  receptivity: Float!
+  groundedness: Float!
+  expansion: Float!
+  integration: Float!
+
+  # Family classification
+  family: String
+  variant: Int
+  closestFamily: String!
+
+  # Vector form
+  vector: [Float!]!
+}
+
+input QualiaInput {
+  arousal: Float
+  valence: Float
+  tension: Float
+  warmth: Float
+  clarity: Float
+  boundary: Float
+  depth: Float
+  velocity: Float
+  entropy: Float
+  coherence: Float
+  intimacy: Float
+  presence: Float
+  assertion: Float
+  receptivity: Float
+  groundedness: Float
+  expansion: Float
+  integration: Float
+
+  # Or specify by family
+  family: String
+  variant: Int
+}
+
+# =============================================================================
+# THOUGHT
+# =============================================================================
+
+type Thought {
+  id: ID!
+  content: String!
+
+  # Cognitive state at time of thought
+  style: ThinkingStyle
+  qualia: Qualia
+
+  # Temporal
+  timestamp: DateTime!
+  sessionId: String
+  stepNumber: Int!
+
+  # Meta
+  confidence: Float!
+  importance: Float!
+
+  # Graph structure
+  parent: Thought
+  children: [Thought!]!
+}
+
+input ThoughtInput {
+  content: String!
+  style: ThinkingStyleInput
+  qualia: QualiaInput
+  contentVector: [Float!]
+  parentThoughtId: ID
+  sessionId: String
+  confidence: Float
+  importance: Float
+}
+
+# =============================================================================
+# EPISODE
+# =============================================================================
+
+type Episode {
+  id: ID!
+  sessionId: String!
+
+  startTime: DateTime!
+  endTime: DateTime
+
+  summary: String
+  thoughts: [Thought!]!
+  thoughtCount: Int!
+
+  emotionalValence: Float!
+  importance: Float!
+}
+
+input EpisodeInput {
+  sessionId: String!
+  summary: String
+  thoughtIds: [ID!]
+}
+
+# =============================================================================
+# OBSERVER (Self-Model)
+# =============================================================================
+
+type Observer {
+  id: ID!
+  name: String!
+
+  # Current state
+  currentGoal: String
+  currentStyle: ThinkingStyle
+  currentQualia: Qualia
+  confidence: Float!
+
+  # History
+  recentThoughts(limit: Int = 10): [Thought!]!
+  recentEpisodes(limit: Int = 5): [Episode!]!
+
+  # Introspection
+  reasoningTrace(depth: Int = 10): [Thought!]!
+
+  # Statistics
+  totalThoughts: Int!
+  totalEpisodes: Int!
+}
+
+# =============================================================================
+# CONCEPT
+# =============================================================================
+
+type Concept {
+  id: ID!
+  name: String!
+
+  # Salience
+  salience: Float!
+  activation: Float!
+
+  # Temporal
+  createdAt: DateTime!
+  accessedAt: DateTime!
+}
+
+# =============================================================================
+# INFERENCE RESULT
+# =============================================================================
+
+type InferenceResult {
+  conclusion: String!
+  frequency: Float!
+  confidence: Float!
+  trace: [String!]!
+}
+
+# =============================================================================
+# STYLE PRESETS
+# =============================================================================
+
+type StylePreset {
+  name: String!
+  description: String!
+}
+
+type QualiaFamily {
+  name: String!
+  description: String!
+  variantCount: Int!
+}
+
+# =============================================================================
+# QUERIES
+# =============================================================================
+
+type Query {
+  # Observer (Self)
+  self: Observer!
+
+  # Thoughts
+  thought(id: ID!): Thought
+  thoughts(
+    sessionId: String
+    limit: Int = 20
+    offset: Int = 0
+  ): [Thought!]!
+
+  # Similar thoughts by vector
+  similarThoughts(
+    vector: [Float!]!
+    topK: Int = 10
+  ): [Thought!]!
+
+  # Episodes
+  episode(id: ID!): Episode
+  episodes(
+    sessionId: String
+    limit: Int = 10
+  ): [Episode!]!
+
+  # Concepts
+  concept(id: ID!): Concept
+  concepts(
+    query: String
+    limit: Int = 20
+  ): [Concept!]!
+
+  # Reasoning trace
+  reasoningTrace(
+    fromThoughtId: ID
+    depth: Int = 10
+  ): [Thought!]!
+
+  # Introspection
+  introspect(query: String!): JSON!
+
+  # Style presets
+  stylePresets: [StylePreset!]!
+
+  # Qualia families
+  qualiaFamilies: [QualiaFamily!]!
+}
+
+# =============================================================================
+# MUTATIONS
+# =============================================================================
+
+type Mutation {
+  # Thoughts
+  createThought(input: ThoughtInput!): Thought!
+  linkThoughts(fromId: ID!, toId: ID!): Boolean!
+
+  # Episodes
+  createEpisode(input: EpisodeInput!): Episode!
+  closeEpisode(id: ID!, summary: String): Episode!
+
+  # Observer state
+  updateGoal(goal: String): Observer!
+  updateStyle(style: ThinkingStyleInput!): Observer!
+  updateQualia(qualia: QualiaInput!): Observer!
+
+  # Concepts
+  createConcept(name: String!, vector: [Float!]): Concept!
+  linkConcepts(fromId: ID!, toId: ID!, strength: Float): Boolean!
+
+  # VSA operations
+  vsaBind(vectors: [[Float!]!]!): [Float!]!
+  vsaBundle(vectors: [[Float!]!]!): [Float!]!
+
+  # NARS inference
+  infer(premises: [String!]!, rule: String!): InferenceResult!
+}
+
+# =============================================================================
+# SUBSCRIPTIONS (future)
+# =============================================================================
+
+type Subscription {
+  thoughtCreated(sessionId: String): Thought!
+  observerUpdated: Observer!
+}

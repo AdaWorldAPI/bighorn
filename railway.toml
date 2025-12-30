@@ -1,24 +1,24 @@
 # =============================================================================
-# Railway Configuration - GraphQL AGI
+# Railway Configuration - Ada AGI Surface
 # =============================================================================
-# This file tells Railway to use the GraphQL AGI Dockerfile
+# Unified AGI interface: Kuzu + LanceDB + GraphQL + VSA + NARS
 # =============================================================================
 
 [build]
 builder = "dockerfile"
-dockerfilePath = "extension/graphql_agi/Dockerfile.simple"
+dockerfilePath = "extension/ada_surface/Dockerfile"
 
 [deploy]
 numReplicas = 1
 healthcheckPath = "/health"
-healthcheckTimeout = 10
+healthcheckTimeout = 30
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 
 [env]
-# Database
-DATABASE_PATH = "/app/data/kuzu.db"
-LANCEDB_URI = "lance:///app/data/vectors"
+# Database paths
+KUZU_DB_PATH = "/data/kuzu"
+LANCE_DB_PATH = "/data/lancedb"
 
 # CPU optimization (minimize Railway bill)
 OMP_NUM_THREADS = "1"
@@ -31,7 +31,4 @@ PYTHONOPTIMIZE = "2"
 PYTHONUNBUFFERED = "1"
 
 # App
-WORKERS = "1"
 LOG_LEVEL = "warning"
-GRAPHQL_AGI_MAX_WORKERS = "1"
-GRAPHQL_AGI_CACHE_SIZE = "500"
