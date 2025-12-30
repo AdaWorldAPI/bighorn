@@ -10,7 +10,6 @@ dockerfilePath = "extension/graphql_agi/Dockerfile.simple"
 
 [deploy]
 numReplicas = 1
-startCommand = "python -m uvicorn graphql_agi.server:app --host 0.0.0.0 --port $PORT --workers 1 --limit-concurrency 50 --no-access-log"
 healthcheckPath = "/health"
 healthcheckTimeout = 10
 restartPolicyType = "ON_FAILURE"
