@@ -1,7 +1,10 @@
-FROM nginx:stable
-# Build context is scripts/extension (set in Railway UI)
-COPY --chown=nginx:nginx ./releases /usr/share/nginx/html
-COPY --chown=nginx:nginx ./dataset /usr/share/nginx/html/dataset
-COPY ./nginx.conf /etc/nginx/nginx.conf
-RUN rm -f /usr/share/nginx/html/index.html /usr/share/nginx/html/50x.html
+# Use the pre-built extension repo image from GHCR
+# Same image as in compose.yaml
+FROM ghcr.io/kuzudb/extension-repo:latest
+
+# Healthcheck for Railway
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:80/ || exit 1
+
+EXPOSE 80
 
