@@ -49,8 +49,7 @@ RUN pip install --no-cache-dir \
     uvicorn[standard]>=0.24.0 \
     pydantic>=2.0.0 \
     && pip install --no-cache-dir /tmp/graphql_agi/ \
-    && rm -rf /tmp/graphql_agi \
-    && pip cache purge
+    && rm -rf /tmp/graphql_agi
 
 # Create data directories
 RUN mkdir -p /app/data /app/cache && \
