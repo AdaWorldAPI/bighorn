@@ -64,5 +64,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 EXPOSE 8080
 
-# Optimized start command (shell form for variable expansion)
-CMD /bin/sh -c "python -m uvicorn graphql_agi.server:app --host 0.0.0.0 --port ${PORT:-8080} --workers 1 --limit-concurrency 50 --no-access-log"
+# Optimized start command
+CMD ["python", "-m", "uvicorn", "graphql_agi.server:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1", "--limit-concurrency", "50", "--no-access-log"]
