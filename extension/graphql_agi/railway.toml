@@ -1,0 +1,51 @@
+# =============================================================================
+# Railway Configuration
+# =============================================================================
+# Optimized for minimal CPU usage and low billing
+# =============================================================================
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "extension/graphql_agi/Dockerfile"
+
+[deploy]
+# Single replica to minimize costs
+numReplicas = 1
+
+# Start command with minimal resources
+startCommand = "python -m uvicorn graphql_agi.server:app --host 0.0.0.0 --port $PORT --workers 1 --limit-concurrency 50 --limit-max-requests 5000 --timeout-keep-alive 5 --no-access-log"
+
+# Health check
+healthcheckPath = "/health"
+healthcheckTimeout = 10
+
+# Restart policy
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+# Sleep when inactive (saves money!)
+sleepApplication = true
+
+[env]
+# Database
+DATABASE_PATH = "/app/data/kuzu.db"
+LANCEDB_URI = "lance:///app/data/vectors"
+
+# CPU/Memory optimization
+OMP_NUM_THREADS = "1"
+MKL_NUM_THREADS = "1"
+OPENBLAS_NUM_THREADS = "1"
+NUMEXPR_NUM_THREADS = "1"
+
+# Python optimization
+PYTHONOPTIMIZE = "2"
+PYTHONUNBUFFERED = "1"
+PYTHONDONTWRITEBYTECODE = "1"
+
+# Application settings
+GRAPHQL_AGI_MAX_WORKERS = "1"
+GRAPHQL_AGI_CACHE_SIZE = "500"
+GRAPHQL_AGI_PRECOMPUTE_ON_START = "true"
+
+# Logging (minimal)
+LOG_LEVEL = "warning"

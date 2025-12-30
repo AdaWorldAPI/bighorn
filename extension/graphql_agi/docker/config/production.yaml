@@ -1,0 +1,118 @@
+# =============================================================================
+# GraphQL AGI - Production Configuration
+# =============================================================================
+# Optimized for low CPU usage and Railway deployment
+# =============================================================================
+
+# Server settings
+server:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 1                    # Single worker to minimize CPU
+  timeout: 30
+  keepalive: 5
+  max_requests: 10000           # Recycle worker after 10k requests
+  max_requests_jitter: 1000
+  graceful_timeout: 10
+
+# Database settings
+database:
+  path: "${DATABASE_PATH:-/app/data/kuzu.db}"
+  buffer_pool_size: 67108864    # 64MB - small for low memory
+  max_threads: 1                # Single thread for queries
+  read_only: false
+  checkpoint_threshold: 16777216  # 16MB
+
+# Vector store (LanceDB)
+vector_store:
+  uri: "${LANCEDB_URI:-lance:///app/data/vectors}"
+  cache_size: 500               # Cache 500 vectors
+  index_type: "IVF_PQ"          # Memory-efficient index
+  num_partitions: 64            # Reduced for low memory
+  num_sub_vectors: 32
+
+# Embedding settings
+embeddings:
+  provider: "openai"            # Or "ollama" for local
+  model: "text-embedding-3-small"  # Smaller, cheaper model
+  dimension: 1536
+  batch_size: 10                # Small batches
+  cache_embeddings: true
+  cache_ttl: 3600               # 1 hour cache
+
+# GraphQL settings
+graphql:
+  introspection: true
+  max_depth: 10                 # Limit query depth
+  max_complexity: 500           # Limit complexity
+  batch_queries: true
+  batch_max_size: 5
+
+# AGI settings
+agi:
+  enabled: true
+  default_strategy: "chain_of_thought"
+  max_reasoning_steps: 5        # Limit steps for CPU
+  confidence_threshold: 0.7
+  cache_reasoning: true
+  cache_ttl: 1800               # 30 min cache
+
+  # Precomputation (runs on startup)
+  precompute:
+    enabled: true
+    salience_scores: true
+    concept_vectors: true
+    pattern_cache: true
+    max_concepts: 10000
+
+# Ladybug debugging
+ladybug:
+  enabled: true
+  tracing: false                # Disable in production for CPU
+  metrics: true
+  slow_query_threshold_ms: 500
+  max_trace_events: 100
+
+# Caching (aggressive for CPU savings)
+cache:
+  backend: "memory"             # Or "redis" if available
+  redis_url: "${REDIS_URL:-}"
+  default_ttl: 300              # 5 min default
+  max_size: 1000                # Max cached items
+
+  # Specific cache TTLs
+  ttls:
+    query_results: 60           # 1 min for query results
+    embeddings: 3600            # 1 hour for embeddings
+    reasoning: 1800             # 30 min for reasoning
+    schema: 86400               # 24 hours for schema
+
+# Rate limiting (protect CPU)
+rate_limit:
+  enabled: true
+  requests_per_minute: 60
+  burst: 10
+  by_ip: true
+
+# Logging (minimal for CPU)
+logging:
+  level: "WARNING"
+  format: "json"
+  include_timestamp: true
+  max_size_mb: 10
+  max_files: 3
+
+# Health checks
+health:
+  enabled: true
+  include_details: false        # Minimal health response
+  check_database: true
+  check_vector_store: true
+  check_cache: false            # Skip cache check
+
+# Security
+security:
+  cors_origins: ["*"]
+  allowed_hosts: ["*"]
+  api_key_header: "X-API-Key"
+  require_api_key: false

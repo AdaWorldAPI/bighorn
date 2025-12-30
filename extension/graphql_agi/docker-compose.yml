@@ -1,0 +1,148 @@
+# =============================================================================
+# GraphQL AGI - Docker Compose
+# =============================================================================
+# Optimized for Railway and low-resource environments
+# CPU limits: 0.5 cores, Memory: 512MB
+# =============================================================================
+
+version: '3.8'
+
+services:
+  graphql-agi:
+    build:
+      context: ../..
+      dockerfile: extension/graphql_agi/Dockerfile
+    container_name: graphql-agi
+
+    # Resource limits (Railway-friendly)
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'        # Half a CPU core max
+          memory: 512M       # 512MB RAM max
+        reservations:
+          cpus: '0.25'       # Reserve quarter core
+          memory: 256M       # Reserve 256MB
+
+    # Also set for non-swarm mode
+    mem_limit: 512m
+    memswap_limit: 512m      # No swap (prevents thrashing)
+    cpu_quota: 50000         # 50% of one CPU
+    cpu_period: 100000
+    cpus: 0.5
+
+    # Prevent CPU spikes
+    cpu_shares: 512          # Lower priority than default (1024)
+
+    environment:
+      # Database
+      - DATABASE_PATH=/app/data/kuzu.db
+      - LANCEDB_URI=lance:///app/data/vectors
+
+      # Performance tuning
+      - GRAPHQL_AGI_MAX_WORKERS=1
+      - GRAPHQL_AGI_CACHE_SIZE=500
+      - GRAPHQL_AGI_BATCH_SIZE=50
+      - GRAPHQL_AGI_PRECOMPUTE_ON_START=true
+
+      # Limit parallel operations
+      - OMP_NUM_THREADS=1
+      - MKL_NUM_THREADS=1
+      - OPENBLAS_NUM_THREADS=1
+      - NUMEXPR_NUM_THREADS=1
+
+      # Python optimizations
+      - PYTHONOPTIMIZE=2
+      - PYTHONHASHSEED=0
+
+      # Server settings
+      - UVICORN_WORKERS=1
+      - WEB_CONCURRENCY=1
+
+      # Logging (minimal for CPU savings)
+      - LOG_LEVEL=warning
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      # Persistent data
+      - graphql-agi-data:/app/data
+      - graphql-agi-cache:/app/cache
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Logging limits
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Optional: Redis for caching (even lower resources)
+  redis:
+    image: redis:7-alpine
+    container_name: graphql-agi-redis
+
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 64M
+        reservations:
+          cpus: '0.05'
+          memory: 32M
+
+    mem_limit: 64m
+    cpus: 0.1
+
+    command: >
+      redis-server
+      --maxmemory 50mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+      --appendonly no
+      --tcp-backlog 128
+      --timeout 0
+      --tcp-keepalive 300
+
+    volumes:
+      - redis-data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+    restart: unless-stopped
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+volumes:
+  graphql-agi-data:
+    driver: local
+  graphql-agi-cache:
+    driver: local
+  redis-data:
+    driver: local
+
+# Network with minimal overhead
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
