@@ -1,0 +1,22 @@
+# Ada AGI Surface Dependencies
+
+# Web framework
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+httpx>=0.24.0
+pydantic>=2.0.0
+
+# Database clients
+kuzu>=0.6.0
+lancedb>=0.4.0
+pyarrow>=14.0.0
+
+# GraphQL
+ariadne>=0.20.0
+
+# Redis (Upstash)
+upstash-redis>=0.15.0
+
+# Utilities
+numpy>=1.24.0
+python-dateutil>=2.8.0
