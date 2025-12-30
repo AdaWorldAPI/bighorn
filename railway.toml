@@ -1,0 +1,38 @@
+# =============================================================================
+# Railway Configuration - GraphQL AGI
+# =============================================================================
+# This file tells Railway to use the GraphQL AGI Dockerfile
+# =============================================================================
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "extension/graphql_agi/Dockerfile.simple"
+
+[deploy]
+numReplicas = 1
+startCommand = "python -m uvicorn graphql_agi.server:app --host 0.0.0.0 --port $PORT --workers 1 --limit-concurrency 50 --no-access-log"
+healthcheckPath = "/health"
+healthcheckTimeout = 10
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[env]
+# Database
+DATABASE_PATH = "/app/data/kuzu.db"
+LANCEDB_URI = "lance:///app/data/vectors"
+
+# CPU optimization (minimize Railway bill)
+OMP_NUM_THREADS = "1"
+MKL_NUM_THREADS = "1"
+OPENBLAS_NUM_THREADS = "1"
+NUMEXPR_NUM_THREADS = "1"
+
+# Python
+PYTHONOPTIMIZE = "2"
+PYTHONUNBUFFERED = "1"
+
+# App
+WORKERS = "1"
+LOG_LEVEL = "warning"
+GRAPHQL_AGI_MAX_WORKERS = "1"
+GRAPHQL_AGI_CACHE_SIZE = "500"
