@@ -52,8 +52,8 @@ COPY extension/ada_surface /app/extension/ada_surface
 # Set Python path
 ENV PYTHONPATH=/app
 
-# Create data directories
-RUN mkdir -p /data/kuzu /data/lancedb && \
+# Create data directory (Kuzu will create its own subdirectory)
+RUN mkdir -p /data && \
     chown -R agi:agi /app /data
 
 # Switch to non-root user

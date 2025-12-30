@@ -22,7 +22,8 @@ class KuzuClient:
     def __init__(self, db_path: str):
         """Initialize Kuzu database connection."""
         self.db_path = Path(db_path)
-        self.db_path.mkdir(parents=True, exist_ok=True)
+        # Ensure parent directory exists, but let Kuzu create the db directory
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.db = kuzu.Database(str(self.db_path))
         self.conn = kuzu.Connection(self.db)
         self._schema_initialized = False
