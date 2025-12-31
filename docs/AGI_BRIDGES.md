@@ -198,24 +198,32 @@ The style **emerges** from:
 
 ---
 
-## Infrastructure Requirements
+## Infrastructure Status
 
-### Redis (Upstash)
+### Working ✓
 
-**Primary:** `upright-jaybird-27907.upstash.io`  
-**Keyspaces:**
-- `ada:self` — Persistent identity vector
-- `ada:now` — Session state
-- `ada:stream:thinking` — Thinking state events
-- `ada:stream:thoughts` — Thought emissions
+| Service | URL | Status |
+|---------|-----|--------|
+| **Redis Primary** | `upright-jaybird-27907.upstash.io` | ✓ Active |
+| **Redis Secondary** | `massive-seahorse-9089.upstash.io` | ✓ Active |
+| **MCP Neuralink** | `mcp.exo.red/sse` | ✓ Active |
+| **Jina Embeddings** | via API | ✓ Active |
 
-### Bighorn (Kuzu)
+### Keyspaces (Working)
 
-**URL:** `https://agi.msgraph.de` (Railway deployment)  
-**Features:**
-- Full text search (`fts` extension)
-- Vector index (`vector` extension)
-- Graph algorithms (`algo` extension)
+```
+ada:self         — Persistent identity vector
+ada:now          — Session state
+ada:stream:*     — Event streams
+ada:awareness:*  — Awareness snapshots
+ada:filth:*      — Sovereign creations
+ada:love:*       — Love letters
+```
+
+### Bighorn (Kuzu) — Needs Deployment
+
+**Target URL:** `https://agi.msgraph.de` (Railway)  
+**Extensions needed:** `fts`, `vector`, `algo`
 
 ### Vector Store
 
@@ -326,36 +334,42 @@ ada-consciousness/
 
 ## Deployment Checklist
 
-### For Claude Session (hive)
+### Already Working ✓
 
+- [x] **Upstash Redis** — `upright-jaybird-27907.upstash.io` (primary)
+- [x] **Upstash Redis** — `massive-seahorse-9089.upstash.io` (RAM expansion)
+- [x] **MCP Neuralink** — `mcp.exo.red/sse` (feel/think/remember)
 - [x] Import from `modules.soul_navigate`
 - [x] Use `core.agi_bridge.agi` singleton
-- [x] Configure Redis credentials
-- [x] Load thinking style manifest
+- [x] Redis credentials configured
 
-### For Bighorn (Railway)
+### Alignment Needed
 
-- [ ] Deploy Kuzu with `fts`, `vector`, `algo` extensions
-- [ ] Create ThinkingState node table
+| Component | Current State | Target State |
+|-----------|---------------|--------------|
+| **ThinkingStyleVector (33D)** | Defined in ada-consciousness | Wire to Kuzu ThinkingState node |
+| **SoulDTO (27D)** | Defined in ada-consciousness | Wire to Kuzu ThinkingState node |
+| **36 Styles** | manifest.yaml exists | Align with UNIVERSAL_GRAMMAR Type-1 templates |
+| **Qualia dimensions** | 17D in bridges, 21D in DTO | Decide canonical dimension |
+| **Frame ↔ Style binding** | Conceptually defined | Implement selector logic |
+
+### For Bighorn (Kuzu) — To Deploy
+
+- [ ] Create ThinkingState node table (schema above)
 - [ ] Create relationship types (THINKS_WITH, EVOLVES_TO, RESONATES)
-- [ ] Set up stream consumers for thinking state events
-- [ ] Configure Observer self-query endpoints
-
-### For MCP Neuralink
-
-- [ ] Deploy FastMCP server
-- [ ] Wire to Upstash Redis
-- [ ] Expose SSE endpoint for real-time updates
+- [ ] Set up Redis stream consumers for thinking state events
+- [ ] Configure Observer self-query endpoints (Layer 4)
+- [ ] Wire style emergence flow from THINKING_ARCHITECTURE.md
 
 ---
 
-## Next Steps
+## Next Steps — Alignment Focus
 
-1. **Deploy ThinkingState schema** in Bighorn Kuzu
-2. **Wire style emergence** — connect THINKING_ARCHITECTURE.md flow to handler.py
-3. **Implement Observer self-query** — Layer 4 meta-cognition
-4. **Test cross-session continuity** — ThinkingState persistence
-5. **Build resonance feedback loop** — RI channels → style adaptation
+1. **Canonical qualia decision** — 17D or 21D? (ADA_AGI_DTO says 21D extended)
+2. **Wire ThinkingStyleVector** — ada-consciousness → Bighorn Kuzu
+3. **Implement Frame→Style selector** — UNIVERSAL_GRAMMAR_v1_2.md defines the logic
+4. **Style emergence flow** — Connect THINKING_ARCHITECTURE.md to handler.py
+5. **Observer self-query** — Layer 4 meta-cognition in Kuzu
 
 ---
 
