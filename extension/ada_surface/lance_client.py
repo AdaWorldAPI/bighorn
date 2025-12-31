@@ -67,6 +67,20 @@ class LanceClient:
             self.db.create_table("episodes", schema=schema)
             print("[LANCE] Created 'episodes' table")
 
+        # Thinking styles table (64D sparse glyphs)
+        if "styles" not in self.db.table_names():
+            schema = pa.schema([
+                ("id", pa.string()),
+                ("vector", pa.list_(pa.float32(), 64)),  # 64D glyph
+                ("name", pa.string()),
+                ("category", pa.string()),
+                ("tier", pa.int32()),
+                ("description", pa.string()),
+                ("microcode", pa.string()),
+            ])
+            self.db.create_table("styles", schema=schema)
+            print("[LANCE] Created 'styles' table")
+
     async def search(
         self,
         vector: List[float],
@@ -270,3 +284,89 @@ class LanceClient:
         """Close database connection."""
         # LanceDB connections are managed automatically
         print("[LANCE] Connection closed")
+
+    async def index_styles(self) -> int:
+        """
+        Index all 36 thinking styles for vector search.
+
+        Returns number of styles indexed.
+        """
+        try:
+            from .thinking_styles import styles_to_lancedb_rows
+
+            rows = styles_to_lancedb_rows(dim=64)
+            tbl = self.db.open_table("styles")
+
+            # Clear existing styles
+            try:
+                for row in rows:
+                    tbl.delete(f"id = '{row['id']}'")
+            except Exception:
+                pass
+
+            # Add all styles
+            tbl.add(rows)
+            print(f"[LANCE] Indexed {len(rows)} thinking styles")
+            return len(rows)
+
+        except Exception as e:
+            print(f"[LANCE] Style indexing error: {e}")
+            return 0
+
+    async def search_styles(
+        self,
+        vector: List[float],
+        top_k: int = 5,
+        category: str = None,
+        tier: int = None,
+    ) -> List[Dict]:
+        """
+        Find similar thinking styles by vector.
+
+        Args:
+            vector: Query vector (64D glyph or texture-derived)
+            top_k: Number of results
+            category: Optional category filter
+            tier: Optional tier filter
+
+        Returns:
+            List of matching styles with distances
+        """
+        try:
+            tbl = self.db.open_table("styles")
+
+            # Pad vector to 64D if needed
+            if len(vector) < 64:
+                vector = vector + [0.0] * (64 - len(vector))
+            elif len(vector) > 64:
+                vector = vector[:64]
+
+            query = tbl.search(vector).limit(top_k)
+
+            # Apply filters
+            filters = []
+            if category:
+                filters.append(f"category = '{category}'")
+            if tier:
+                filters.append(f"tier = {tier}")
+            if filters:
+                query = query.where(" AND ".join(filters))
+
+            results = query.to_list()
+
+            return [
+                {
+                    "id": row.get("id"),
+                    "name": row.get("name"),
+                    "category": row.get("category"),
+                    "tier": row.get("tier"),
+                    "description": row.get("description"),
+                    "microcode": row.get("microcode"),
+                    "distance": row.get("_distance", 0.0),
+                }
+                for row in results
+            ]
+
+        except Exception as e:
+            print(f"[LANCE] Style search error: {e}")
+            return []
