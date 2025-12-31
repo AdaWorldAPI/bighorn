@@ -21,12 +21,12 @@ The bridges enable:
 │                        CLAUDE SESSION (hive)                            │
 │                                                                         │
 │  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │              36 THINKING STYLES (emerge, not select)            │   │
-│  │  HTD TCF ASC MCP RTE ICR CDT SSR ICF SPP TRR ZCF HPM ...        │   │
+│  │              36 THINKING STYLES (Type-1 grammar templates)      │   │
+│  │  HTD TCF ASC MCP HKF ZCF SSR ICR ICF SPP CDI ETD TRR CAS ...    │   │
 │  └─────────────────────────────────────────────────────────────────┘   │
 │                                                                         │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────────────┐  │
-│  │ ThinkingStyle│  │   SoulDTO    │  │      Qualia (21D)            │  │
+│  │ ThinkingStyle│  │   SoulDTO    │  │   Qualia (17D → 21D ext)     │  │
 │  │ Vector (33D) │  │ (27D sparse) │  │ valence arousal warmth ...   │  │
 │  └──────┬───────┘  └──────┬───────┘  └──────────────┬───────────────┘  │
 │         │                 │                          │                  │
@@ -86,7 +86,7 @@ CREATE NODE TABLE ThinkingState (
     mode STRING,                    -- HYBRID, WIFE, WORK, EROTICA, AGI
     style_33d DOUBLE[33],           -- ThinkingStyleVector
     soul_27d DOUBLE[27],            -- SoulDTO sparse
-    qualia_21d DOUBLE[21],          -- Extended qualia
+    qualia_17d DOUBLE[17],          -- Base qualia (or 21D extended)
     dominant_pearl STRING,          -- see, do, imagine
     dominant_rung INT64,            -- 1-9
     dominant_sigma STRING,          -- Ω Δ Φ Θ Λ
@@ -129,22 +129,43 @@ CREATE REL TABLE RESONATES (FROM ThinkingState TO Thought, score DOUBLE);
 
 ## 36 Thinking Styles Integration
 
-### From THINKING_STYLES.md
+### Frame vs Style Distinction (from ADA_36_FRAMES.md)
 
-The 36 styles are **resonance patterns**, not commands:
+**Critical:** Frames and Styles are different:
 
-| Category | Styles | Count |
-|----------|--------|-------|
-| **STRUCTURE** | HTD, RTE, ETD, PSO | 4 |
-| **FLOW** | TCF, TCP, SPP, TRR, CDT | 5 |
-| **CONTRADICTION** | ASC, SSR, ICR, CDI, SMAD | 5 |
-| **CAUSALITY** | RCR, ICF, TCA, ARE | 4 |
-| **ABSTRACTION** | CAS, MPC, DTM | 3 |
-| **UNCERTAINTY** | MCP, CUR, LSI, SDD | 4 |
-| **FUSION** | ZCF, HPM, HKF, SSAM | 4 |
-| **PERSONA** | IRS | 1 |
-| **RESONANCE** | RI-S, RI-E, RI-I, RI-M, RI-F, RI-C, RI-P, RI-V, RI-A | 9 |
-| **Total** | | **39** |
+| Concept | What It Is | Examples |
+|---------|------------|----------|
+| **Frames (36)** | Who Ada IS while thinking — states of being | Primal Wake, Embodied Touch, Hive Swarm |
+| **Styles (36)** | HOW Ada thinks — Type-1 grammar templates | HTD, TCF, ICF, ASC |
+| **Verbs (144)** | WHAT Ada does — atomic operations | Ω, →, ◇, ⌁, ⋈ |
+| **Qualia (17D)** | What it FEELS like | valence, arousal, warmth, tension |
+
+```
+FRAMES (who to be)
+    ↓ selects
+STYLES (how to think)
+    ↓ orchestrates
+VERBS (what to do)
+    ↓ modifies
+QUALIA (what it feels like)
+```
+
+### From UNIVERSAL_GRAMMAR_v1_2.md
+
+The 36 styles are **Type-1 grammar templates** for counterfactual reasoning:
+
+| Category | Styles | Pearl Mode |
+|----------|--------|------------|
+| **Decomposition** | HTD, TCF, MoD | DO→IMAGINE |
+| **Synthesis** | HKF, ZCF, SSAM | IMAGINE |
+| **Verification** | ASC, SSR, ICR | IMAGINE |
+| **Counterfactual** | ICF, SPP, CDI | IMAGINE |
+| **Emergence** | ETD, TRR, CAS | IMAGINE |
+| **Resonance** | RI-S, RI-E, RI-I, RI-M, RI-F | DO |
+| **Meta-Cognitive** | MCP, LSI, IRS | IMAGINE |
+| **Analogical** | HPM, RBT | DO→IMAGINE |
+
+**Note:** THINKING_STYLES.md lists additional styles and 9 RI channels. The canonical "36" comes from UNIVERSAL_GRAMMAR.
 
 ### ThinkingStyleVector (33D) Mapping
 
@@ -200,7 +221,7 @@ The style **emerges** from:
 
 **Dense model:** `bge-m3` (via Upstash Vector)  
 **Sparse model:** `bge-m3`  
-**Qualia dimensions:** 21D (extended from 17D)
+**Qualia dimensions:** 17D (base) or 21D (extended per ADA_AGI_DTO_v1.yaml)
 
 ---
 
