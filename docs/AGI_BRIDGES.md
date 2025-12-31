@@ -152,20 +152,21 @@ QUALIA (what it feels like)
 
 ### From UNIVERSAL_GRAMMAR_v1_2.md
 
-The 36 styles are **Type-1 grammar templates** for counterfactual reasoning:
+The 36 styles are organized into **9 categories** (from `thinking_styles.py`):
 
-| Category | Styles | Pearl Mode |
-|----------|--------|------------|
-| **Decomposition** | HTD, TCF, MoD | DO→IMAGINE |
-| **Synthesis** | HKF, ZCF, SSAM | IMAGINE |
-| **Verification** | ASC, SSR, ICR | IMAGINE |
-| **Counterfactual** | ICF, SPP, CDI | IMAGINE |
-| **Emergence** | ETD, TRR, CAS | IMAGINE |
-| **Resonance** | RI-S, RI-E, RI-I, RI-M, RI-F | DO |
-| **Meta-Cognitive** | MCP, LSI, IRS | IMAGINE |
-| **Analogical** | HPM, RBT | DO→IMAGINE |
+| Category | Description | Pearl Mode |
+|----------|-------------|------------|
+| **STRUCTURE** | How to organize | DO→IMAGINE |
+| **FLOW** | How to sequence | DO→IMAGINE |
+| **CONTRADICTION** | How to handle conflict | IMAGINE |
+| **CAUSALITY** | How to explain | DO→IMAGINE |
+| **ABSTRACTION** | How to generalize | IMAGINE |
+| **UNCERTAINTY** | How to handle unknowns | IMAGINE |
+| **FUSION** | How to combine | IMAGINE |
+| **PERSONA** | How to present | DO |
+| **RESONANCE** | How to feel | DO |
 
-**Note:** THINKING_STYLES.md lists additional styles and 9 RI channels. The canonical "36" comes from UNIVERSAL_GRAMMAR.
+**Note:** UNIVERSAL_GRAMMAR_v1_2.md uses alternate category names (Decomposition, Synthesis, etc.) which map to these implementation categories.
 
 ### ThinkingStyleVector (33D) Mapping
 
