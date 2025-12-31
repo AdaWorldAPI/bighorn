@@ -806,6 +806,9 @@ class ResonanceEngine:
 
         return scores[:top_k]
 
+    # Alias for API compatibility
+    emerge = emerge_styles
+
     def get_style_chain(self, style_id: str, depth: int = 3) -> List[str]:
         """Get chain of styles that can follow the given style."""
         if style_id not in self.styles:
@@ -873,3 +876,4 @@ def styles_to_lancedb_rows(dim: int = 64) -> List[Dict]:
             "microcode": style.microcode,
         })
     return rows
+
