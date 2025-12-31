@@ -27,6 +27,7 @@ from .resolvers import create_schema
 from .consumers import start_consumers
 from .vsa import HypervectorSpace, CognitivePrimitives
 from .nars import NARSReasoner
+from .thinking_styles import ResonanceEngine, STYLES, get_style, all_styles, RI
 
 # =============================================================================
 # CONFIGURATION
@@ -99,6 +100,27 @@ class AdaptQualiaRequest(BaseModel):
     qualia: List[float]
 
 
+class TextureRequest(BaseModel):
+    """9-channel texture for style emergence."""
+    tension: float = 0.5
+    novelty: float = 0.5
+    intimacy: float = 0.5
+    clarity: float = 0.5
+    urgency: float = 0.5
+    depth: float = 0.5
+    play: float = 0.5
+    stability: float = 0.5
+    abstraction: float = 0.5
+
+
+class StyleSearchRequest(BaseModel):
+    """Search styles by vector similarity."""
+    vector: List[float]
+    top_k: int = 5
+    category: Optional[str] = None
+    tier: Optional[int] = None
+
+
 # =============================================================================
 # LIFESPAN
 # =============================================================================
@@ -121,8 +143,16 @@ async def lifespan(app: FastAPI):
     print("[AGI] Initializing NARS reasoner")
     app.state.nars = NARSReasoner()
 
+    print("[AGI] Initializing Resonance Engine")
+    app.state.resonance = ResonanceEngine()
+
     # Initialize Kuzu schema and Observer
     await app.state.kuzu.init_observer()
+
+    # Index thinking styles in LanceDB
+    print("[AGI] Indexing 36 thinking styles")
+    style_count = await app.state.lance.index_styles()
+    print(f"[AGI] Indexed {style_count} thinking styles")
 
     # Start Redis consumers if configured
     consumer_task = None
@@ -473,6 +503,178 @@ async def nars_chain(premises: List[str], max_steps: int = 10):
 
 
 # =============================================================================
+# THINKING STYLES ENDPOINTS
+# =============================================================================
+
+@app.get("/agi/styles")
+async def list_styles():
+    """List all 36 thinking styles."""
+    try:
+        styles = all_styles()
+        return {
+            "ok": True,
+            "count": len(styles),
+            "styles": [
+                {
+                    "id": s.id,
+                    "name": s.name,
+                    "category": s.category.value,
+                    "tier": s.tier.value,
+                    "description": s.description,
+                    "microcode": s.microcode,
+                }
+                for s in styles
+            ],
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/agi/styles/{style_id}")
+async def get_style_by_id(style_id: str):
+    """Get a specific thinking style by ID."""
+    try:
+        style = get_style(style_id)
+        if not style:
+            raise HTTPException(status_code=404, detail=f"Style not found: {style_id}")
+        return {
+            "ok": True,
+            "style": {
+                "id": style.id,
+                "name": style.name,
+                "category": style.category.value,
+                "tier": style.tier.value,
+                "description": style.description,
+                "microcode": style.microcode,
+                "resonance": {k.value: v for k, v in style.resonance.items()},
+                "glyph": style.glyph,
+                "chains_to": style.chains_to,
+                "chains_from": style.chains_from,
+                "min_rung": style.min_rung,
+                "max_rung": style.max_rung,
+            },
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/agi/styles/emerge")
+async def emerge_style(request: TextureRequest):
+    """
+    Emerge the best-fit thinking style from a 9-channel texture.
+
+    The resonance engine computes compatibility between the input texture
+    and each style's resonance profile, returning the top matches.
+    """
+    try:
+        # Build texture dict from request
+        texture = {
+            RI.TENSION: request.tension,
+            RI.NOVELTY: request.novelty,
+            RI.INTIMACY: request.intimacy,
+            RI.CLARITY: request.clarity,
+            RI.URGENCY: request.urgency,
+            RI.DEPTH: request.depth,
+            RI.PLAY: request.play,
+            RI.STABILITY: request.stability,
+            RI.ABSTRACTION: request.abstraction,
+        }
+
+        # Get emerged styles
+        emerged = app.state.resonance.emerge(texture, top_k=5)
+
+        return {
+            "ok": True,
+            "texture": {k.value: v for k, v in texture.items()},
+            "emerged": [
+                {
+                    "style_id": style.id,
+                    "name": style.name,
+                    "category": style.category.value,
+                    "tier": style.tier.value,
+                    "score": score,
+                    "microcode": style.microcode,
+                }
+                for style, score in emerged
+            ],
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/agi/styles/search")
+async def search_styles(request: StyleSearchRequest):
+    """Search thinking styles by vector similarity in LanceDB."""
+    try:
+        results = await app.state.lance.search_styles(
+            vector=request.vector,
+            top_k=request.top_k,
+            category=request.category,
+            tier=request.tier,
+        )
+        return {"ok": True, "results": results}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/agi/styles/categories")
+async def list_categories():
+    """List all style categories with their styles."""
+    try:
+        from .thinking_styles import StyleCategory
+
+        categories = {}
+        for style in all_styles():
+            cat = style.category.value
+            if cat not in categories:
+                categories[cat] = []
+            categories[cat].append({
+                "id": style.id,
+                "name": style.name,
+                "tier": style.tier.value,
+            })
+
+        return {
+            "ok": True,
+            "categories": categories,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/agi/styles/chains/{style_id}")
+async def get_style_chains(style_id: str):
+    """Get style transition chains for a given style."""
+    try:
+        style = get_style(style_id)
+        if not style:
+            raise HTTPException(status_code=404, detail=f"Style not found: {style_id}")
+
+        # Resolve chain references to full style objects
+        chains_to = [get_style(sid) for sid in style.chains_to]
+        chains_from = [get_style(sid) for sid in style.chains_from]
+
+        return {
+            "ok": True,
+            "style_id": style_id,
+            "chains_to": [
+                {"id": s.id, "name": s.name, "microcode": s.microcode}
+                for s in chains_to if s
+            ],
+            "chains_from": [
+                {"id": s.id, "name": s.name, "microcode": s.microcode}
+                for s in chains_from if s
+            ],
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# =============================================================================
 # HEALTH
 # =============================================================================
 
@@ -493,7 +695,7 @@ async def root():
     """Root endpoint."""
     return {
         "service": "ada-agi-surface",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "endpoints": {
             "graph": "/agi/graph/*",
             "vector": "/agi/vector/*",
@@ -501,6 +703,7 @@ async def root():
             "self": "/agi/self/*",
             "vsa": "/agi/vsa/*",
             "nars": "/agi/nars/*",
+            "styles": "/agi/styles/*",
         },
         "docs": "/docs",
     }
