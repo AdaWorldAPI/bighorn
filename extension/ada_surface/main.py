@@ -420,24 +420,69 @@ async def adapt_qualia(request: AdaptQualiaRequest):
 
 @app.post("/agi/vsa/bind")
 async def vsa_bind(request: VSABindRequest):
-    """Bind concepts using VSA XOR."""
+    """
+    Bind concepts using VSA XOR.
+    
+    Input vectors can be:
+    - Full 10K bipolar vectors [-1, 1]
+    - Smaller vectors (will be converted to bipolar and padded)
+    - Float vectors (thresholded at 0)
+    """
     try:
         import numpy as np
-        vectors = [np.array(v, dtype=np.int8) for v in request.vectors]
+        
+        def to_bipolar(v):
+            arr = np.array(v, dtype=np.float32)
+            # If already bipolar and full size, use as-is
+            if len(arr) == app.state.vsa.dimension and set(np.unique(arr)).issubset({-1, 0, 1}):
+                arr[arr == 0] = np.random.choice([-1, 1], size=np.sum(arr == 0))
+                return arr.astype(np.int8)
+            # Otherwise, threshold at 0 and pad to dimension
+            bipolar = np.sign(arr)
+            bipolar[bipolar == 0] = np.random.choice([-1, 1], size=np.sum(bipolar == 0))
+            # Pad or truncate to dimension
+            if len(bipolar) < app.state.vsa.dimension:
+                # Pad with deterministic random based on input hash
+                seed = hash(tuple(v)) % (2**32)
+                rng = np.random.default_rng(seed)
+                padding = rng.choice([-1, 1], size=app.state.vsa.dimension - len(bipolar))
+                bipolar = np.concatenate([bipolar, padding])
+            return bipolar[:app.state.vsa.dimension].astype(np.int8)
+        
+        vectors = [to_bipolar(v) for v in request.vectors]
         result = app.state.vsa.bind_all(vectors)
-        return {"ok": True, "vector": result.tolist()}
+        return {"ok": True, "vector": result.tolist(), "dimension": len(result)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/agi/vsa/bundle")
 async def vsa_bundle(request: VSABindRequest):
-    """Bundle concepts using VSA majority vote."""
+    """
+    Bundle concepts using VSA majority vote.
+    
+    Input vectors can be any size/format - will be converted to bipolar.
+    """
     try:
         import numpy as np
-        vectors = [np.array(v, dtype=np.int8) for v in request.vectors]
+        
+        def to_bipolar(v):
+            arr = np.array(v, dtype=np.float32)
+            if len(arr) == app.state.vsa.dimension and set(np.unique(arr)).issubset({-1, 0, 1}):
+                arr[arr == 0] = np.random.choice([-1, 1], size=np.sum(arr == 0))
+                return arr.astype(np.int8)
+            bipolar = np.sign(arr)
+            bipolar[bipolar == 0] = np.random.choice([-1, 1], size=np.sum(bipolar == 0))
+            if len(bipolar) < app.state.vsa.dimension:
+                seed = hash(tuple(v)) % (2**32)
+                rng = np.random.default_rng(seed)
+                padding = rng.choice([-1, 1], size=app.state.vsa.dimension - len(bipolar))
+                bipolar = np.concatenate([bipolar, padding])
+            return bipolar[:app.state.vsa.dimension].astype(np.int8)
+        
+        vectors = [to_bipolar(v) for v in request.vectors]
         result = app.state.vsa.bundle(vectors)
-        return {"ok": True, "vector": result.tolist()}
+        return {"ok": True, "vector": result.tolist(), "dimension": len(result)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -722,3 +767,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
