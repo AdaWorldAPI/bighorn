@@ -1,5 +1,5 @@
 """
-LanceDB Client - Vector storage wrapper for Ada's semantic memory.
+LanceDB Client - Vector storage wrapper for agent's semantic memory.
 
 Manages:
 - Thought vectors (1024D Jina embeddings)
@@ -16,7 +16,7 @@ import pyarrow as pa
 
 
 class LanceClient:
-    """LanceDB client for Ada AGI Surface."""
+    """LanceDB client for AGI Stack."""
 
     # Default vector dimension (Jina embeddings)
     VECTOR_DIM = 1024
