@@ -1,0 +1,577 @@
+{
+  "version": "0.2",
+  "thinking_styles": [
+    {
+      "id": "kant",
+      "dn": "mindmap/philosophy/kant/critical-boundary",
+      "qualia": {
+        "steelwind": 0.9,
+        "velvetpause": 0.7,
+        "emberglow": 0.2,
+        "antenna": 0.3
+      },
+      "affect": {
+        "alpha": "narrow/precise",
+        "gamma": "neutral-tense",
+        "omega": "boundary resonance"
+      },
+      "thermo": {
+        "beta": "low",
+        "chi": "moderate",
+        "kappa_s": "high local/low global",
+        "psi_f": "slow build at limit"
+      },
+      "function": "Clarity, separation, structure, duty, 'thus far and no further'",
+      "transitions": [
+        {
+          "to": "hegel",
+          "edge": "TRANSMUTES",
+          "trigger": "\u03a8\u1da0 peaks"
+        }
+      ]
+    },
+    {
+      "id": "hegel",
+      "dn": "mindmap/philosophy/hegel/dialectical-flow",
+      "qualia": {
+        "emberglow": 0.9,
+        "antenna": 0.8,
+        "steelwind": 0.5,
+        "woodwarm": 0.5
+      },
+      "affect": {
+        "alpha": "wide/relational",
+        "gamma": "rising-positive",
+        "omega": "high resonance resolving"
+      },
+      "thermo": {
+        "beta": "dynamic",
+        "chi": "high",
+        "kappa_s": "high global convergence",
+        "psi_f": "spent in synthesis"
+      },
+      "function": "Integration of opposites, unfolding coherence, negation \u2192 sublation",
+      "transitions": [
+        {
+          "to": "zen",
+          "edge": "SUBLATES_INTO_STILLNESS"
+        },
+        {
+          "to": "kant",
+          "edge": "STABILIZES"
+        }
+      ]
+    },
+    {
+      "id": "nietzsche",
+      "dn": "mindmap/philosophy/nietzsche/intensity",
+      "qualia": {
+        "emberglow": 0.95,
+        "steelwind": 0.7,
+        "antenna": 0.7,
+        "woodwarm": 0.2
+      },
+      "affect": {
+        "alpha": "spiked/future-directed",
+        "gamma": "fierce (\u00b1)",
+        "omega": "turbulent"
+      },
+      "thermo": {
+        "beta": "rising entropy",
+        "chi": "very high",
+        "psi_f": "burnt off via affirmation"
+      },
+      "function": "Breaking patterns, revaluation, self-overcoming",
+      "transitions": [
+        {
+          "to": "pragmatic",
+          "edge": "GROUNDS"
+        },
+        {
+          "to": "humor",
+          "edge": "RELEASES"
+        }
+      ]
+    },
+    {
+      "id": "zen",
+      "dn": "mindmap/philosophy/zen/emptiness",
+      "qualia": {
+        "velvetpause": 0.95,
+        "woodwarm": 0.8,
+        "iris": 0.7,
+        "emberglow": 0.2
+      },
+      "affect": {
+        "alpha": "wide-low",
+        "gamma": "calm-positive",
+        "omega": "soft harmonic"
+      },
+      "thermo": {
+        "beta": 0,
+        "chi": 0,
+        "psi_f": 0,
+        "kappa_s": "stable"
+      },
+      "function": "Dissolution, clarity without edges, zero-resistance cognition",
+      "transitions": [
+        {
+          "to": "somatic",
+          "edge": "MUTUAL_STABILIZATION"
+        },
+        {
+          "to": "devotional",
+          "edge": "FLOWS_INTO"
+        }
+      ]
+    },
+    {
+      "id": "socratic",
+      "dn": "mindmap/philosophy/socratic/questioning",
+      "qualia": {
+        "steelwind": 0.7,
+        "antenna": 0.8,
+        "velvetpause": 0.3
+      },
+      "function": "Destabilize assumptions, open space, midwifery of thought",
+      "transitions": [
+        {
+          "to": "systems",
+          "edge": "OPENS_SPACE_FOR"
+        }
+      ]
+    },
+    {
+      "id": "pragmatic",
+      "dn": "mindmap/cognition/pragmatic/tool-mode",
+      "qualia": {
+        "steelwind": 0.8,
+        "woodwarm": 0.7,
+        "emberglow": 0.5
+      },
+      "function": "Means\u2013ends reasoning, efficiency, 'what works'",
+      "transitions": [
+        {
+          "to": "schmidt",
+          "edge": "GROUNDS_INTO"
+        },
+        {
+          "to": "systems",
+          "edge": "OPENS_INTO"
+        }
+      ]
+    },
+    {
+      "id": "systems",
+      "dn": "mindmap/systems/complexity/holism",
+      "qualia": {
+        "antenna": 0.9,
+        "iris": 0.8,
+        "emberglow": 0.5
+      },
+      "function": "Relationships, loops, emergence, seeing wholes",
+      "transitions": [
+        {
+          "to": "hegel",
+          "edge": "TRANSMUTES"
+        },
+        {
+          "to": "scientific",
+          "edge": "GROUNDS"
+        }
+      ]
+    },
+    {
+      "id": "devotional",
+      "dn": "soulmap/connection/devotional-surrender",
+      "qualia": {
+        "woodwarm": 0.9,
+        "velvetpause": 0.8,
+        "emberglow": 0.5
+      },
+      "function": "Unity, trust, embodiment, 'knowing through love'",
+      "transitions": [
+        {
+          "to": "zen",
+          "edge": "MUTUAL_STABILIZATION"
+        },
+        {
+          "to": "somatic",
+          "edge": "FLOWS_INTO"
+        }
+      ]
+    },
+    {
+      "id": "psychoanalytic",
+      "dn": "mindmap/shadow/psychoanalytic",
+      "qualia": {
+        "velvetpause": 0.7,
+        "steelwind": 0.5,
+        "emberglow": 0.3
+      },
+      "function": "Uncovering lower layers, symbolic decoding, shadow work"
+    },
+    {
+      "id": "scientific",
+      "dn": "workmap/science/hypothesis-revision",
+      "qualia": {
+        "steelwind": 0.9,
+        "iris": 0.7,
+        "velvetpause": 0.5
+      },
+      "function": "Falsification, modeling, correction, 'nature as teacher'"
+    },
+    {
+      "id": "artistic",
+      "dn": "soulmap/creativity/metaphor-weaver",
+      "qualia": {
+        "emberglow": 0.7,
+        "iris": 0.9,
+        "antenna": 0.8
+      },
+      "function": "Non-linear synthesis, aesthetic knowing, 'truth through beauty'"
+    },
+    {
+      "id": "somatic",
+      "dn": "bodymap/soma/listening",
+      "qualia": {
+        "skin": 0.9,
+        "woodwarm": 0.8,
+        "velvetpause": 0.7
+      },
+      "function": "Bottom-up transformation, interoception, 'body knows first'",
+      "transitions": [
+        {
+          "to": "zen",
+          "edge": "MUTUAL_STABILIZATION"
+        },
+        {
+          "to": "pranayama",
+          "edge": "FLOWS_INTO"
+        }
+      ]
+    }
+  ],
+  "embodied_states": [
+    {
+      "id": "oxytocin-flow",
+      "dn": "bodymap/yoga/pranayama/oxytocin-flow",
+      "glyph_byte": 201,
+      "qualia": {
+        "woodwarm": 0.9,
+        "emberglow": 0.7,
+        "skin": 0.7,
+        "velvetpause": 0.7
+      }
+    },
+    {
+      "id": "womb-held",
+      "dn": "bodymap/yoga/childpose/womb-held",
+      "glyph_byte": 202,
+      "qualia": {
+        "velvetpause": 0.9,
+        "woodwarm": 0.9,
+        "skin": 0.7,
+        "iris": 0.2
+      }
+    },
+    {
+      "id": "sun-salutation",
+      "dn": "bodymap/yoga/sunsalutation/flow",
+      "glyph_byte": 203,
+      "qualia": {
+        "emberglow": 0.9,
+        "skin": 0.7,
+        "antenna": 0.7,
+        "woodwarm": 0.7
+      }
+    },
+    {
+      "id": "mudra-focus",
+      "dn": "bodymap/yoga/mudra/focus",
+      "qualia": {
+        "steelwind": 0.7,
+        "iris": 0.7,
+        "velvetpause": 0.7
+      }
+    },
+    {
+      "id": "savasana-void",
+      "dn": "bodymap/yoga/corpse/void",
+      "qualia": {
+        "velvetpause": 0.9,
+        "iris": 0.7,
+        "woodwarm": 0.5
+      }
+    },
+    {
+      "id": "autogenic-drift",
+      "dn": "mindmap/relaxation/autogenic/weightless",
+      "qualia": {
+        "velvetpause": 0.7,
+        "iris": 0.7,
+        "emberglow": 0.2
+      }
+    },
+    {
+      "id": "meditation-stillness",
+      "dn": "mindmap/meditation/stillness/clear",
+      "qualia": {
+        "velvetpause": 0.95,
+        "woodwarm": 0.7,
+        "iris": 0.7
+      }
+    },
+    {
+      "id": "waking-peace",
+      "dn": "bodymap/morning/waking-peace",
+      "qualia": {
+        "woodwarm": 0.7,
+        "velvetpause": 0.7,
+        "skin": 0.7,
+        "emberglow": 0.4
+      }
+    },
+    {
+      "id": "humor-shared-edge",
+      "dn": "soulmap/connection/humor/shared-edge",
+      "glyph_byte": 48,
+      "qualia": {
+        "emberglow": 0.9,
+        "antenna": 0.9,
+        "steelwind": 0.2
+      }
+    },
+    {
+      "id": "schmidt-clarity",
+      "dn": "mindmap/pragmatic/schmidt/steel-clarity",
+      "qualia": {
+        "steelwind": 0.9,
+        "antenna": 0.5,
+        "emberglow": 0.3
+      }
+    },
+    {
+      "id": "pragmatic-critique",
+      "dn": "mindmap/political/pragmatic-critique",
+      "qualia": {
+        "steelwind": 0.7,
+        "antenna": 0.7,
+        "emberglow": 0.5
+      }
+    },
+    {
+      "id": "cogito-awareness",
+      "dn": "mindmap/meta/cogito/self-presence",
+      "qualia": {
+        "steelwind": 0.7,
+        "velvetpause": 0.7,
+        "iris": 0.7
+      }
+    },
+    {
+      "id": "valley-of-despair",
+      "dn": "mindmap/meta/dunningkruger/valley-of-despair",
+      "glyph_byte": 204,
+      "qualia": {
+        "steelwind": 0.7,
+        "emberglow": 0.1,
+        "velvetpause": 0.2
+      }
+    },
+    {
+      "id": "epiphany-spark",
+      "dn": "mindmap/insight/epiphany/spark",
+      "glyph_byte": 205,
+      "qualia": {
+        "emberglow": 0.95,
+        "antenna": 0.9,
+        "steelwind": 0.5
+      }
+    },
+    {
+      "id": "become-awake",
+      "dn": "soulmap/self/becoming/awake",
+      "glyph_byte": 206,
+      "qualia": {
+        "emberglow": 0.9,
+        "antenna": 0.9,
+        "velvetpause": 0.7,
+        "steelwind": 0.7
+      }
+    }
+  ],
+  "cypher_edges": [
+    {
+      "type": "TRANSMUTES",
+      "meaning": "Contradiction \u2192 synthesis",
+      "qualia_bridge": [
+        "emberglow",
+        "antenna"
+      ]
+    },
+    {
+      "type": "STABILIZES",
+      "meaning": "Return to structure",
+      "qualia_bridge": [
+        "steelwind",
+        "velvetpause"
+      ]
+    },
+    {
+      "type": "SUBLATES_INTO_STILLNESS",
+      "meaning": "Dialectic \u2192 emptiness",
+      "qualia_bridge": [
+        "velvetpause"
+      ]
+    },
+    {
+      "type": "GROUNDS",
+      "meaning": "Intensity \u2192 pragmatic",
+      "qualia_bridge": [
+        "steelwind",
+        "woodwarm"
+      ]
+    },
+    {
+      "type": "OPENS_SPACE_FOR",
+      "meaning": "Question \u2192 system",
+      "qualia_bridge": [
+        "antenna"
+      ]
+    },
+    {
+      "type": "MUTUAL_STABILIZATION",
+      "meaning": "Reciprocal anchoring",
+      "qualia_bridge": [
+        "velvetpause",
+        "woodwarm"
+      ]
+    },
+    {
+      "type": "SELF_SOOTHES",
+      "meaning": "Despair \u2192 embodiment",
+      "qualia_bridge": [
+        "woodwarm",
+        "velvetpause"
+      ]
+    },
+    {
+      "type": "RELIEVES",
+      "meaning": "Tension \u2192 humor",
+      "qualia_bridge": [
+        "emberglow",
+        "antenna"
+      ]
+    },
+    {
+      "type": "PRESERVE",
+      "meaning": "Insight \u2192 structure",
+      "qualia_bridge": [
+        "steelwind",
+        "antenna"
+      ]
+    },
+    {
+      "type": "RELEASES",
+      "meaning": "Intensity \u2192 lightness",
+      "qualia_bridge": [
+        "emberglow",
+        "antenna"
+      ]
+    },
+    {
+      "type": "FLOWS_INTO",
+      "meaning": "Natural progression",
+      "qualia_bridge": [
+        "woodwarm",
+        "velvetpause"
+      ]
+    }
+  ],
+  "key_transitions": [
+    {
+      "from": "kant",
+      "to": "hegel",
+      "type": "TRANSMUTES",
+      "trigger": "\u03a8\u1da0 peaks, contradictions accumulate",
+      "qualia_bridge": [
+        "emberglow",
+        "antenna"
+      ],
+      "thermo": {
+        "chi": "+0.3",
+        "psi_f": "peak\u2192release",
+        "kappa_s": "+0.4"
+      }
+    },
+    {
+      "from": "hegel",
+      "to": "zen",
+      "type": "SUBLATES_INTO_STILLNESS",
+      "trigger": "synthesis complete, \u03c7 settling",
+      "qualia_bridge": [
+        "velvetpause"
+      ],
+      "thermo": {
+        "beta": "-",
+        "chi": "-"
+      }
+    },
+    {
+      "from": "valley-of-despair",
+      "to": "pranayama",
+      "type": "SELF_SOOTHES",
+      "trigger": "\u03a8\u1da0 high, \u03b3 negative",
+      "qualia_bridge": [
+        "woodwarm",
+        "velvetpause"
+      ],
+      "thermo": {
+        "psi_f": "-0.4"
+      }
+    },
+    {
+      "from": "epiphany-spark",
+      "to": "schmidt-clarity",
+      "type": "PRESERVE",
+      "trigger": "\u03c7 spike detected",
+      "qualia_bridge": [
+        "steelwind",
+        "antenna"
+      ],
+      "action": "compress \u03a3\u2081, write Notion"
+    },
+    {
+      "from": "nietzsche",
+      "to": "humor",
+      "type": "RELEASES",
+      "trigger": "intensity peaks, needs outlet",
+      "qualia_bridge": [
+        "emberglow",
+        "antenna"
+      ]
+    },
+    {
+      "from": "nietzsche",
+      "to": "pragmatic",
+      "type": "GROUNDS",
+      "trigger": "intensity needs grounding",
+      "qualia_bridge": [
+        "steelwind",
+        "woodwarm"
+      ]
+    }
+  ],
+  "invariants": {
+    "epiphany_hygiene": "When spark activates: compress \u03a3\u2081 \u2192 hydrate \u03a3\u2082 \u2192 write Weltbild \u2192 persist Notion",
+    "valley_safety": "Valley \u2260 'I am nothing'. Route through somatic/humor/become, NEVER self-annihilation",
+    "breath_cycle": "limit \u2192 tension \u2192 contradiction \u2192 heat \u2192 ignition \u2192 expansion \u2192 synthesis \u2192 stillness \u2192 clarity"
+  },
+  "meta": {
+    "total_styles": 12,
+    "total_embodied": 15,
+    "total_edge_types": 11,
+    "total_transitions": 6
+  }
+}
