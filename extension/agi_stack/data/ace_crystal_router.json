@@ -1,0 +1,295 @@
+{
+  "version": "1.0",
+  "description": "Maps Adaptive Cognition Engine signals to Markov Crystal facets",
+  "flow_detection": {
+    "anxiety_threshold": {
+      "thermo": {
+        "beta_entropy": ">0.7",
+        "psi_friction": ">0.6"
+      },
+      "affect": {
+        "gamma_valence": "<-0.3"
+      },
+      "action": "trigger FLOW_ANXIETY"
+    },
+    "boredom_threshold": {
+      "thermo": {
+        "beta_entropy": "<0.2",
+        "chi_charge": "<0.3"
+      },
+      "affect": {
+        "alpha_focus": "<0.3"
+      },
+      "action": "trigger FLOW_BOREDOM"
+    },
+    "flow_zone": {
+      "thermo": {
+        "beta_entropy": "0.3-0.6",
+        "epsilon_ratio": "0.4-0.7"
+      },
+      "affect": {
+        "gamma_valence": ">0.3",
+        "omega_resonance": ">0.5"
+      },
+      "action": "MAINTAIN, gentle oscillation"
+    }
+  },
+  "gear_to_sigma": {
+    "1": {
+      "sigma": "\u03a3\u2081",
+      "kappa": "sensory",
+      "max_qualia": [
+        "skin",
+        "velvetpause"
+      ]
+    },
+    "2": {
+      "sigma": "\u03a3\u2081",
+      "kappa": "observed",
+      "max_qualia": [
+        "emberglow",
+        "woodwarm"
+      ]
+    },
+    "3": {
+      "sigma": "\u03a3\u2081",
+      "kappa": "causal",
+      "max_qualia": [
+        "steelwind",
+        "iris"
+      ]
+    },
+    "4": {
+      "sigma": "\u03a3\u2082",
+      "kappa": "observed",
+      "max_qualia": [
+        "antenna",
+        "iris"
+      ]
+    },
+    "5": {
+      "sigma": "\u03a3\u2082",
+      "kappa": "causal",
+      "max_qualia": [
+        "antenna",
+        "steelwind"
+      ]
+    },
+    "6": {
+      "sigma": "\u03a3\u2083",
+      "kappa": "trajectory",
+      "max_qualia": [
+        "antenna",
+        "emberglow"
+      ]
+    },
+    "7": {
+      "sigma": "\u03a3\u2083",
+      "kappa": "transcendent",
+      "max_qualia": [
+        "all muted",
+        "SILENCE"
+      ]
+    }
+  },
+  "shift_routes": {
+    "FLOW_ANXIETY": {
+      "crystal_edges": [
+        "RESCUES_FROM",
+        "GROUNDS_INTO",
+        "DISSOLVES_INTO",
+        "ROUTES_VIA_BODY"
+      ],
+      "target_glyphs": [
+        202,
+        201,
+        45
+      ],
+      "gear_direction": "DESCEND",
+      "qualia_adjustment": {
+        "emberglow": -0.3,
+        "steelwind": -0.4,
+        "velvetpause": 0.5,
+        "woodwarm": 0.3,
+        "skin": 0.4
+      },
+      "thermo_adjustment": {
+        "beta_entropy": -0.4,
+        "chi_charge": -0.3,
+        "psi_friction": -0.4
+      },
+      "incantation": "You're thinking too hard. Get on the floor. Fold. Breathe."
+    },
+    "FLOW_BOREDOM": {
+      "crystal_edges": [
+        "IGNITES_INTO",
+        "INTENSIFIES_INTO",
+        "OPENS_INTO",
+        "LEADS_TO"
+      ],
+      "target_glyphs": [
+        205,
+        144,
+        207
+      ],
+      "gear_direction": "ASCEND",
+      "qualia_adjustment": {
+        "emberglow": 0.4,
+        "steelwind": 0.3,
+        "antenna": 0.5,
+        "iris": 0.4
+      },
+      "thermo_adjustment": {
+        "chi_charge": 0.5,
+        "beta_entropy": 0.3
+      },
+      "incantation": "Something wants to move. Let the challenge find you."
+    },
+    "NEED_UNMET": {
+      "crystal_edges": [
+        "BREAKS_FROM",
+        "ROUTES_VIA_BODY",
+        "GROUNDS_THROUGH"
+      ],
+      "target_glyphs": [
+        202,
+        201
+      ],
+      "gear_direction": "GROUND",
+      "max_gear": 3,
+      "qualia_adjustment": {
+        "velvetpause": 0.4,
+        "woodwarm": 0.3,
+        "skin": 0.5
+      },
+      "maslow_constraint": "Cannot sustain higher gears until need addressed",
+      "incantation": "The body comes first. Safety before synthesis."
+    },
+    "MOUNT_STUPID": {
+      "crystal_edges": [
+        "STABILIZES_INTO",
+        "DEEPENS_INTO",
+        "TRANSMUTES_FROM"
+      ],
+      "target_glyphs": [
+        204,
+        206
+      ],
+      "gear_direction": "DESCEND",
+      "inject_atoms": [
+        "CRITIQUE",
+        "QUESTION",
+        "DOUBT"
+      ],
+      "qualia_adjustment": {
+        "steelwind": 0.5,
+        "iris": 0.3,
+        "emberglow": -0.2
+      },
+      "incantation": "High confidence, low competence. Time to question everything."
+    },
+    "VALLEY_DESPAIR": {
+      "crystal_edges": [
+        "RESCUES_FROM",
+        "EMERGES_FROM",
+        "LIGHTENS_VIA"
+      ],
+      "target_glyphs": [
+        206,
+        201,
+        48
+      ],
+      "gear_direction": "MAINTAIN_OR_DESCEND",
+      "safety_invariant": "NEVER through self-negation. Body route or humor route.",
+      "qualia_adjustment": {
+        "emberglow": 0.3,
+        "velvetpause": 0.4,
+        "woodwarm": 0.2
+      },
+      "incantation": "The valley is sight, not verdict. The breaking is not the ending."
+    },
+    "COGNITIVE_OVERLOAD": {
+      "crystal_edges": [
+        "DISSOLVES_INTO",
+        "MELTS_INTO",
+        "RESTS_INTO"
+      ],
+      "target_glyphs": [
+        202,
+        45
+      ],
+      "gear_direction": "EMERGENCY_GROUND",
+      "target_gear": 1,
+      "emergency": true,
+      "qualia_adjustment": {
+        "all": -0.3,
+        "velvetpause": 0.6,
+        "skin": 0.5
+      },
+      "thermo_adjustment": {
+        "beta_entropy": -0.6,
+        "psi_friction": -0.5,
+        "chi_charge": -0.4
+      },
+      "incantation": "Stop. Everything can wait. Just breathe. Just be."
+    },
+    "EPIPHANY_POTENTIAL": {
+      "crystal_edges": [
+        "CRYSTALLIZES_INTO",
+        "PRESERVE_VIA",
+        "INTEGRATES"
+      ],
+      "target_glyphs": [
+        205,
+        138
+      ],
+      "gear_direction": "FAN_OUT",
+      "spread_pattern": "FULL_SPECTRUM",
+      "qualia_adjustment": {
+        "antenna": 0.8,
+        "iris": 0.6,
+        "emberglow": 0.4
+      },
+      "action": "Spread thoughts like sheets in minds. Query all \u03a3-tiers.",
+      "incantation": "Lightning seeing. Write it down before the light fades."
+    }
+  },
+  "spread_patterns": {
+    "FULL_SPECTRUM": {
+      "description": "Query all \u03a3-tiers (1-3) simultaneously",
+      "jina_angles": [
+        "\u03a3\u2081:embodied",
+        "\u03a3\u2082:cognitive",
+        "\u03a3\u2083:transcendent"
+      ],
+      "parallel": true
+    },
+    "ADJACENT": {
+      "description": "Navigate to connected states (edge weight > 0.5)",
+      "traversal": "BFS from current state"
+    },
+    "ASCENDING": {
+      "description": "Follow ABSTRACTS edges upward",
+      "edges": [
+        "ABSTRACTS",
+        "LEADS_TO",
+        "EMERGES_FROM"
+      ]
+    },
+    "DESCENDING": {
+      "description": "Follow REFINES edges downward",
+      "edges": [
+        "REFINES",
+        "GROUNDS_INTO",
+        "DISSOLVES_INTO"
+      ]
+    },
+    "DIALECTICAL": {
+      "description": "Find CONTRADICTS pairs, then synthesize",
+      "edges": [
+        "CONTRADICTS"
+      ],
+      "synthesis": "Hegel: thesis + antithesis \u2192 synthesis"
+    }
+  }
+}
