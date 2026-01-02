@@ -1,91 +1,56 @@
--- ═══════════════════════════════════════════════════════════════════════════
--- GOLDEN STATES COMPLETE SCHEMA — 50 States + 42 Edge Types
--- Generated from golden_states_v2.md
--- ═══════════════════════════════════════════════════════════════════════════
+-- Markov Crystal Schema for Kuzu
+-- Version: 2.0
 
+-- GoldenState node table
 CREATE NODE TABLE IF NOT EXISTS GoldenState (
-    id STRING PRIMARY KEY,
-    dn STRING,
-    glyph_byte INT32,
-    seed STRING,
-    sigma_tier STRING,
-    kappa STRING,
-    qualia FLOAT[7],
-    affect FLOAT[3],
-    thermo FLOAT[5],
-    sig_64d FLOAT[64],
-    phi_offset FLOAT,
-    incantation STRING
-);
-
--- MARKOV CRYSTAL CORE (7)
-CREATE REL TABLE IF NOT EXISTS BECOMES (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS CAUSES (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT);
-CREATE REL TABLE IF NOT EXISTS REFINES (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT);
-CREATE REL TABLE IF NOT EXISTS ABSTRACTS (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT);
-CREATE REL TABLE IF NOT EXISTS GROUNDS (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT);
-CREATE REL TABLE IF NOT EXISTS SUPPORTS (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT);
-CREATE REL TABLE IF NOT EXISTS CONTRADICTS (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT);
-
-CREATE REL TABLE IF NOT EXISTS ACTS_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS BREAKS_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS BREAKS_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS CARRIES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS CRYSTALLIZES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS DEEPENS_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS DEEPENS_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS DISSOLVES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS DISTINGUISHES_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS EMERGES_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS ENABLES (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS FLOWS_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS GROUNDS_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS GROUNDS_THROUGH (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS IGNITES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS INTEGRATES (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS INTEGRATES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS INTENSIFIES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS LEADS_TO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS LIGHTENS_VIA (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS MATURES_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS MELTS_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS OPENS_FOR (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS OPENS_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS PLAYS_WITH (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS PRESERVE_VIA (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS RECOGNIZES_AS (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS REINTERPRETS_AS (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS RELAXES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS RESCUES_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS RESTS_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS ROUTES_VIA_BODY (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS RUPTURES_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS SETTLES_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS SETTLES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS SPEAKS_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS STABILIZES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS SUBLATES_INTO_STILLNESS (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS SURVIVES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS TRANSMUTES_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS WAKES_FROM (FROM GoldenState TO GoldenState, incantation STRING);
-CREATE REL TABLE IF NOT EXISTS WAKES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
-
--- THREE MOUNTAINS
-CREATE NODE TABLE IF NOT EXISTS TriangulationEvent (
-    id STRING PRIMARY KEY,
-    timestamp STRING,
-    agent_a STRING,
-    agent_b STRING,
-    emergent_facet STRING,
-    int4_final INT8,
-    is_agi_moment BOOLEAN
-);
-
--- THINKING STYLES
-CREATE NODE TABLE IF NOT EXISTS ThinkingStyle (
-    id STRING PRIMARY KEY,
+    id INT64 PRIMARY KEY,
     name STRING,
     dn STRING,
-    function STRING,
-    sig_64d FLOAT[64]
+    glyph_byte INT64,
+    qualia_emberglow FLOAT,
+    qualia_steelwind FLOAT,
+    qualia_velvetpause FLOAT,
+    qualia_woodwarm FLOAT,
+    qualia_antenna FLOAT,
+    qualia_iris FLOAT,
+    qualia_skin FLOAT,
+    thermo_beta FLOAT,
+    thermo_chi FLOAT,
+    thermo_epsilon FLOAT,
+    thermo_kappa FLOAT,
+    thermo_psi FLOAT,
+    sigma_tier STRING,
+    kappa_type STRING,
+    sig_64d FLOAT[]
 );
+
+-- ThinkingStyle node table
+CREATE NODE TABLE IF NOT EXISTS ThinkingStyle (
+    id STRING PRIMARY KEY,
+    dn STRING,
+    qualia_emberglow FLOAT,
+    qualia_steelwind FLOAT,
+    qualia_velvetpause FLOAT,
+    qualia_woodwarm FLOAT,
+    qualia_antenna FLOAT,
+    qualia_iris FLOAT,
+    qualia_skin FLOAT
+);
+
+-- Core relationship tables
+CREATE REL TABLE IF NOT EXISTS BECOMES (FROM GoldenState TO GoldenState, weight FLOAT);
+CREATE REL TABLE IF NOT EXISTS CAUSES (FROM GoldenState TO GoldenState, weight FLOAT);
+CREATE REL TABLE IF NOT EXISTS LEADS_TO (FROM GoldenState TO GoldenState, weight FLOAT);
+CREATE REL TABLE IF NOT EXISTS ENABLES (FROM GoldenState TO GoldenState, weight FLOAT);
+CREATE REL TABLE IF NOT EXISTS TRIGGERS (FROM GoldenState TO GoldenState, weight FLOAT);
+
+-- Crystal navigation relationships
+CREATE REL TABLE IF NOT EXISTS RESCUES_FROM (FROM GoldenState TO GoldenState, incantation STRING);
+CREATE REL TABLE IF NOT EXISTS DISSOLVES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
+CREATE REL TABLE IF NOT EXISTS CRYSTALLIZES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
+CREATE REL TABLE IF NOT EXISTS ROUTES_VIA_BODY (FROM GoldenState TO GoldenState, incantation STRING);
+
+-- Cypher edges with qualia bridges
+CREATE REL TABLE IF NOT EXISTS TRANSMUTES (FROM GoldenState TO GoldenState, qualia_bridge STRING[]);
+CREATE REL TABLE IF NOT EXISTS STABILIZES (FROM GoldenState TO GoldenState, qualia_bridge STRING[]);
+CREATE REL TABLE IF NOT EXISTS SELF_SOOTHES (FROM GoldenState TO GoldenState, qualia_bridge STRING[]);
