@@ -1,8 +1,10 @@
-# Ada AGI Surface - System Audit
+# AGI Stack - System Audit
 
 **Audit Date:** 2024
 **Auditor:** System Designer
-**Scope:** Complete review of ada_surface extension vs original AGI_INTEGRATION_PLAN.md
+**Scope:** Complete review of agi_stack extension vs original AGI_INTEGRATION_PLAN.md
+
+> **Note:** This extension was originally named `ada_surface` and has been renamed to `agi_stack` to reflect its role as the core AGI stack implementation.
 
 ---
 
@@ -34,7 +36,7 @@ The Ada AGI Surface represents a significant **architectural pivot** from the or
 └─────────────────────────────────────┘
 ```
 
-### Current Implementation (ada_surface)
+### Current Implementation (agi_stack)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
