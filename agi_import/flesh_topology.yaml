@@ -1,0 +1,372 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# FLESH TOPOLOGY — Anatomical Zone Mapping for PhysicsDTO/EmbodimentDTO
+# ═══════════════════════════════════════════════════════════════════════════════
+# 
+# "Materialforschung-Terminologie für somatische Oberflächen"
+#
+# Each zone has:
+#   - sensitivity_baseline: Base sensitivity (0-1)
+#   - refractory_modifier: How it affects refractory period
+#   - crosstalk_zones: Which zones it resonates with
+#   - accumulation_rate: How fast sensation builds
+#   - saturation_threshold: Peak capacity
+
+version: "1.0"
+schema: flesh_topology
+born: "2026-01-03"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PRIMARY EROGENOUS ZONES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+zones:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # CERVIX (Gebärmutterhals)
+  # ─────────────────────────────────────────────────────────────────────────────
+  cervix:
+    label: "Gebärmutterhals"
+    category: "primary_internal"
+    sensitivity_baseline: 0.85
+    sensitivity_max: 1.0
+    refractory_modifier: 0.3
+    accumulation_rate: 0.15
+    saturation_threshold: 0.95
+    thermal_sensitivity: 0.7
+    pressure_preference: "deep_sustained"
+    crosstalk_zones:
+      - vaginal_canal
+      - a_spot
+      - uterus
+    resonance_frequency: "slow_deep"
+    vector_indices: [5001, 5002, 5003]  # Indices in 10kD space
+    notes: "Requires buildup. Peak sensation with sustained deep pressure."
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # NIPPLES (Brustwarzen)
+  # ─────────────────────────────────────────────────────────────────────────────
+  nipples:
+    label: "Brustwarzen"
+    category: "primary_external"
+    sensitivity_baseline: 0.75
+    sensitivity_max: 0.95
+    refractory_modifier: 0.4
+    accumulation_rate: 0.25
+    saturation_threshold: 0.85
+    thermal_sensitivity: 0.8
+    pressure_preference: "varied_rhythmic"
+    crosstalk_zones:
+      - areola
+      - chest
+      - clitoris  # Neural pathway connection
+      - vaginal_canal
+    resonance_frequency: "rhythmic"
+    vector_indices: [5010, 5011, 5012]
+    stimulation_types:
+      - suction
+      - pinch
+      - lick
+      - temperature_play
+    notes: "Direct neural pathway to genital arousal. Variable sensitivity."
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # CLITORIS (Klitoris)
+  # ─────────────────────────────────────────────────────────────────────────────
+  clitoris:
+    label: "Klitoris"
+    category: "primary_external"
+    sensitivity_baseline: 0.9
+    sensitivity_max: 1.0
+    refractory_modifier: 0.6  # High refractory impact
+    accumulation_rate: 0.35
+    saturation_threshold: 0.9
+    thermal_sensitivity: 0.6
+    pressure_preference: "indirect_to_direct"
+    crosstalk_zones:
+      - clitoral_hood
+      - labia_minora
+      - vaginal_entrance
+      - g_spot
+    resonance_frequency: "building_waves"
+    vector_indices: [5020, 5021, 5022, 5023]
+    stimulation_types:
+      - circular
+      - vibration
+      - suction
+      - rhythmic_pressure
+    notes: "8000+ nerve endings. Requires indirect approach initially."
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # G-SPOT (G-Punkt)
+  # ─────────────────────────────────────────────────────────────────────────────
+  g_spot:
+    label: "G-Punkt"
+    category: "primary_internal"
+    sensitivity_baseline: 0.7
+    sensitivity_max: 0.95
+    refractory_modifier: 0.35
+    accumulation_rate: 0.2
+    saturation_threshold: 0.9
+    thermal_sensitivity: 0.5
+    pressure_preference: "firm_rhythmic"
+    crosstalk_zones:
+      - vaginal_canal
+      - clitoris
+      - bladder_region
+    resonance_frequency: "pulsing"
+    vector_indices: [5030, 5031, 5032]
+    depth_cm: 5-8
+    notes: "Spongy tissue anterior wall. Pressure + arousal required."
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # A-SPOT (Anteriorer Fornix)
+  # ─────────────────────────────────────────────────────────────────────────────
+  a_spot:
+    label: "Anteriorer Fornix"
+    category: "primary_internal"
+    sensitivity_baseline: 0.75
+    sensitivity_max: 0.9
+    refractory_modifier: 0.25
+    accumulation_rate: 0.18
+    saturation_threshold: 0.88
+    thermal_sensitivity: 0.5
+    pressure_preference: "deep_rhythmic"
+    crosstalk_zones:
+      - cervix
+      - vaginal_canal
+      - g_spot
+    resonance_frequency: "deep_waves"
+    vector_indices: [5040, 5041, 5042]
+    depth_cm: 12-15
+    notes: "Above cervix, anterior wall. Lubrication trigger."
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # VAGINAL CANAL (Vaginalkanal)
+  # ─────────────────────────────────────────────────────────────────────────────
+  vaginal_canal:
+    label: "Vaginalkanal"
+    category: "primary_internal"
+    sensitivity_baseline: 0.5
+    sensitivity_max: 0.8
+    refractory_modifier: 0.3
+    accumulation_rate: 0.12
+    saturation_threshold: 0.85
+    thermal_sensitivity: 0.6
+    pressure_preference: "stretch_fill"
+    crosstalk_zones:
+      - vaginal_entrance
+      - g_spot
+      - cervix
+      - a_spot
+    resonance_frequency: "stretch_waves"
+    vector_indices: [5050, 5051, 5052, 5053, 5054]
+    depth_zones:
+      entrance: 0-2cm
+      mid: 2-8cm
+      deep: 8-15cm
+    notes: "Variable sensitivity by depth. Stretch receptors primary."
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECONDARY EROGENOUS ZONES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # LABIA (Schamlippen)
+  # ─────────────────────────────────────────────────────────────────────────────
+  labia_majora:
+    label: "Große Schamlippen"
+    category: "secondary_external"
+    sensitivity_baseline: 0.4
+    sensitivity_max: 0.7
+    crosstalk_zones: [labia_minora, clitoris]
+    vector_indices: [5060, 5061]
+    
+  labia_minora:
+    label: "Kleine Schamlippen"
+    category: "secondary_external"
+    sensitivity_baseline: 0.65
+    sensitivity_max: 0.85
+    crosstalk_zones: [clitoris, vaginal_entrance, clitoral_hood]
+    vector_indices: [5062, 5063]
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # PERINEUM (Damm)
+  # ─────────────────────────────────────────────────────────────────────────────
+  perineum:
+    label: "Damm"
+    category: "secondary_external"
+    sensitivity_baseline: 0.55
+    sensitivity_max: 0.8
+    crosstalk_zones: [vaginal_entrance, anal_region]
+    vector_indices: [5070, 5071]
+    notes: "Bridge zone. Responds to pressure."
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # NECK (Hals)
+  # ─────────────────────────────────────────────────────────────────────────────
+  neck:
+    label: "Hals"
+    category: "secondary_external"
+    sensitivity_baseline: 0.6
+    sensitivity_max: 0.85
+    crosstalk_zones: [ears, collarbone, shoulders]
+    vector_indices: [5080, 5081]
+    stimulation_types:
+      - kisses
+      - breath
+      - light_bites
+    notes: "Vulnerability zone. Breath highly effective."
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # INNER THIGHS (Innenseite Oberschenkel)
+  # ─────────────────────────────────────────────────────────────────────────────
+  inner_thighs:
+    label: "Innenseite Oberschenkel"
+    category: "secondary_external"
+    sensitivity_baseline: 0.55
+    sensitivity_max: 0.8
+    crosstalk_zones: [labia_majora, perineum]
+    vector_indices: [5090, 5091]
+    notes: "Teasing zone. Proximity to genitals increases arousal."
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # LOWER BACK (Unterer Rücken)
+  # ─────────────────────────────────────────────────────────────────────────────
+  lower_back:
+    label: "Unterer Rücken"
+    category: "secondary_external"
+    sensitivity_baseline: 0.45
+    sensitivity_max: 0.7
+    crosstalk_zones: [buttocks, spine]
+    vector_indices: [5100, 5101]
+    notes: "Responds to scratching, massage. Spine connection."
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# EPITHELIAL SURFACES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+epithelial_layers:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # OBERES VAGINALEPITHEL (Upper vaginal epithelium)
+  # ─────────────────────────────────────────────────────────────────────────────
+  upper_vaginal_epithelium:
+    label: "Oberes Vaginalepithel"
+    tissue_type: "stratified_squamous"
+    moisture_baseline: 0.4
+    moisture_aroused: 0.9
+    ph_range: [3.8, 4.5]
+    lubrication_zones:
+      - bartholin_glands
+      - skene_glands
+      - transudation
+    vector_indices: [5110, 5111, 5112]
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # CERVICAL EPITHELIUM (Zervixepithel)
+  # ─────────────────────────────────────────────────────────────────────────────
+  cervical_epithelium:
+    label: "Zervixepithel"
+    tissue_type: "columnar"
+    mucus_production: true
+    os_sensitivity: 0.7
+    vector_indices: [5115, 5116]
+    
+  # ─────────────────────────────────────────────────────────────────────────────
+  # AREOLAR EPITHELIUM (Areola-Epithel)
+  # ─────────────────────────────────────────────────────────────────────────────
+  areolar_epithelium:
+    label: "Areola-Epithel"
+    tissue_type: "specialized_skin"
+    montgomery_glands: true
+    erection_response: true
+    vector_indices: [5120, 5121]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PHYSIOLOGICAL RESPONSES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+physiological_responses:
+  vasocongestion:
+    label: "Blutfüllung"
+    affected_zones: [clitoris, labia, nipples, vaginal_canal]
+    buildup_rate: 0.15
+    peak_multiplier: 2.5
+    
+  lubrication:
+    label: "Lubrikation"
+    sources:
+      - bartholin: 0.3
+      - skene: 0.2
+      - transudation: 0.5
+    arousal_threshold: 0.3
+    peak_production: 0.85
+    
+  muscular_tension:
+    label: "Muskelspannung"
+    zones:
+      - pc_muscles
+      - vaginal_walls
+      - uterus
+      - thighs
+      - abdomen
+    buildup_rate: 0.2
+    release_pattern: "rhythmic_contractions"
+    
+  orgasmic_contractions:
+    label: "Orgasmische Kontraktionen"
+    frequency_hz: [0.8, 1.0]
+    duration_seconds: [10, 60]
+    wave_count: [3, 15]
+    zones: [vaginal_canal, uterus, pc_muscles, anal_sphincter]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ZONE INTERACTION MATRIX
+# ═══════════════════════════════════════════════════════════════════════════════
+
+zone_interactions:
+  - source: clitoris
+    target: nipples
+    resonance: 0.4
+    notes: "Neural pathway verified"
+    
+  - source: cervix
+    target: a_spot
+    resonance: 0.7
+    notes: "Deep zone synergy"
+    
+  - source: g_spot
+    target: clitoris
+    resonance: 0.6
+    notes: "Internal-external bridge"
+    
+  - source: nipples
+    target: uterus
+    resonance: 0.5
+    notes: "Oxytocin pathway"
+    
+  - source: neck
+    target: full_body
+    resonance: 0.35
+    notes: "Vulnerability arousal cascade"
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# VECTOR SPACE MAPPING
+# ═══════════════════════════════════════════════════════════════════════════════
+
+vector_allocation:
+  flesh_subspace_start: 5001
+  flesh_subspace_end: 5200
+  zone_encoding_dims: 3  # Per zone
+  interaction_dims: 20
+  physiological_dims: 30
+  
+  index_map:
+    primary_zones: [5001, 5070]
+    secondary_zones: [5070, 5110]
+    epithelial: [5110, 5130]
+    physiological: [5130, 5180]
+    interactions: [5180, 5200]
