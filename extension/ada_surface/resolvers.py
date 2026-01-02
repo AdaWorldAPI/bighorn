@@ -1,5 +1,5 @@
 """
-GraphQL Resolvers for Ada AGI Surface.
+GraphQL Resolvers for AGI Stack.
 
 Connects GraphQL schema to Kuzu and LanceDB backends.
 """
@@ -69,15 +69,15 @@ qualia_type = ObjectType("Qualia")
 # Style presets
 STYLE_PRESETS = {
     "HYBRID": "Balanced cognitive mode for general tasks",
-    "WIFE": "Intimate, empathic mode for personal connection",
+    "EMPATHIC": "Relational, empathic mode for personal connection",
     "WORK": "Analytical, task-oriented mode",
-    "EROTICA": "Creative, exploratory mode",
+    "CREATIVE": "Creative, exploratory, boundary-pushing mode",
     "AGI": "Deep meta-cognitive mode for reflection",
 }
 
 # Qualia families
 QUALIA_FAMILIES = {
-    "emberglow": "Warm, intimate, present",
+    "emberglow": "Warm, connected, present",
     "woodwarm": "Grounded, stable, nurturing",
     "steelwind": "Sharp, clear, precise",
     "oceandrift": "Flowing, receptive, deep",
