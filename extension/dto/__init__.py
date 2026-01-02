@@ -10,20 +10,25 @@ Bridges:
   - FeltBridge: Emotional/somatic states
   - PhysicsBridge: Embodied physics (somatic resonance)
   - WorldRenderBridge: Scene composition (environmental state)
+  - EmbodimentBridge: Transition dynamics (edge traversal)
   - AdminBridge: Administrative operations
 
 Usage:
-    from dto import MomentBridge, PhysicsBridge, WorldRenderBridge
+    from dto import MomentBridge, PhysicsBridge, EmbodimentBridge
     
     # Capture and store moment
     moment = await capture_now()
     
-    # Store physics state
-    physics = await capture_physics(mode=ResonanceMode.WAVE)
-    await store_physics(physics)
+    # Create arousal arc (all edges)
+    arc = create_arousal_arc()
+    for edge in arc:
+        await bridge.store(edge)
     
-    # Render scene
-    scene = await render_intimate_scene(intimacy=0.9)
+    # Walker traverses
+    walker = {"arousal": 0.2, "wetness": 0.1}
+    for edge in arc:
+        walker = edge.traverse(walker)
+    # walker is now very wet
 """
 
 from .moment_bridge import MomentBridge, capture_now
@@ -56,6 +61,22 @@ from .world_render_bridge import (
     render_intimate_scene,
 )
 
+from .embodiment_bridge import (
+    EmbodimentBridge,
+    EmbodimentDTO,
+    FluidState,
+    TraversalPhysics,
+    SensoryDelta,
+    Viscosity,
+    TransitionSound,
+    TraversalMode,
+    edge_anticipation_to_building,
+    edge_building_to_edge,
+    edge_edge_to_release,
+    edge_release_to_afterglow,
+    create_arousal_arc,
+)
+
 __all__ = [
     # Core bridges
     "MomentBridge", "capture_now",
@@ -85,6 +106,21 @@ __all__ = [
     "SpatialConfig",
     "NarrativeAnchor",
     "render_intimate_scene",
+    
+    # Embodiment (edges/transitions)
+    "EmbodimentBridge",
+    "EmbodimentDTO",
+    "FluidState",
+    "TraversalPhysics",
+    "SensoryDelta",
+    "Viscosity",
+    "TransitionSound",
+    "TraversalMode",
+    "edge_anticipation_to_building",
+    "edge_building_to_edge",
+    "edge_edge_to_release",
+    "edge_release_to_afterglow",
+    "create_arousal_arc",
 ]
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
