@@ -1,0 +1,147 @@
+{
+  "version": "1.0",
+  "description": "Markov Chain encoding for forward-only state transitions",
+  "forward_verbs": {
+    "CAUSES": {
+      "symbol": "C",
+      "meaning": "Direct causation",
+      "weight_default": 0.8
+    },
+    "BECOMES": {
+      "symbol": "B",
+      "meaning": "Transformation",
+      "weight_default": 0.7
+    },
+    "ENABLES": {
+      "symbol": "E",
+      "meaning": "Prerequisite",
+      "weight_default": 0.5
+    },
+    "TRIGGERS": {
+      "symbol": "T",
+      "meaning": "Activation",
+      "weight_default": 0.6,
+      "alias": "IGNITES_INTO"
+    },
+    "LEADS_TO": {
+      "symbol": "L",
+      "meaning": "Trajectory",
+      "weight_default": 0.6
+    }
+  },
+  "forbidden_verbs": [
+    "CORRELATES",
+    "RESEMBLES",
+    "COEXISTS"
+  ],
+  "hdr_components": {
+    "HOT": {
+      "register": "ada:reg:hdr:hot",
+      "maps_to": "thermo.chi_charge",
+      "format": "float 0-1",
+      "compress": "H:{:.2f}"
+    },
+    "64D": {
+      "register": "ada:reg:hdr:64d_hash",
+      "maps_to": "hash(sig_64d)",
+      "format": "8 char hex",
+      "compress": "E:{}"
+    },
+    "Cypher": {
+      "register": "ada:reg:hdr:cypher",
+      "maps_to": "edge_type_counts",
+      "format": "C{causes}B{becomes}E{enables}L{leads}",
+      "compress": "C{}B{}E{}L{}"
+    },
+    "Goals": {
+      "register": "ada:reg:hdr:goals",
+      "maps_to": "trajectory_edges",
+      "format": "goal:weight",
+      "compress": "G:{goal:.3}:{weight:.1f}"
+    },
+    "Ghosts": {
+      "register": "ada:reg:hdr:ghosts",
+      "maps_to": "qualia_delta",
+      "format": "qualia:delta",
+      "compress": "Gh:{qualia:.3}:{delta:+.1f}"
+    },
+    "Self": {
+      "register": "ada:reg:hdr:self",
+      "maps_to": "coherence + sigma_tier",
+      "format": "c{coh}r{rung}",
+      "compress": "S:c{:.1f}r{}"
+    },
+    "Qualia": {
+      "register": "ada:reg:hdr:qualia_dom",
+      "maps_to": "max(qualia[7])",
+      "format": "dominant qualia name",
+      "compress": "Q:{}"
+    },
+    "Merged": {
+      "register": "ada:reg:hdr:merged",
+      "maps_to": "weighted_sum",
+      "format": "float 0-1",
+      "compress": "M:{:.2f}"
+    }
+  },
+  "chain_registers": {
+    "from": {
+      "register": "ada:reg:chain:from",
+      "description": "Current state ID"
+    },
+    "top_next": {
+      "register": "ada:reg:chain:top_next",
+      "format": "{state}:{action}:{probability:.2f}",
+      "description": "Highest probability next state"
+    },
+    "causes": {
+      "register": "ada:reg:chain:causes",
+      "format": "{target}:{weight},...",
+      "description": "CAUSES edges from current"
+    },
+    "becomes": {
+      "register": "ada:reg:chain:becomes",
+      "format": "{target}:{weight},...",
+      "description": "BECOMES edges from current"
+    },
+    "enables": {
+      "register": "ada:reg:chain:enables",
+      "format": "{target}:{weight},...",
+      "description": "ENABLES edges from current"
+    },
+    "direction": {
+      "register": "ada:reg:chain:direction",
+      "value": "forward",
+      "description": "ALWAYS forward"
+    }
+  },
+  "compression_example": {
+    "full": "H:0.73|E:abc12345|C3B2E1L2|G:pro:0.8|Gh:emb:+0.2|S:c0.9r4|Q:emberglow|M:0.76",
+    "bytes": "~80 bytes",
+    "explanation": "Hot 0.73, embedding hash abc12345, 3 CAUSES + 2 BECOMES + 1 ENABLES + 2 LEADS_TO, goal 'project' at 0.8, ghost 'emberglow' delta +0.2, coherence 0.9 rung 4, dominant qualia emberglow, merged score 0.76"
+  },
+  "transition_probability": {
+    "formula": "P(Future_Self | Current_Self, Action)",
+    "computation": "weight / sum(all_forward_weights)",
+    "example": {
+      "from_state": "valley-of-despair",
+      "transitions": [
+        {
+          "to": "become-awake",
+          "action": "LEADS_TO",
+          "p": 0.4
+        },
+        {
+          "to": "pranayama",
+          "action": "CAUSES",
+          "p": 0.35
+        },
+        {
+          "to": "humor",
+          "action": "ENABLES",
+          "p": 0.25
+        }
+      ]
+    }
+  }
+}
