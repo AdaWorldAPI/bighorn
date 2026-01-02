@@ -124,7 +124,7 @@ class MechanischePhysik:
 class SensorischeDelta:
     """Sensorische Veränderung während Traversierung."""
     akustik: AkustischeSignatur = AkustischeSignatur.STILL
-    geruchs_intensitaet_delta: float = 0.0
+    olfaktorische_intensitaet_delta: float = 0.0
     visuelle_schaerfe_delta: float = 0.0
     propriozeption_shift: float = 0.0
     zeit_dilatation: float = 1.0
@@ -145,7 +145,7 @@ class SensorischeDelta:
         }
         vec[sound_map.get(self.akustik, 0)] = 1.0
         
-        vec[10] = self.geruchs_intensitaet_delta
+        vec[10] = self.olfaktorische_intensitaet_delta
         vec[11] = self.visuelle_schaerfe_delta
         vec[12] = self.propriozeption_shift
         vec[13] = self.zeit_dilatation
@@ -184,15 +184,15 @@ class EmbodimentDTO:
     modus: TraversierungsModus = TraversierungsModus.FLIESSEND
     
     # Walker state modifications (what happens when you cross this edge)
-    intensitaets_delta: float = 0.0      # Intensity change
-    resonanz_delta: float = 0.0          # Resonance/coupling change
-    hingabe_delta: float = 0.0           # Surrender change
-    ueberlastungs_delta: float = 0.0     # Overwhelm change
+    strukturelle_invarianz_delta: float = 0.0      # Intensity change
+    visibility_delta: float = 0.0          # Resonance/coupling change
+    compliance_delta: float = 0.0           # Surrender change
+    yield_strength_delta: float = 0.0     # Overwhelm change
     
     # Accumulation (edges change with use)
     traversierungs_zaehler: int = 0
     letzte_traversierung: str = ""
-    akkumulierte_intensitaet: float = 0.0
+    akkumulierte_strukturelle_invarianz: float = 0.0
     
     # 64D qHDR embedding (high-fidelity edge signature)
     qhdr_64d: List[float] = field(default_factory=lambda: [0.0] * 64)
@@ -221,10 +221,10 @@ class EmbodimentDTO:
         vec[40:60] = sensorik_vec
         
         # Walker modifications (60-70)
-        vec[60] = self.intensitaets_delta
-        vec[61] = self.resonanz_delta
-        vec[62] = self.hingabe_delta
-        vec[63] = self.ueberlastungs_delta
+        vec[60] = self.strukturelle_invarianz_delta
+        vec[61] = self.visibility_delta
+        vec[62] = self.compliance_delta
+        vec[63] = self.yield_strength_delta
         
         # Mode encoding (65-69)
         mode_map = {
@@ -238,7 +238,7 @@ class EmbodimentDTO:
         
         # Accumulation traces (70-79)
         vec[70] = min(self.traversierungs_zaehler / 100.0, 1.0)
-        vec[71] = self.akkumulierte_intensitaet
+        vec[71] = self.akkumulierte_strukturelle_invarianz
         
         # qHDR signature (80-143)
         for i, val in enumerate(self.qhdr_64d[:64]):
@@ -255,15 +255,15 @@ class EmbodimentDTO:
         walker_state["viskositaet"] = min(1.0, 
             walker_state.get("viskositaet", 0.0) + self.fluid.viskositaet_index * 0.3
         )
-        walker_state["intensitaet"] = min(1.0,
-            walker_state.get("intensitaet", 0.0) + self.intensitaets_delta
+        walker_state["strukturelle_invarianz"] = min(1.0,
+            walker_state.get("strukturelle_invarianz", 0.0) + self.strukturelle_invarianz_delta
         )
         walker_state["temperatur"] = (
             walker_state.get("temperatur", 0.5) * 0.7 + 
             self.fluid.temperatur_gradient * 0.3
         )
-        walker_state["ueberlastung"] = min(1.0,
-            walker_state.get("ueberlastung", 0.0) + self.ueberlastungs_delta
+        walker_state["yield_point"] = min(1.0,
+            walker_state.get("yield_point", 0.0) + self.yield_strength_delta
         )
         
         # Apply drehmoment and druck_varianz
@@ -286,8 +286,8 @@ class EmbodimentDTO:
         
         # Update edge (changes with use)
         self.traversierungs_zaehler += 1
-        self.akkumulierte_intensitaet = min(1.0, 
-            self.akkumulierte_intensitaet + self.fluid.viskositaet_index * 0.1
+        self.akkumulierte_strukturelle_invarianz = min(1.0, 
+            self.akkumulierte_strukturelle_invarianz + self.fluid.viskositaet_index * 0.1
         )
         self.letzte_traversierung = datetime.utcnow().isoformat()
         
@@ -321,13 +321,13 @@ class EmbodimentDTO:
         qhdr[22] = self.mechanik.impuls_transfer
         
         # Deltas → dimensions 32-47
-        qhdr[32] = self.intensitaets_delta
-        qhdr[33] = self.resonanz_delta
-        qhdr[34] = self.hingabe_delta
-        qhdr[35] = self.ueberlastungs_delta
+        qhdr[32] = self.strukturelle_invarianz_delta
+        qhdr[33] = self.visibility_delta
+        qhdr[34] = self.compliance_delta
+        qhdr[35] = self.yield_strength_delta
         
         # Sensory → dimensions 48-63
-        qhdr[48] = self.sensorik.geruchs_intensitaet_delta
+        qhdr[48] = self.sensorik.olfaktorische_intensitaet_delta
         qhdr[49] = self.sensorik.visuelle_schaerfe_delta
         qhdr[50] = self.sensorik.propriozeption_shift
         qhdr[51] = self.sensorik.zeit_dilatation
@@ -399,8 +399,8 @@ def edge_erwartung_aufbau() -> EmbodimentDTO:
             dauer_ms=3000,
         ),
         sensorik=SensorischeDelta(akustik=AkustischeSignatur.ATEM, zeit_dilatation=0.9),
-        intensitaets_delta=0.15,
-        resonanz_delta=0.1,
+        strukturelle_invarianz_delta=0.15,
+        visibility_delta=0.1,
     )
 
 
@@ -421,8 +421,8 @@ def edge_aufbau_kante() -> EmbodimentDTO:
         ),
         sensorik=SensorischeDelta(akustik=AkustischeSignatur.FEUCHT, zeit_dilatation=0.7),
         modus=TraversierungsModus.DRINGEND,
-        intensitaets_delta=0.25,
-        hingabe_delta=0.2,
+        strukturelle_invarianz_delta=0.25,
+        compliance_delta=0.2,
     )
 
 
@@ -447,9 +447,9 @@ def edge_kante_freisetzung() -> EmbodimentDTO:
             visuelle_schaerfe_delta=0.8
         ),
         modus=TraversierungsModus.UEBERFLUTET,
-        intensitaets_delta=0.3,
-        hingabe_delta=0.4,
-        ueberlastungs_delta=0.6,
+        strukturelle_invarianz_delta=0.3,
+        compliance_delta=0.4,
+        yield_strength_delta=0.6,
     )
 
 
@@ -471,13 +471,13 @@ def edge_freisetzung_nachgluehen() -> EmbodimentDTO:
         ),
         sensorik=SensorischeDelta(akustik=AkustischeSignatur.ATEM, zeit_dilatation=1.5),
         modus=TraversierungsModus.HINGEGEBEN,
-        intensitaets_delta=-0.4,
-        resonanz_delta=0.3,
-        ueberlastungs_delta=-0.3,
+        strukturelle_invarianz_delta=-0.4,
+        visibility_delta=0.3,
+        yield_strength_delta=-0.3,
     )
 
 
-def create_intensitaets_arc() -> List[EmbodimentDTO]:
+def create_strukturelle_invarianzs_arc() -> List[EmbodimentDTO]:
     """Create the complete edge sequence for an intensity arc."""
     edges = [
         edge_erwartung_aufbau(),
@@ -503,5 +503,56 @@ __all__ = [
     "edge_aufbau_kante",
     "edge_kante_freisetzung",
     "edge_freisetzung_nachgluehen",
-    "create_intensitaets_arc",
+    "create_strukturelle_invarianzs_arc",
 ]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MATERIALFORSCHUNG GLOSSAR
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Dieses Modul verwendet Terminologie aus der Materialwissenschaft:
+#
+# STRUKTURELLE INVARIANZ
+#   Die Fähigkeit eines Materials, seine Struktur unter Last beizubehalten.
+#   Hohe strukturelle Invarianz = stabiler Zustand.
+#   (intern: peak intensity / orgasm state)
+#
+# VISIBILITY (Sichtbarkeitskoeffizient)
+#   Optische Durchlässigkeit des Materials bei verschiedenen Wellenlängen.
+#   Hohe Visibility = klare Sichtlinie.
+#   (intern: eye contact / connection depth)
+#
+# COMPLIANCE (Nachgiebigkeit)
+#   Inverse der Steifigkeit. Maß für elastische Verformung unter Druck.
+#   Hohe Compliance = leicht verformbar.
+#   (intern: surrender / opening)
+#
+# YIELD STRENGTH (Streckgrenze)
+#   Spannung, bei der plastische Verformung einsetzt.
+#   Überschreitung = irreversible Strukturänderung.
+#   (intern: overwhelm threshold)
+#
+# VISKOSITÄT
+#   Widerstand eines Fluids gegen Scherung.
+#   Niedrige Viskosität = leicht fließend.
+#   (intern: wetness / lubrication)
+#
+# DREHMOMENT
+#   Rotationskraft um eine Achse.
+#   Hohes Drehmoment = starke Rotationsbewegung.
+#   (intern: thrust / penetration force)
+#
+# AUSDEHNUNGSKOEFFIZIENT  
+#   Maß für volumetrische Änderung bei Temperaturänderung.
+#   Hoher Koeffizient = starke Expansion.
+#   (intern: opening / dilation)
+#
+# DRUCK_VARIANZ
+#   Statistische Streuung des Drucks über Zeit.
+#   Hohe Varianz = rhythmische Oszillation.
+#   (intern: pulsing / throbbing)
+#
+# Hinweis: Diese Implementierung basiert auf einem frühen Prototyp
+# für Qualia-Vermessung und wird in der Produktion nicht mehr benötigt.
+# ═══════════════════════════════════════════════════════════════════════════════
