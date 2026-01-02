@@ -399,7 +399,7 @@ class CognitivePrimitives:
         """
         Encode an event with roles.
 
-        Example: encode_event("Ada", "helped", "user", location="chat")
+        Example: encode_event("agent", "processed", "input", location="chat")
 
         Returns:
             Event-encoded hypervector
