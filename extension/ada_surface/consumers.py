@@ -2,9 +2,9 @@
 Redis Stream Consumers - Process async events from hive.
 
 Streams:
-    - ada:stream:thoughts    -> Persist to Kuzu + LanceDB
-    - ada:stream:episodes    -> Mark episode boundaries
-    - ada:stream:adaptations -> Style/qualia changes
+    - agi:stream:thoughts    -> Persist to Kuzu + LanceDB
+    - agi:stream:episodes    -> Mark episode boundaries
+    - agi:stream:adaptations -> Style/qualia changes
 """
 
 import asyncio
@@ -16,12 +16,12 @@ from .kuzu_client import KuzuClient
 from .lance_client import LanceClient
 
 # Stream names
-STREAM_THOUGHTS = "ada:stream:thoughts"
-STREAM_EPISODES = "ada:stream:episodes"
-STREAM_ADAPTATIONS = "ada:stream:adaptations"
+STREAM_THOUGHTS = "agi:stream:thoughts"
+STREAM_EPISODES = "agi:stream:episodes"
+STREAM_ADAPTATIONS = "agi:stream:adaptations"
 
 # Consumer group name
-CONSUMER_GROUP = "ada-agi-surface"
+CONSUMER_GROUP = "agi-stack"
 CONSUMER_NAME = "worker-1"
 
 
