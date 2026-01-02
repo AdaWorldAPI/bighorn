@@ -1,15 +1,15 @@
 # =============================================================================
-# Ada AGI Surface - Dockerfile
+# AGI Stack - Dockerfile
 # =============================================================================
-# Unified AGI interface: Kuzu + LanceDB + GraphQL + VSA + NARS
+# Unified AGI interface: Kuzu + LanceDB + GraphQL + VSA + NARS + MUL + Persona
 # Optimized for Railway deployment with minimal resource usage
 # =============================================================================
 
 FROM python:3.11-slim-bookworm
 
 # Labels
-LABEL maintainer="Ada AGI Team"
-LABEL description="Ada AGI Surface - Unified AGI interface"
+LABEL maintainer="AGI Stack Team"
+LABEL description="AGI Stack - Unified cognitive infrastructure"
 
 # Environment variables for minimal resource usage
 ENV PYTHONUNBUFFERED=1 \
@@ -40,14 +40,14 @@ RUN apt-get update && \
     apt-get clean
 
 # Copy requirements first for better caching
-COPY extension/ada_surface/requirements.txt /tmp/requirements.txt
+COPY extension/agi_stack/requirements.txt /tmp/requirements.txt
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt
 
 # Copy extension code
-COPY extension/ada_surface /app/extension/ada_surface
+COPY extension/agi_stack /app/extension/agi_stack
 
 # Set Python path
 ENV PYTHONPATH=/app
@@ -66,4 +66,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
 EXPOSE 8080
 
 # Start command
-CMD ["python", "-m", "uvicorn", "extension.ada_surface.main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1", "--limit-concurrency", "50", "--no-access-log"]
+CMD ["python", "-m", "uvicorn", "extension.agi_stack.main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1", "--limit-concurrency", "50", "--no-access-log"]
