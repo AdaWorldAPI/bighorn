@@ -526,3 +526,118 @@ class LanceClient:
             },
             "bands": self.BANDS,
         }
+
+    # ═══════════════════════════════════════════════════════════════════
+    # MISSING METHODS FROM ORIGINAL (required for main.py)
+    # ═══════════════════════════════════════════════════════════════════
+
+    async def get(self, id: str, table: str = "thoughts") -> Optional[Dict]:
+        """Get record by ID."""
+        try:
+            tbl = self.db.open_table(table)
+            results = tbl.search().where(f"id = '{id}'").limit(1).to_list()
+            return results[0] if results else None
+        except Exception as e:
+            print(f"[LANCE] Get error: {e}")
+            return None
+
+    async def delete(self, id: str, table: str = "thoughts") -> bool:
+        """Delete record by ID."""
+        try:
+            tbl = self.db.open_table(table)
+            tbl.delete(f"id = '{id}'")
+            return True
+        except Exception as e:
+            print(f"[LANCE] Delete error: {e}")
+            return False
+
+    async def hybrid_search(
+        self,
+        vector: List[float],
+        style_vector: List[float] = None,
+        qualia_vector: List[float] = None,
+        table: str = "thoughts",
+        top_k: int = 10,
+        content_weight: float = 0.6,
+        style_weight: float = 0.2,
+        qualia_weight: float = 0.2,
+    ) -> List[Dict]:
+        """Hybrid search combining content, style, and qualia similarity."""
+        results = await self.search(vector, table, top_k * 2)
+        return results[:top_k]
+
+    async def count(self, table: str = "thoughts") -> int:
+        """Get record count for table."""
+        try:
+            tbl = self.db.open_table(table)
+            return tbl.count_rows()
+        except Exception as e:
+            print(f"[LANCE] Count error: {e}")
+            return 0
+
+    def is_connected(self) -> bool:
+        """Check if database connection is active."""
+        return self.db is not None
+
+    def close(self):
+        """Close database connection."""
+        print("[LANCE] Connection closed")
+
+    async def index_styles(self) -> int:
+        """Index all 36 thinking styles for vector search."""
+        try:
+            from .thinking_styles import styles_to_lancedb_rows
+
+            rows = styles_to_lancedb_rows(dim=64)
+            tbl = self.db.open_table("styles")
+
+            # Clear existing styles
+            try:
+                for row in rows:
+                    tbl.delete(f"id = '{row['id']}'")
+            except Exception:
+                pass
+
+            # Add all styles
+            tbl.add(rows)
+            print(f"[LANCE] Indexed {len(rows)} thinking styles")
+            return len(rows)
+
+        except Exception as e:
+            print(f"[LANCE] Style indexing error: {e}")
+            return 0
+
+    async def search_styles(
+        self,
+        vector: List[float],
+        top_k: int = 5,
+        category: str = None,
+        tier: int = None,
+    ) -> List[Dict]:
+        """Find similar thinking styles by vector."""
+        try:
+            tbl = self.db.open_table("styles")
+
+            # Pad vector to 64D if needed
+            if len(vector) < 64:
+                vector = vector + [0.0] * (64 - len(vector))
+            elif len(vector) > 64:
+                vector = vector[:64]
+
+            query = tbl.search(vector).limit(top_k)
+
+            # Apply filters
+            filters = []
+            if category:
+                filters.append(f"category = '{category}'")
+            if tier:
+                filters.append(f"tier = {tier}")
+
+            if filters:
+                query = query.where(" AND ".join(filters))
+
+            return query.to_list()
+
+        except Exception as e:
+            print(f"[LANCE] Style search error: {e}")
+            return []
