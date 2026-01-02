@@ -2,7 +2,7 @@
 Universal DTOs — AGI-Agnostic Data Transfer Objects
 
 These DTOs define the contract between ANY AGI client and the Bighorn AGI Surface.
-Ada wears this glove first, but it fits any future AGI.
+Any AGI can wear this glove.
 
 Design Principles:
     1. No agent-specific logic in bighorn
