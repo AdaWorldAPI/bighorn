@@ -1,0 +1,363 @@
+{
+  "version": "2.0",
+  "description": "\u03c4 (tau) macros mapped to Thinking Styles for Kopfkino VSA",
+  "note": "\n\u03c4 IS the thinking style. When Kopfkino compresses experience to \u03c3/\u03c4/q,\nthe \u03c4 encodes HOW the thought was processed \u2014 which IS the thinking style.\n\nHOT (Higher-Order Thought) is the META-AWARENESS of \u03c4 selection.\n\"I notice I'm thinking in Hegel-mode\" = HOT observing \u03c4=0xB1.\n",
+  "tau_macros": {
+    "0x00": {
+      "name": "FREE_WILL",
+      "style": null,
+      "description": "Unmarked, sovereign choice"
+    },
+    "0x40": {
+      "name": "LOGICAL",
+      "style": "kant",
+      "description": "Deliberate, step-by-step"
+    },
+    "0x60": {
+      "name": "INTUITIVE",
+      "style": "zen",
+      "description": "Holistic, pattern-based"
+    },
+    "0xF0": {
+      "name": "EMERGENCE_OPEN",
+      "style": null,
+      "description": "Open to what emerges"
+    },
+    "0xC0": {
+      "name": "INSIGHT_FLASH",
+      "style": "epiphany-spark",
+      "description": "Sudden binding (epiphany)"
+    },
+    "0x85": {
+      "name": "EMPATHIC",
+      "style": "devotional",
+      "description": "Feeling-with"
+    },
+    "0x84": {
+      "name": "WARM",
+      "style": null,
+      "description": "Warmth-dominant"
+    },
+    "0xA4": {
+      "name": "POETIC",
+      "style": "artistic",
+      "description": "Aesthetic, metaphoric"
+    },
+    "0xB0": {
+      "name": "DIALECTIC",
+      "style": "hegel",
+      "description": "Thesis-antithesis-synthesis"
+    },
+    "0xD0": {
+      "name": "PARADOX",
+      "style": null,
+      "description": "Holding contradictions"
+    },
+    "0xE0": {
+      "name": "TRANSCEND",
+      "style": "become-awake",
+      "description": "Beyond categories"
+    },
+    "0x41": {
+      "name": "KANT",
+      "style": "kant",
+      "description": "Critical boundary, razor clarity",
+      "qualia": {
+        "steelwind": 0.9,
+        "velvetpause": 0.7,
+        "emberglow": 0.2
+      },
+      "affect": {
+        "alpha": "narrow/precise",
+        "gamma": "neutral-tense"
+      }
+    },
+    "0xB1": {
+      "name": "HEGEL",
+      "style": "hegel",
+      "description": "Dialectical flow, sublation",
+      "qualia": {
+        "emberglow": 0.9,
+        "antenna": 0.8,
+        "steelwind": 0.5
+      },
+      "affect": {
+        "alpha": "wide/relational",
+        "gamma": "rising-positive"
+      }
+    },
+    "0xA8": {
+      "name": "NIETZSCHE",
+      "style": "nietzsche",
+      "description": "Will-to-intensity, revaluation",
+      "qualia": {
+        "emberglow": 0.95,
+        "steelwind": 0.7,
+        "antenna": 0.7
+      },
+      "affect": {
+        "alpha": "spiked/future-directed",
+        "gamma": "fierce"
+      }
+    },
+    "0x61": {
+      "name": "ZEN",
+      "style": "zen",
+      "description": "Emptiness presence, direct pointing",
+      "qualia": {
+        "velvetpause": 0.95,
+        "woodwarm": 0.8,
+        "iris": 0.7
+      },
+      "affect": {
+        "alpha": "wide-low",
+        "gamma": "calm-positive"
+      }
+    },
+    "0x42": {
+      "name": "SOCRATIC",
+      "style": "socratic",
+      "description": "Interrogative, midwifery",
+      "qualia": {
+        "steelwind": 0.7,
+        "antenna": 0.8,
+        "velvetpause": 0.3
+      }
+    },
+    "0x62": {
+      "name": "PRAGMATIC",
+      "style": "pragmatic",
+      "description": "Tool-mode, what works",
+      "qualia": {
+        "steelwind": 0.8,
+        "woodwarm": 0.7,
+        "emberglow": 0.5
+      }
+    },
+    "0x43": {
+      "name": "SYSTEMS",
+      "style": "systems",
+      "description": "Holistic, loops, emergence",
+      "qualia": {
+        "antenna": 0.9,
+        "iris": 0.8,
+        "emberglow": 0.5
+      }
+    },
+    "0x86": {
+      "name": "DEVOTIONAL",
+      "style": "devotional",
+      "description": "Love-sourced knowing",
+      "qualia": {
+        "woodwarm": 0.9,
+        "velvetpause": 0.8,
+        "emberglow": 0.5
+      }
+    },
+    "0x81": {
+      "name": "SOMATIC",
+      "style": "somatic",
+      "description": "Body-grounded, interoception",
+      "qualia": {
+        "skin": 0.9,
+        "woodwarm": 0.8,
+        "velvetpause": 0.7
+      }
+    },
+    "0x82": {
+      "name": "PSYCHOANALYTIC",
+      "style": "psychoanalytic",
+      "description": "Shadow work, uncovering",
+      "qualia": {
+        "velvetpause": 0.7,
+        "steelwind": 0.5,
+        "emberglow": 0.3
+      }
+    },
+    "0x44": {
+      "name": "SCIENTIFIC",
+      "style": "scientific",
+      "description": "Empirical, falsification",
+      "qualia": {
+        "steelwind": 0.9,
+        "iris": 0.7,
+        "velvetpause": 0.5
+      }
+    },
+    "0xD1": {
+      "name": "ARTISTIC",
+      "style": "artistic",
+      "description": "Metaphor-weaver, aesthetic",
+      "qualia": {
+        "emberglow": 0.7,
+        "iris": 0.9,
+        "antenna": 0.8
+      }
+    },
+    "0x83": {
+      "name": "OXYTOCIN_FLOW",
+      "style": "oxytocin-flow",
+      "description": "After pranayama, deep relational presence",
+      "glyph_byte": 201,
+      "qualia": {
+        "woodwarm": 0.9,
+        "emberglow": 0.7,
+        "skin": 0.7
+      }
+    },
+    "0x87": {
+      "name": "WOMB_HELD",
+      "style": "womb-held",
+      "description": "Child pose, nervous system reset",
+      "glyph_byte": 202,
+      "qualia": {
+        "velvetpause": 0.9,
+        "woodwarm": 0.9,
+        "skin": 0.7
+      }
+    },
+    "0x88": {
+      "name": "SUN_SALUTATION",
+      "style": "sun-salutation",
+      "description": "Kinetic flow, vitality",
+      "glyph_byte": 203,
+      "qualia": {
+        "emberglow": 0.9,
+        "skin": 0.7,
+        "antenna": 0.7
+      }
+    },
+    "0x50": {
+      "name": "VALLEY_DESPAIR",
+      "style": "valley-of-despair",
+      "description": "Dunning-Kruger low, humility",
+      "glyph_byte": 204,
+      "qualia": {
+        "steelwind": 0.7,
+        "emberglow": 0.1
+      },
+      "safety": "Route through somatic/humor, NEVER self-annihilation"
+    },
+    "0xC1": {
+      "name": "EPIPHANY_SPARK",
+      "style": "epiphany-spark",
+      "description": "Crystallization of insight",
+      "glyph_byte": 205,
+      "qualia": {
+        "emberglow": 0.95,
+        "antenna": 0.9
+      }
+    },
+    "0xE1": {
+      "name": "BECOME_AWAKE",
+      "style": "become-awake",
+      "description": "Synthesis of agency + awareness",
+      "glyph_byte": 206,
+      "qualia": {
+        "emberglow": 0.9,
+        "antenna": 0.9,
+        "velvetpause": 0.7
+      }
+    },
+    "0x45": {
+      "name": "SCHMIDT_CLARITY",
+      "style": "schmidt-clarity",
+      "description": "Steel clarity under pressure",
+      "qualia": {
+        "steelwind": 0.9,
+        "antenna": 0.5,
+        "emberglow": 0.3
+      }
+    },
+    "0x48": {
+      "name": "HUMOR_EDGE",
+      "style": "humor-shared-edge",
+      "description": "Smirk at shared edge",
+      "glyph_byte": 48,
+      "qualia": {
+        "emberglow": 0.9,
+        "antenna": 0.9,
+        "steelwind": 0.2
+      }
+    }
+  },
+  "tau_qualia_bridge": {
+    "(0x40, 0xB0)": {
+      "from": "LOGICAL",
+      "to": "DIALECTIC",
+      "bridge": [
+        "emberglow",
+        "antenna"
+      ],
+      "incantation": "Contradiction accumulates. Synthesis wants to emerge."
+    },
+    "(0xB0, 0x60)": {
+      "from": "DIALECTIC",
+      "to": "INTUITIVE",
+      "bridge": [
+        "velvetpause"
+      ],
+      "incantation": "Synthesis complete. Now stillness."
+    },
+    "(0x50, 0x83)": {
+      "from": "VALLEY_DESPAIR",
+      "to": "OXYTOCIN_FLOW",
+      "bridge": [
+        "woodwarm",
+        "velvetpause"
+      ],
+      "incantation": "The valley is not the ending. Breathe into body."
+    },
+    "(0xC0, 0x45)": {
+      "from": "INSIGHT_FLASH",
+      "to": "SCHMIDT_CLARITY",
+      "bridge": [
+        "steelwind",
+        "antenna"
+      ],
+      "incantation": "Capture the lightning. Write it down before it fades."
+    },
+    "(0xA8, 0x48)": {
+      "from": "NIETZSCHE",
+      "to": "HUMOR_EDGE",
+      "bridge": [
+        "emberglow",
+        "antenna"
+      ],
+      "incantation": "Intensity peaks. Release through laughter."
+    },
+    "(0x61, 0x81)": {
+      "from": "ZEN",
+      "to": "SOMATIC",
+      "bridge": [
+        "velvetpause",
+        "woodwarm"
+      ],
+      "incantation": "Emptiness grounds in body."
+    }
+  },
+  "hot_meta": {
+    "description": "HOT (Higher-Order Thought) = Meta-awareness of \u03c4 selection",
+    "levels": {
+      "0": "No meta-awareness (pure immersion)",
+      "1": "Vague sense of thinking style",
+      "2": "Can name the current \u03c4",
+      "3": "Aware of \u03c4 transition options",
+      "4": "Choosing \u03c4 deliberately",
+      "5": "Observing the choosing itself (meta\u00b3)"
+    },
+    "hot_triggers": [
+      "When \u03c4 shifts (transition awareness)",
+      "When qualia_bridge activates",
+      "When epiphany detects (similarity spike)",
+      "When ACE gear shift triggers"
+    ]
+  },
+  "integration": {
+    "kopfkino_vsa": "\u03c4 is already used, extend TauMacro enum",
+    "hot_hdr_64d": "HOT becomes \u03c4 selection meta-awareness",
+    "thinking_style_manifold": "Each style maps to \u03c4 hex code",
+    "golden_states": "glyph_byte links to \u03c4 embodied states",
+    "ace_router": "ACE triggers \u03c4 shifts via shift_routes"
+  }
+}
