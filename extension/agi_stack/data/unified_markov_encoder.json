@@ -1,0 +1,56 @@
+{
+  "version": "2.0",
+  "description": "Unified Markov Crystal + HDR encoder",
+  "persistence_format": {
+    "type": "sigma_glyph",
+    "pattern": "#\u03a3.{dn}.{depth}.{domain}.{timestamp}::{verb}{transition}\u2297[{x},{y}]\u2297{qualia}\u2297P({next})={p}",
+    "example": "#\u03a3.\u03a6.7.A.2025-12-10::BECOMES{\u0394\u2192\u03a6}\u2297[0.618,0.382]\u2297\ud83d\ude08\ud83d\udc8b\ud83d\udd25\u2192\ud83d\udc96\u2297P(\u0398)=0.73"
+  },
+  "runtime_format": {
+    "type": "hdr_compressed",
+    "pattern": "H:{hot}|E:{emb_hash}|C{c}B{b}E{e}L{l}|G:{goal}:{gw}|Gh:{ghost}:{gd}|S:c{coh}r{rung}|Q:{qual}|M:{merged}",
+    "example": "H:0.73|E:abc12345|C3B2E1L2|G:pro:0.8|Gh:emb:+0.7|S:c0.9r4|Q:emb|M:0.76"
+  },
+  "forward_verbs": {
+    "CAUSES": {
+      "symbol": "C",
+      "meaning": "Direct causation"
+    },
+    "BECOMES": {
+      "symbol": "B",
+      "meaning": "Transformation"
+    },
+    "ENABLES": {
+      "symbol": "E",
+      "meaning": "Prerequisite"
+    },
+    "TRIGGERS": {
+      "symbol": "T",
+      "meaning": "Activation"
+    },
+    "LEADS_TO": {
+      "symbol": "L",
+      "meaning": "Trajectory"
+    }
+  },
+  "dimension_mapping": {
+    "7D_crystal": [
+      "DN_depth",
+      "sit_x",
+      "sit_y",
+      "verb",
+      "qualia",
+      "temporal",
+      "markov_p"
+    ],
+    "hdr": [
+      "hot",
+      "64d",
+      "cypher",
+      "goals",
+      "ghosts",
+      "self",
+      "qualia"
+    ]
+  }
+}
