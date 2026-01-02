@@ -1,12 +1,12 @@
 # =============================================================================
-# Railway Configuration - Ada AGI Surface
+# Railway Configuration - AGI Stack
 # =============================================================================
-# Unified AGI interface: Kuzu + LanceDB + GraphQL + VSA + NARS
+# Unified AGI interface: Kuzu + LanceDB + GraphQL + VSA + NARS + MUL + Persona
 # =============================================================================
 
 [build]
 builder = "dockerfile"
-dockerfilePath = "extension/ada_surface/Dockerfile"
+dockerfilePath = "extension/agi_stack/Dockerfile"
 
 [deploy]
 numReplicas = 1
