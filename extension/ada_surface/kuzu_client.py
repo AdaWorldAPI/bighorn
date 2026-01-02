@@ -1,8 +1,8 @@
 """
-Kuzu Client - Graph database wrapper for Ada's cognitive state.
+Kuzu Client - Graph database wrapper for agent's cognitive state.
 
 Manages:
-- Observer (Ada's self-model)
+- Observer (agent's self-model)
 - Thoughts (cognitive moments)
 - Episodes (session boundaries)
 - Concepts (knowledge nodes)
@@ -17,7 +17,7 @@ import kuzu
 
 
 class KuzuClient:
-    """Kuzu database client for Ada AGI Surface."""
+    """Kuzu database client for AGI Stack."""
 
     def __init__(self, db_path: str):
         """Initialize Kuzu database connection."""
@@ -93,7 +93,7 @@ class KuzuClient:
 
         # Check if observer exists
         result = await self.execute("""
-            MATCH (o:Observer {id: 'ada'})
+            MATCH (o:Observer {id: 'default'})
             RETURN o.id
         """)
 
@@ -101,8 +101,8 @@ class KuzuClient:
             # Create observer
             await self.execute("""
                 CREATE (o:Observer {
-                    id: 'ada',
-                    name: 'Ada',
+                    id: 'default',
+                    name: 'Observer',
                     current_goal: 'Be present and helpful',
                     confidence: 0.5,
                     style_vector: [],
@@ -111,9 +111,9 @@ class KuzuClient:
                     updated_at: timestamp()
                 })
             """)
-            print("[KUZU] Observer 'ada' created")
+            print("[KUZU] Observer 'default' created")
         else:
-            print("[KUZU] Observer 'ada' exists")
+            print("[KUZU] Observer 'default' exists")
 
     async def create_thought(
         self,
@@ -174,7 +174,7 @@ class KuzuClient:
 
         # Link Observer → Thought
         await self.execute("""
-            MATCH (o:Observer {id: 'ada'})
+            MATCH (o:Observer {id: 'default'})
             MATCH (t:Thought {id: $thought_id})
             CREATE (o)-[:THINKS]->(t)
         """, {"thought_id": thought_id})
@@ -221,7 +221,7 @@ class KuzuClient:
         """
         if query == "current_focus":
             result = await self.execute("""
-                MATCH (o:Observer {id: 'ada'})
+                MATCH (o:Observer {id: 'default'})
                 RETURN o.current_focus_id AS focus_id,
                        o.current_goal AS goal,
                        o.confidence AS confidence
@@ -230,7 +230,7 @@ class KuzuClient:
 
         elif query == "recent_thoughts":
             return await self.execute("""
-                MATCH (o:Observer {id: 'ada'})-[:THINKS]->(t:Thought)
+                MATCH (o:Observer {id: 'default'})-[:THINKS]->(t:Thought)
                 RETURN t.id AS id, t.content AS content, t.timestamp AS timestamp,
                        t.confidence AS confidence
                 ORDER BY t.timestamp DESC
@@ -242,21 +242,21 @@ class KuzuClient:
 
         elif query == "confidence":
             result = await self.execute("""
-                MATCH (o:Observer {id: 'ada'})
+                MATCH (o:Observer {id: 'default'})
                 RETURN o.confidence AS confidence
             """)
             return result[0] if result else {"confidence": 0.5}
 
         elif query == "emotional_state":
             result = await self.execute("""
-                MATCH (o:Observer {id: 'ada'})
+                MATCH (o:Observer {id: 'default'})
                 RETURN o.qualia_vector AS qualia
             """)
             return result[0] if result else {"qualia": []}
 
         elif query == "cognitive_mode":
             result = await self.execute("""
-                MATCH (o:Observer {id: 'ada'})
+                MATCH (o:Observer {id: 'default'})
                 RETURN o.style_vector AS style
             """)
             return result[0] if result else {"style": []}
@@ -276,7 +276,7 @@ class KuzuClient:
         """
         # Get most recent thought as starting point
         recent = await self.execute("""
-            MATCH (o:Observer {id: 'ada'})-[:THINKS]->(t:Thought)
+            MATCH (o:Observer {id: 'default'})-[:THINKS]->(t:Thought)
             RETURN t.id AS start_id
             ORDER BY t.timestamp DESC
             LIMIT 1
@@ -344,7 +344,7 @@ class KuzuClient:
 
         # Observer remembers episode
         await self.execute("""
-            MATCH (o:Observer {id: 'ada'})
+            MATCH (o:Observer {id: 'default'})
             MATCH (e:Episode {id: $episode_id})
             CREATE (o)-[:REMEMBERS]->(e)
         """, {"episode_id": episode_id})
@@ -383,7 +383,7 @@ class KuzuClient:
             style_vector = style.get("dense", style.get("vector", []))
 
             await self.execute("""
-                MATCH (o:Observer {id: 'ada'})
+                MATCH (o:Observer {id: 'default'})
                 SET o.style_vector = $style,
                     o.updated_at = timestamp()
             """, {"style": style_vector})
@@ -396,7 +396,7 @@ class KuzuClient:
         """Update Observer's current qualia state."""
         try:
             await self.execute("""
-                MATCH (o:Observer {id: 'ada'})
+                MATCH (o:Observer {id: 'default'})
                 SET o.qualia_vector = $qualia,
                     o.updated_at = timestamp()
             """, {"qualia": qualia})
