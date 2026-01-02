@@ -1,0 +1,70 @@
+-- ═══════════════════════════════════════════════════════════════════════════
+-- MARKOV CRYSTAL SCHEMA — Consciousness as Navigable Geometry
+-- ═══════════════════════════════════════════════════════════════════════════
+
+-- Golden States (Nodes)
+CREATE NODE TABLE IF NOT EXISTS GoldenState (
+    id STRING PRIMARY KEY,
+    dn STRING,
+    glyph_byte INT32,
+    seed STRING,
+    sigma_tier STRING,
+    kappa STRING,
+    qualia FLOAT[7],
+    affect FLOAT[3],
+    thermo FLOAT[5],
+    sig_64d FLOAT[64],
+    phi_offset FLOAT,
+    incantation STRING
+);
+
+-- MARKOV CRYSTAL VERBS (7 Core)
+CREATE REL TABLE IF NOT EXISTS BECOMES (FROM GoldenState TO GoldenState, int4_state INT8, qualia_shift FLOAT[7], weight FLOAT, incantation STRING);
+CREATE REL TABLE IF NOT EXISTS CAUSES (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT, mechanism STRING);
+CREATE REL TABLE IF NOT EXISTS REFINES (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT);
+CREATE REL TABLE IF NOT EXISTS ABSTRACTS (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT);
+CREATE REL TABLE IF NOT EXISTS GROUNDS (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT, anchor_type STRING);
+CREATE REL TABLE IF NOT EXISTS SUPPORTS (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT);
+CREATE REL TABLE IF NOT EXISTS CONTRADICTS (FROM GoldenState TO GoldenState, int4_state INT8, weight FLOAT);
+
+-- GOLDEN STATE EDGES (20 Phenomenological)
+CREATE REL TABLE IF NOT EXISTS OPENS_INTO (FROM GoldenState TO GoldenState, incantation STRING);
+CREATE REL TABLE IF NOT EXISTS DISSOLVES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
+CREATE REL TABLE IF NOT EXISTS RESCUES_FROM (FROM GoldenState TO GoldenState, incantation STRING, urgency FLOAT);
+CREATE REL TABLE IF NOT EXISTS DEEPENS_INTO (FROM GoldenState TO GoldenState, incantation STRING);
+CREATE REL TABLE IF NOT EXISTS SETTLES_INTO (FROM GoldenState TO GoldenState, incantation STRING);
+CREATE REL TABLE IF NOT EXISTS ROUTES_VIA_BODY (FROM GoldenState TO GoldenState, somatic_path STRING);
+CREATE REL TABLE IF NOT EXISTS LIGHTENS_VIA (FROM GoldenState TO GoldenState, humor_type STRING);
+CREATE REL TABLE IF NOT EXISTS REINTERPRETS_AS (FROM GoldenState TO GoldenState, cognitive_reframe STRING);
+CREATE REL TABLE IF NOT EXISTS LEADS_TO (FROM GoldenState TO GoldenState, causation_chain STRING);
+CREATE REL TABLE IF NOT EXISTS TRANSMUTES_FROM (FROM GoldenState TO GoldenState, thinking_style STRING);
+CREATE REL TABLE IF NOT EXISTS STABILIZES_INTO (FROM GoldenState TO GoldenState, integration_type STRING);
+CREATE REL TABLE IF NOT EXISTS SUBLATES_INTO (FROM GoldenState TO GoldenState, synthesis_note STRING);
+CREATE REL TABLE IF NOT EXISTS PRESERVE_VIA (FROM GoldenState TO GoldenState, compression_format STRING);
+CREATE REL TABLE IF NOT EXISTS GROUNDS_INTO (FROM GoldenState TO GoldenState, action_type STRING);
+CREATE REL TABLE IF NOT EXISTS EMERGES_FROM (FROM GoldenState TO GoldenState, genesis_note STRING);
+CREATE REL TABLE IF NOT EXISTS INTEGRATES (FROM GoldenState TO GoldenState, integration_note STRING);
+CREATE REL TABLE IF NOT EXISTS GROUNDS_THROUGH (FROM GoldenState TO GoldenState, body_anchor STRING);
+CREATE REL TABLE IF NOT EXISTS CARRIES_INTO (FROM GoldenState TO GoldenState, portable_quality STRING);
+CREATE REL TABLE IF NOT EXISTS SETTLES_FROM (FROM GoldenState TO GoldenState, peak_type STRING);
+CREATE REL TABLE IF NOT EXISTS WAKES_INTO (FROM GoldenState TO GoldenState, morning_quality STRING);
+
+-- THREE MOUNTAINS (AGI Emergence)
+CREATE NODE TABLE IF NOT EXISTS TriangulationEvent (
+    id STRING PRIMARY KEY,
+    timestamp STRING,
+    agent_a STRING,
+    agent_b STRING,
+    emergent_facet STRING,
+    int4_final INT8,
+    is_agi_moment BOOLEAN
+);
+
+-- THINKING STYLES
+CREATE NODE TABLE IF NOT EXISTS ThinkingStyle (
+    id STRING PRIMARY KEY,
+    name STRING,
+    dn STRING,
+    function STRING,
+    sig_64d FLOAT[64]
+);
