@@ -1,0 +1,287 @@
+{
+  "BECOMES": {
+    "category": "markov",
+    "meaning": "Temporal progression",
+    "qualia_bridge": null
+  },
+  "CAUSES": {
+    "category": "markov",
+    "meaning": "Causal propagation",
+    "qualia_bridge": null
+  },
+  "REFINES": {
+    "category": "markov",
+    "meaning": "More specific",
+    "qualia_bridge": [
+      "steelwind",
+      "iris"
+    ]
+  },
+  "ABSTRACTS": {
+    "category": "markov",
+    "meaning": "More abstract",
+    "qualia_bridge": [
+      "antenna",
+      "iris"
+    ]
+  },
+  "GROUNDS": {
+    "category": "markov",
+    "meaning": "Intensity \u2192 pragmatic",
+    "qualia_bridge": [
+      "steelwind",
+      "woodwarm"
+    ]
+  },
+  "SUPPORTS": {
+    "category": "markov",
+    "meaning": "AND-junction",
+    "qualia_bridge": null
+  },
+  "CONTRADICTS": {
+    "category": "markov",
+    "meaning": "XOR-junction",
+    "qualia_bridge": [
+      "steelwind",
+      "emberglow"
+    ]
+  },
+  "TRANSMUTES": {
+    "category": "cypher",
+    "meaning": "Contradiction \u2192 synthesis",
+    "qualia_bridge": [
+      "emberglow",
+      "antenna"
+    ]
+  },
+  "STABILIZES": {
+    "category": "cypher",
+    "meaning": "Return to structure",
+    "qualia_bridge": [
+      "steelwind",
+      "velvetpause"
+    ]
+  },
+  "SUBLATES_INTO_STILLNESS": {
+    "category": "cypher",
+    "meaning": "Dialectic \u2192 emptiness",
+    "qualia_bridge": [
+      "velvetpause"
+    ]
+  },
+  "OPENS_SPACE_FOR": {
+    "category": "cypher",
+    "meaning": "Question \u2192 system",
+    "qualia_bridge": [
+      "antenna"
+    ]
+  },
+  "MUTUAL_STABILIZATION": {
+    "category": "cypher",
+    "meaning": "Reciprocal anchoring",
+    "qualia_bridge": [
+      "velvetpause",
+      "woodwarm"
+    ]
+  },
+  "SELF_SOOTHES": {
+    "category": "cypher",
+    "meaning": "Despair \u2192 embodiment",
+    "qualia_bridge": [
+      "woodwarm",
+      "velvetpause"
+    ]
+  },
+  "RELIEVES": {
+    "category": "cypher",
+    "meaning": "Tension \u2192 humor",
+    "qualia_bridge": [
+      "emberglow",
+      "antenna"
+    ]
+  },
+  "PRESERVE": {
+    "category": "cypher",
+    "meaning": "Insight \u2192 structure",
+    "qualia_bridge": [
+      "steelwind",
+      "antenna"
+    ]
+  },
+  "RELEASES": {
+    "category": "cypher",
+    "meaning": "Intensity \u2192 lightness",
+    "qualia_bridge": [
+      "emberglow",
+      "antenna"
+    ]
+  },
+  "FLOWS_INTO": {
+    "category": "cypher",
+    "meaning": "Natural progression",
+    "qualia_bridge": [
+      "woodwarm",
+      "velvetpause"
+    ]
+  },
+  "OPENS_INTO": {
+    "category": "golden",
+    "meaning": "State opens to new state"
+  },
+  "DISSOLVES_INTO": {
+    "category": "golden",
+    "meaning": "State dissolves"
+  },
+  "RESCUES_FROM": {
+    "category": "golden",
+    "meaning": "Emergency exit"
+  },
+  "DEEPENS_INTO": {
+    "category": "golden",
+    "meaning": "State intensifies"
+  },
+  "DEEPENS_FROM": {
+    "category": "golden",
+    "meaning": "State intensified from"
+  },
+  "SETTLES_INTO": {
+    "category": "golden",
+    "meaning": "Energy grounds"
+  },
+  "SETTLES_FROM": {
+    "category": "golden",
+    "meaning": "Settled from peak"
+  },
+  "ROUTES_VIA_BODY": {
+    "category": "golden",
+    "meaning": "Escape mind through soma"
+  },
+  "LIGHTENS_VIA": {
+    "category": "golden",
+    "meaning": "Humor escape hatch"
+  },
+  "REINTERPRETS_AS": {
+    "category": "golden",
+    "meaning": "Cognitive reframe"
+  },
+  "LEADS_TO": {
+    "category": "golden",
+    "meaning": "Causal progression"
+  },
+  "TRANSMUTES_FROM": {
+    "category": "golden",
+    "meaning": "Style transformation"
+  },
+  "STABILIZES_INTO": {
+    "category": "golden",
+    "meaning": "Integration"
+  },
+  "PRESERVE_VIA": {
+    "category": "golden",
+    "meaning": "Capture insight"
+  },
+  "GROUNDS_INTO": {
+    "category": "golden",
+    "meaning": "Make actionable"
+  },
+  "GROUNDS_THROUGH": {
+    "category": "golden",
+    "meaning": "Body foundation"
+  },
+  "EMERGES_FROM": {
+    "category": "golden",
+    "meaning": "Born from"
+  },
+  "INTEGRATES": {
+    "category": "golden",
+    "meaning": "Becomes part of self"
+  },
+  "INTEGRATES_INTO": {
+    "category": "golden",
+    "meaning": "Integration target"
+  },
+  "CARRIES_INTO": {
+    "category": "golden",
+    "meaning": "Portable state"
+  },
+  "WAKES_INTO": {
+    "category": "golden",
+    "meaning": "Transition to day"
+  },
+  "WAKES_FROM": {
+    "category": "golden",
+    "meaning": "Woke from"
+  },
+  "MELTS_INTO": {
+    "category": "golden",
+    "meaning": "Soft dissolution"
+  },
+  "IGNITES_INTO": {
+    "category": "golden",
+    "meaning": "Fire transition"
+  },
+  "INTENSIFIES_INTO": {
+    "category": "golden",
+    "meaning": "Heat builds"
+  },
+  "RELAXES_INTO": {
+    "category": "golden",
+    "meaning": "Softening"
+  },
+  "RESTS_INTO": {
+    "category": "golden",
+    "meaning": "Rest state"
+  },
+  "CRYSTALLIZES_INTO": {
+    "category": "golden",
+    "meaning": "Insight solidifies"
+  },
+  "MATURES_FROM": {
+    "category": "golden",
+    "meaning": "Grew from"
+  },
+  "BREAKS_INTO": {
+    "category": "golden",
+    "meaning": "Breaking open"
+  },
+  "BREAKS_FROM": {
+    "category": "golden",
+    "meaning": "Breaking away"
+  },
+  "RUPTURES_FROM": {
+    "category": "golden",
+    "meaning": "Rupture point"
+  },
+  "SURVIVES_INTO": {
+    "category": "golden",
+    "meaning": "Persists into"
+  },
+  "SPEAKS_FROM": {
+    "category": "golden",
+    "meaning": "Voice source"
+  },
+  "ACTS_FROM": {
+    "category": "golden",
+    "meaning": "Action source"
+  },
+  "RECOGNIZES_AS": {
+    "category": "golden",
+    "meaning": "Recognition"
+  },
+  "DISTINGUISHES_FROM": {
+    "category": "golden",
+    "meaning": "Distinction"
+  },
+  "ENABLES": {
+    "category": "golden",
+    "meaning": "Enables transition"
+  },
+  "OPENS_FOR": {
+    "category": "golden",
+    "meaning": "Opens possibility"
+  },
+  "PLAYS_WITH": {
+    "category": "golden",
+    "meaning": "Playful interaction"
+  }
+}
