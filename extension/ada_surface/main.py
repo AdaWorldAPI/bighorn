@@ -1,14 +1,15 @@
 """
-Ada AGI Surface - Unified wrapper for Kuzu + LanceDB + GraphQL + VSA + NARS
+AGI Stack - Agent-Agnostic Cognitive Infrastructure - Unified wrapper for Kuzu + LanceDB + GraphQL + VSA + NARS
 
 Endpoints:
     /agi/graph/*     -> Kuzu (Cypher queries)
     /agi/vector/*    -> LanceDB (similarity search)
     /agi/gql         -> GraphQL (flexible queries)
-    /agi/self/*      -> Ada's self-model
+    /agi/self/*      -> Agent's self-model
     /agi/vsa/*       -> Vector Symbolic Architecture
     /agi/nars/*      -> NARS inference
     /health          -> Health check
+    /agi/mul/*       -> Meta-Uncertainty Layer
 """
 
 import os
@@ -28,6 +29,8 @@ from .consumers import start_consumers
 from .vsa import HypervectorSpace, CognitivePrimitives
 from .nars import NARSReasoner
 from .thinking_styles import ResonanceEngine, STYLES, get_style, all_styles, RI
+from .meta_uncertainty import MetaUncertaintyEngine, TrustTexture, CompassMode
+from .persona import PersonaEngine, PersonaPriors, SoulField, OntologicalMode, InternalModel
 
 # =============================================================================
 # CONFIGURATION
@@ -121,6 +124,31 @@ class StyleSearchRequest(BaseModel):
     tier: Optional[int] = None
 
 
+
+class PersonaModeRequest(BaseModel):
+    """Set ontological mode."""
+    mode: str  # hybrid, empathic, work, creative, meta
+
+
+class PersonaPriorsRequest(BaseModel):
+    """Update persona priors."""
+    warmth: Optional[float] = None
+    depth: Optional[float] = None
+    presence: Optional[float] = None
+    groundedness: Optional[float] = None
+    intimacy_comfort: Optional[float] = None
+    playfulness: Optional[float] = None
+
+class MULUpdateRequest(BaseModel):
+    """Update Meta-Uncertainty Layer state."""
+    g_value: float
+    depth: float = 0.5
+    coherence: float = 0.5
+    clarity: float = 0.5
+    presence: float = 0.5
+
+
+
 # =============================================================================
 # LIFESPAN
 # =============================================================================
@@ -146,6 +174,12 @@ async def lifespan(app: FastAPI):
     print("[AGI] Initializing Resonance Engine")
     app.state.resonance = ResonanceEngine()
 
+    print("[AGI] Initializing Meta-Uncertainty Layer")
+    app.state.mul = MetaUncertaintyEngine()
+
+
+    print("[AGI] Initializing Persona Engine")
+    app.state.persona = PersonaEngine(agent_id="default", agent_name="Agent")
     # Initialize Kuzu schema and Observer
     await app.state.kuzu.init_observer()
 
@@ -191,7 +225,7 @@ async def lifespan(app: FastAPI):
 # =============================================================================
 
 app = FastAPI(
-    title="Ada AGI Surface",
+    title="AGI Stack - Agent-Agnostic Cognitive Infrastructure",
     description="Unified AGI interface: Kuzu + LanceDB + GraphQL + VSA + NARS",
     version="1.0.0",
     lifespan=lifespan,
@@ -673,6 +707,96 @@ async def get_style_chains(style_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# =============================================================================
+# META-UNCERTAINTY LAYER
+# =============================================================================
+
+@app.post("/agi/mul/update")
+async def mul_update(request: MULUpdateRequest):
+    """
+    Update Meta-Uncertainty Layer state.
+    
+    Computes trust texture, compass mode, and action constraints.
+    """
+    try:
+        state = app.state.mul.update(
+            g_value=request.g_value,
+            depth=request.depth,
+            coherence=request.coherence,
+            clarity=request.clarity,
+            presence=request.presence,
+        )
+        constraints = app.state.mul.get_action_constraints()
+        return {"ok": True, "state": state.to_dict(), "constraints": constraints}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/agi/mul/state")
+async def mul_get_state():
+    """Get current MUL state."""
+    state = app.state.mul.state
+    constraints = app.state.mul.get_action_constraints()
+    return {"ok": True, "state": state.to_dict(), "constraints": constraints}
+
+
+@app.get("/agi/mul/constraints")
+async def mul_get_constraints():
+    """Get current action constraints from MUL."""
+    return {"ok": True, "constraints": app.state.mul.get_action_constraints()}
+
+
+@app.post("/agi/mul/reset")
+async def mul_reset():
+    """Reset MUL to default state."""
+    app.state.mul.reset()
+    return {"ok": True, "message": "MUL reset"}
+
+
+
+# =============================================================================
+# PERSONA
+# =============================================================================
+
+@app.get("/agi/persona")
+async def get_persona():
+    """Get current persona state."""
+    return {"ok": True, "persona": app.state.persona.to_dict()}
+
+
+@app.post("/agi/persona/mode")
+async def set_persona_mode(request: PersonaModeRequest):
+    """Set ontological mode (hybrid, empathic, work, creative, meta)."""
+    try:
+        mode = OntologicalMode(request.mode)
+        priors = app.state.persona.set_mode(mode)
+        return {"ok": True, "mode": mode.value, "priors": priors.to_dict()}
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Unknown mode: {request.mode}")
+
+
+@app.get("/agi/persona/texture")
+async def get_persona_texture():
+    """Get texture for ResonanceEngine from current persona."""
+    texture = app.state.persona.get_texture_for_resonance()
+    return {"ok": True, "texture": texture}
+
+
+@app.post("/agi/persona/configure")
+async def configure_persona(config: Dict[str, Any]):
+    """
+    Configure persona from external config.
+    
+    Allows runtime personality configuration without code changes.
+    """
+    try:
+        app.state.persona = PersonaEngine.from_config(config)
+        return {"ok": True, "persona": app.state.persona.to_dict()}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+
 
 # =============================================================================
 # HEALTH
@@ -694,8 +818,8 @@ async def health():
 async def root():
     """Root endpoint."""
     return {
-        "service": "ada-agi-surface",
-        "version": "1.1.0",
+        "service": "agi-stack",
+        "version": "2.1.0",
         "endpoints": {
             "graph": "/agi/graph/*",
             "vector": "/agi/vector/*",
@@ -704,6 +828,8 @@ async def root():
             "vsa": "/agi/vsa/*",
             "nars": "/agi/nars/*",
             "styles": "/agi/styles/*",
+            "mul": "/agi/mul/*",
+            "persona": "/agi/persona/*",
         },
         "docs": "/docs",
     }
