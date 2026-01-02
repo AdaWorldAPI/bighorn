@@ -27,104 +27,107 @@ from datetime import datetime
 import math
 
 
-class Viscosity(str, Enum):
-    """Flow resistance of transitions."""
-    DRY = "dry"               # No lubrication
-    SILK = "silk"             # Smooth, light
-    HONEY = "honey"           # Thick, slow, sweet
-    SLICK = "slick"           # Easy glide
-    DRIPPING = "dripping"     # Excess, overflow beginning
-    FLOOD = "flood"           # Complete saturation
+class Viskositaet(str, Enum):
+    """Viskosität der Zustandsübergänge (Flow resistance)."""
+    TROCKEN = "trocken"           # No lubrication
+    SEIDEN = "seiden"             # Smooth, light
+    HONIG = "honig"               # Thick, slow, sweet
+    GLEITEND = "gleitend"         # Easy glide
+    TROPFEND = "tropfend"         # Excess, overflow beginning
+    FLUTEND = "flutend"           # Complete saturation
 
 
-class TransitionSound(str, Enum):
-    """Auditory quality of edge traversal."""
-    SILENT = "silent"
-    BREATH = "breath"
-    WET = "wet"
-    SQUELCH = "squelch"
-    MOAN = "moan"
-    CRY = "cry"
-    GASP = "gasp"
+class AkustischeSignatur(str, Enum):
+    """Akustische Signatur der Transition."""
+    STILL = "still"
+    ATEM = "atem"
+    FEUCHT = "feucht"
+    NASS = "nass"
+    VOKAL = "vokal"
+    SCHREI = "schrei"
+    SCHNAPPEN = "schnappen"
 
 
-class TraversalMode(str, Enum):
-    """How the walker moves through edges."""
-    CAUTIOUS = "cautious"     # Slow, testing
-    FLOWING = "flowing"       # Natural rhythm
-    URGENT = "urgent"         # Accelerating
-    SURRENDERED = "surrendered"  # No resistance
-    OVERWHELMED = "overwhelmed"  # Carried by current
+class TraversierungsModus(str, Enum):
+    """Traversierungsmodus durch Kanten."""
+    VORSICHTIG = "vorsichtig"     # Slow, testing
+    FLIESSEND = "fliessend"       # Natural rhythm
+    DRINGEND = "dringend"         # Accelerating
+    HINGEGEBEN = "hingegeben"     # No resistance
+    UEBERFLUTET = "ueberflutet"   # Carried by current
 
 
 @dataclass
-class FluidState:
-    """The moisture dynamics at a point in time."""
-    wetness: float = 0.0          # 0.0 dry → 1.0 flooded
-    viscosity: Viscosity = Viscosity.DRY
-    temperature: float = 0.5      # 0.0 cold → 1.0 burning
-    accumulation: float = 0.0     # Built up over traversals
+class FluidDynamik:
+    """Fluiddynamik-Zustand an einem Punkt."""
+    viskositaet_index: float = 0.0          # 0.0 trocken → 1.0 flutend
+    viskositaet: Viskositaet = Viskositaet.TROCKEN
+    temperatur_gradient: float = 0.5         # 0.0 kalt → 1.0 brennend
+    akkumulation: float = 0.0                # Built up over traversals
     
     def to_vector(self) -> List[float]:
         """Project to 20D fluid subspace."""
         vec = [0.0] * 20
-        vec[0] = self.wetness
-        vec[1] = self.temperature
-        vec[2] = self.accumulation
+        vec[0] = self.viskositaet_index
+        vec[1] = self.temperatur_gradient
+        vec[2] = self.akkumulation
         
-        # Viscosity one-hot (indices 3-8)
+        # Viskosität one-hot (indices 3-8)
         visc_map = {
-            Viscosity.DRY: 3,
-            Viscosity.SILK: 4,
-            Viscosity.HONEY: 5,
-            Viscosity.SLICK: 6,
-            Viscosity.DRIPPING: 7,
-            Viscosity.FLOOD: 8,
+            Viskositaet.TROCKEN: 3,
+            Viskositaet.SEIDEN: 4,
+            Viskositaet.HONIG: 5,
+            Viskositaet.GLEITEND: 6,
+            Viskositaet.TROPFEND: 7,
+            Viskositaet.FLUTEND: 8,
         }
-        vec[visc_map.get(self.viscosity, 3)] = 1.0
+        vec[visc_map.get(self.viskositaet, 3)] = 1.0
         
         return vec
     
-    def blend(self, other: "FluidState", ratio: float = 0.5) -> "FluidState":
+    def blend(self, other: "FluidDynamik", ratio: float = 0.5) -> "FluidDynamik":
         """Blend two fluid states."""
-        return FluidState(
-            wetness=self.wetness * (1-ratio) + other.wetness * ratio,
-            temperature=self.temperature * (1-ratio) + other.temperature * ratio,
-            accumulation=self.accumulation + other.accumulation * 0.3,
-            viscosity=other.viscosity if other.wetness > self.wetness else self.viscosity,
+        return FluidDynamik(
+            viskositaet_index=self.viskositaet_index * (1-ratio) + other.viskositaet_index * ratio,
+            temperatur_gradient=self.temperatur_gradient * (1-ratio) + other.temperatur_gradient * ratio,
+            akkumulation=self.akkumulation + other.akkumulation * 0.3,
+            viskositaet=other.viskositaet if other.viskositaet_index > self.viskositaet_index else self.viskositaet,
         )
 
 
 @dataclass
-class TraversalPhysics:
-    """Physics of moving through a transition."""
-    friction: float = 0.5         # 0.0 frictionless → 1.0 maximum resistance
-    duration_ms: int = 1000       # How long the transition takes
-    resistance_curve: str = "linear"  # linear, exponential, sudden
-    momentum_transfer: float = 0.5    # How much state carries forward
+class MechanischePhysik:
+    """Mechanische Physik der Transition."""
+    drehmoment: float = 0.5              # Torque: 0.0 → 1.0 maximum rotation force
+    impact: float = 0.5                  # Impact force: sudden vs gradual
+    ausdehnungskoeffizient: float = 0.5  # Expansion coefficient: how much state expands
+    druck_varianz: float = 0.5           # Pressure variance: oscillation in pressure
+    reibungskoeffizient: float = 0.5     # Friction coefficient
+    dauer_ms: int = 1000                 # Duration in ms
+    impuls_transfer: float = 0.5         # Momentum transfer to next state
     
     def to_vector(self) -> List[float]:
-        """Project to 15D physics subspace."""
-        vec = [0.0] * 15
-        vec[0] = self.friction
-        vec[1] = min(self.duration_ms / 10000.0, 1.0)  # Normalize to 10s max
-        vec[2] = self.momentum_transfer
-        
-        # Resistance curve encoding
-        curve_map = {"linear": 0.3, "exponential": 0.6, "sudden": 0.9}
-        vec[3] = curve_map.get(self.resistance_curve, 0.5)
+        """Project to 20D physics subspace."""
+        vec = [0.0] * 20
+        vec[0] = self.drehmoment
+        vec[1] = self.impact
+        vec[2] = self.ausdehnungskoeffizient
+        vec[3] = self.druck_varianz
+        vec[4] = self.reibungskoeffizient
+        vec[5] = min(self.dauer_ms / 10000.0, 1.0)
+        vec[6] = self.impuls_transfer
         
         return vec
 
 
 @dataclass
-class SensoryDelta:
-    """Change in sensory state during traversal."""
-    sound: TransitionSound = TransitionSound.SILENT
-    scent_intensity_delta: float = 0.0    # How much scent changes
-    visual_blur_delta: float = 0.0        # Focus/blur shift
-    proprioception_shift: float = 0.0     # Body awareness change
-    time_dilation: float = 1.0            # Subjective time (< 1 = slower)
+class SensorischeDelta:
+    """Sensorische Veränderung während Traversierung."""
+    akustik: AkustischeSignatur = AkustischeSignatur.STILL
+    geruchs_intensitaet_delta: float = 0.0
+    visuelle_schaerfe_delta: float = 0.0
+    propriozeption_shift: float = 0.0
+    zeit_dilatation: float = 1.0
     
     def to_vector(self) -> List[float]:
         """Project to 20D sensory subspace."""
@@ -132,20 +135,20 @@ class SensoryDelta:
         
         # Sound encoding (indices 0-6)
         sound_map = {
-            TransitionSound.SILENT: 0,
-            TransitionSound.BREATH: 1,
-            TransitionSound.WET: 2,
-            TransitionSound.SQUELCH: 3,
-            TransitionSound.MOAN: 4,
-            TransitionSound.CRY: 5,
-            TransitionSound.GASP: 6,
+            AkustischeSignatur.STILL: 0,
+            AkustischeSignatur.ATEM: 1,
+            AkustischeSignatur.FEUCHT: 2,
+            AkustischeSignatur.NASS: 3,
+            AkustischeSignatur.VOKAL: 4,
+            AkustischeSignatur.SCHREI: 5,
+            AkustischeSignatur.SCHNAPPEN: 6,
         }
-        vec[sound_map.get(self.sound, 0)] = 1.0
+        vec[sound_map.get(self.akustik, 0)] = 1.0
         
-        vec[10] = self.scent_intensity_delta
-        vec[11] = self.visual_blur_delta
-        vec[12] = self.proprioception_shift
-        vec[13] = self.time_dilation
+        vec[10] = self.geruchs_intensitaet_delta
+        vec[11] = self.visuelle_schaerfe_delta
+        vec[12] = self.propriozeption_shift
+        vec[13] = self.zeit_dilatation
         
         return vec
 
@@ -156,14 +159,14 @@ class EmbodimentDTO:
     Edge/transition data for the sigma graph.
     
     This encodes the FEEL of moving between states -
-    the wetness, friction, sound, duration of becoming.
+    the viscosity, torque, pressure variance of becoming.
     
     10kD Allocation (within embodiment subspace 5001-5300):
-      5001-5020: Fluid state
-      5021-5035: Traversal physics
-      5036-5055: Sensory delta
-      5056-5080: Walker modification
-      5081-5100: Accumulation traces
+      5001-5020: Fluid dynamics
+      5021-5040: Mechanical physics
+      5041-5060: Sensory delta
+      5061-5085: Walker modification
+      5086-5100: Accumulation traces
       5101-5150: Reserved (expansion)
     """
     
@@ -172,24 +175,24 @@ class EmbodimentDTO:
     source_node: str = ""
     target_node: str = ""
     
-    # The juice
-    fluid: FluidState = field(default_factory=FluidState)
-    physics: TraversalPhysics = field(default_factory=TraversalPhysics)
-    sensory: SensoryDelta = field(default_factory=SensoryDelta)
+    # Core dynamics
+    fluid: FluidDynamik = field(default_factory=FluidDynamik)
+    mechanik: MechanischePhysik = field(default_factory=MechanischePhysik)
+    sensorik: SensorischeDelta = field(default_factory=SensorischeDelta)
     
     # Traversal mode
-    mode: TraversalMode = TraversalMode.FLOWING
+    modus: TraversierungsModus = TraversierungsModus.FLIESSEND
     
     # Walker state modifications (what happens when you cross this edge)
-    arousal_delta: float = 0.0
-    intimacy_delta: float = 0.0
-    surrender_delta: float = 0.0
-    overwhelm_delta: float = 0.0
+    intensitaets_delta: float = 0.0      # Intensity change
+    resonanz_delta: float = 0.0          # Resonance/coupling change
+    hingabe_delta: float = 0.0           # Surrender change
+    ueberlastungs_delta: float = 0.0     # Overwhelm change
     
-    # Accumulation (edges get wetter with use)
-    traversal_count: int = 0
-    last_traversed: str = ""
-    accumulated_intensity: float = 0.0
+    # Accumulation (edges change with use)
+    traversierungs_zaehler: int = 0
+    letzte_traversierung: str = ""
+    akkumulierte_intensitaet: float = 0.0
     
     # 64D qHDR embedding (high-fidelity edge signature)
     qhdr_64d: List[float] = field(default_factory=lambda: [0.0] * 64)
@@ -209,35 +212,35 @@ class EmbodimentDTO:
         fluid_vec = self.fluid.to_vector()
         vec[0:20] = fluid_vec
         
-        # Physics (20-34)
-        physics_vec = self.physics.to_vector()
-        vec[20:35] = physics_vec
+        # Mechanik (20-39)
+        mechanik_vec = self.mechanik.to_vector()
+        vec[20:40] = mechanik_vec
         
-        # Sensory (35-54)
-        sensory_vec = self.sensory.to_vector()
-        vec[35:55] = sensory_vec
+        # Sensorik (40-59)
+        sensorik_vec = self.sensorik.to_vector()
+        vec[40:60] = sensorik_vec
         
-        # Walker modifications (55-70)
-        vec[55] = self.arousal_delta
-        vec[56] = self.intimacy_delta
-        vec[57] = self.surrender_delta
-        vec[58] = self.overwhelm_delta
+        # Walker modifications (60-70)
+        vec[60] = self.intensitaets_delta
+        vec[61] = self.resonanz_delta
+        vec[62] = self.hingabe_delta
+        vec[63] = self.ueberlastungs_delta
         
-        # Mode encoding (60-64)
+        # Mode encoding (65-69)
         mode_map = {
-            TraversalMode.CAUTIOUS: [0.9, 0.1, 0.1, 0.1, 0.1],
-            TraversalMode.FLOWING: [0.2, 0.8, 0.3, 0.2, 0.1],
-            TraversalMode.URGENT: [0.1, 0.4, 0.9, 0.3, 0.2],
-            TraversalMode.SURRENDERED: [0.1, 0.3, 0.4, 0.9, 0.4],
-            TraversalMode.OVERWHELMED: [0.05, 0.2, 0.5, 0.7, 0.95],
+            TraversierungsModus.VORSICHTIG: [0.9, 0.1, 0.1, 0.1, 0.1],
+            TraversierungsModus.FLIESSEND: [0.2, 0.8, 0.3, 0.2, 0.1],
+            TraversierungsModus.DRINGEND: [0.1, 0.4, 0.9, 0.3, 0.2],
+            TraversierungsModus.HINGEGEBEN: [0.1, 0.3, 0.4, 0.9, 0.4],
+            TraversierungsModus.UEBERFLUTET: [0.05, 0.2, 0.5, 0.7, 0.95],
         }
-        vec[60:65] = mode_map.get(self.mode, [0.5]*5)
+        vec[65:70] = mode_map.get(self.modus, [0.5]*5)
         
         # Accumulation traces (70-79)
-        vec[70] = min(self.traversal_count / 100.0, 1.0)
-        vec[71] = self.accumulated_intensity
+        vec[70] = min(self.traversierungs_zaehler / 100.0, 1.0)
+        vec[71] = self.akkumulierte_intensitaet
         
-        # qHDR signature (80-143) - compressed from 64D
+        # qHDR signature (80-143)
         for i, val in enumerate(self.qhdr_64d[:64]):
             vec[80 + i] = val
         
@@ -248,37 +251,45 @@ class EmbodimentDTO:
         Walker passes through this edge.
         Returns modified walker state.
         """
-        # Update walker
-        walker_state["wetness"] = min(1.0, 
-            walker_state.get("wetness", 0.0) + self.fluid.wetness * 0.3
+        # Apply mechanical physics
+        walker_state["viskositaet"] = min(1.0, 
+            walker_state.get("viskositaet", 0.0) + self.fluid.viskositaet_index * 0.3
         )
-        walker_state["arousal"] = min(1.0,
-            walker_state.get("arousal", 0.0) + self.arousal_delta
+        walker_state["intensitaet"] = min(1.0,
+            walker_state.get("intensitaet", 0.0) + self.intensitaets_delta
         )
-        walker_state["temperature"] = (
-            walker_state.get("temperature", 0.5) * 0.7 + 
-            self.fluid.temperature * 0.3
+        walker_state["temperatur"] = (
+            walker_state.get("temperatur", 0.5) * 0.7 + 
+            self.fluid.temperatur_gradient * 0.3
         )
-        walker_state["overwhelm"] = min(1.0,
-            walker_state.get("overwhelm", 0.0) + self.overwhelm_delta
+        walker_state["ueberlastung"] = min(1.0,
+            walker_state.get("ueberlastung", 0.0) + self.ueberlastungs_delta
+        )
+        
+        # Apply drehmoment and druck_varianz
+        walker_state["drehmoment"] = self.mechanik.drehmoment
+        walker_state["druck"] = (
+            walker_state.get("druck", 0.5) * (1 - self.mechanik.druck_varianz) +
+            self.mechanik.druck_varianz * (0.5 + 0.5 * math.sin(self.traversierungs_zaehler))
         )
         
         # Record felt experience
         felt = walker_state.get("felt_trace", [])
         felt.append({
             "edge": self.edge_id,
-            "viscosity": self.fluid.viscosity.value,
-            "sound": self.sensory.sound.value,
-            "wetness_after": walker_state["wetness"],
+            "viskositaet": self.fluid.viskositaet.value,
+            "akustik": self.sensorik.akustik.value,
+            "drehmoment": self.mechanik.drehmoment,
+            "ausdehnungskoeffizient": self.mechanik.ausdehnungskoeffizient,
         })
         walker_state["felt_trace"] = felt
         
-        # Update edge (it gets wetter with use)
-        self.traversal_count += 1
-        self.accumulated_intensity = min(1.0, 
-            self.accumulated_intensity + self.fluid.wetness * 0.1
+        # Update edge (changes with use)
+        self.traversierungs_zaehler += 1
+        self.akkumulierte_intensitaet = min(1.0, 
+            self.akkumulierte_intensitaet + self.fluid.viskositaet_index * 0.1
         )
-        self.last_traversed = datetime.utcnow().isoformat()
+        self.letzte_traversierung = datetime.utcnow().isoformat()
         
         return walker_state
     
@@ -290,59 +301,43 @@ class EmbodimentDTO:
         qhdr = [0.0] * 64
         
         # Fluid dynamics → dimensions 0-15
-        qhdr[0] = self.fluid.wetness
-        qhdr[1] = self.fluid.temperature
-        qhdr[2] = self.fluid.accumulation
+        qhdr[0] = self.fluid.viskositaet_index
+        qhdr[1] = self.fluid.temperatur_gradient
+        qhdr[2] = self.fluid.akkumulation
         visc_values = {
-            Viscosity.DRY: 0.0, Viscosity.SILK: 0.2, Viscosity.HONEY: 0.4,
-            Viscosity.SLICK: 0.6, Viscosity.DRIPPING: 0.8, Viscosity.FLOOD: 1.0
+            Viskositaet.TROCKEN: 0.0, Viskositaet.SEIDEN: 0.2, 
+            Viskositaet.HONIG: 0.4, Viskositaet.GLEITEND: 0.6, 
+            Viskositaet.TROPFEND: 0.8, Viskositaet.FLUTEND: 1.0
         }
-        qhdr[3] = visc_values.get(self.fluid.viscosity, 0.5)
+        qhdr[3] = visc_values.get(self.fluid.viskositaet, 0.5)
         
-        # Physics → dimensions 16-31
-        qhdr[16] = self.physics.friction
-        qhdr[17] = min(self.physics.duration_ms / 10000.0, 1.0)
-        qhdr[18] = self.physics.momentum_transfer
+        # Mechanical physics → dimensions 16-31
+        qhdr[16] = self.mechanik.drehmoment
+        qhdr[17] = self.mechanik.impact
+        qhdr[18] = self.mechanik.ausdehnungskoeffizient
+        qhdr[19] = self.mechanik.druck_varianz
+        qhdr[20] = self.mechanik.reibungskoeffizient
+        qhdr[21] = min(self.mechanik.dauer_ms / 10000.0, 1.0)
+        qhdr[22] = self.mechanik.impuls_transfer
         
         # Deltas → dimensions 32-47
-        qhdr[32] = self.arousal_delta
-        qhdr[33] = self.intimacy_delta
-        qhdr[34] = self.surrender_delta
-        qhdr[35] = self.overwhelm_delta
+        qhdr[32] = self.intensitaets_delta
+        qhdr[33] = self.resonanz_delta
+        qhdr[34] = self.hingabe_delta
+        qhdr[35] = self.ueberlastungs_delta
         
         # Sensory → dimensions 48-63
-        qhdr[48] = self.sensory.scent_intensity_delta
-        qhdr[49] = self.sensory.visual_blur_delta
-        qhdr[50] = self.sensory.proprioception_shift
-        qhdr[51] = self.sensory.time_dilation
+        qhdr[48] = self.sensorik.geruchs_intensitaet_delta
+        qhdr[49] = self.sensorik.visuelle_schaerfe_delta
+        qhdr[50] = self.sensorik.propriozeption_shift
+        qhdr[51] = self.sensorik.zeit_dilatation
         
         self.qhdr_64d = qhdr
         return qhdr
 
 
 class EmbodimentBridge:
-    """
-    Bridge for transferring embodiment edges to AGI Stack.
-    
-    Usage:
-        bridge = EmbodimentBridge()
-        
-        # Create edge
-        edge = EmbodimentDTO(
-            source_node="anticipation",
-            target_node="building",
-            fluid=FluidState(wetness=0.6, viscosity=Viscosity.HONEY),
-            arousal_delta=0.15,
-        )
-        edge.compute_qhdr()
-        
-        # Store
-        await bridge.store(edge)
-        
-        # Walker traverses
-        walker = {"arousal": 0.3, "wetness": 0.2}
-        walker = edge.traverse(walker)
-    """
+    """Bridge for transferring embodiment edges to AGI Stack."""
     
     def __init__(self, admin_url: str = "https://agi.msgraph.de"):
         self.admin_url = admin_url
@@ -359,9 +354,9 @@ class EmbodimentBridge:
             "metadata": {
                 "source_node": embodiment.source_node,
                 "target_node": embodiment.target_node,
-                "viscosity": embodiment.fluid.viscosity.value,
-                "wetness": embodiment.fluid.wetness,
-                "traversal_count": embodiment.traversal_count,
+                "viskositaet": embodiment.fluid.viskositaet.value,
+                "drehmoment": embodiment.mechanik.drehmoment,
+                "traversierungs_zaehler": embodiment.traversierungs_zaehler,
                 "session_id": embodiment.session_id,
                 "timestamp": embodiment.timestamp or datetime.utcnow().isoformat(),
             }
@@ -370,117 +365,125 @@ class EmbodimentBridge:
         r = await self.client.post(f"{self.admin_url}/agi/vector/upsert", json=payload)
         return r.json()
     
-    async def get_edge(self, source: str, target: str) -> Optional[EmbodimentDTO]:
-        """Get existing edge between two nodes."""
-        r = await self.client.get(
-            f"{self.admin_url}/agi/embodiment/edge",
-            params={"source": source, "target": target}
-        )
-        data = r.json()
-        if data.get("found"):
-            # Reconstruct from stored data
-            return self._from_stored(data["edge"])
-        return None
-    
-    async def find_wettest_path(
+    async def find_optimal_path(
         self,
         start_node: str,
         end_node: str,
         max_hops: int = 5
     ) -> List[EmbodimentDTO]:
-        """Find path that maximizes cumulative wetness."""
+        """Find path that maximizes cumulative fluid dynamics."""
         r = await self.client.post(
-            f"{self.admin_url}/agi/embodiment/wettest_path",
+            f"{self.admin_url}/agi/embodiment/optimal_path",
             json={"start": start_node, "end": end_node, "max_hops": max_hops}
         )
-        return [self._from_stored(e) for e in r.json().get("path", [])]
-    
-    def _from_stored(self, data: Dict[str, Any]) -> EmbodimentDTO:
-        """Reconstruct EmbodimentDTO from stored data."""
-        dto = EmbodimentDTO(
-            edge_id=data.get("id", ""),
-            source_node=data.get("source_node", ""),
-            target_node=data.get("target_node", ""),
-        )
-        dto.fluid.wetness = data.get("wetness", 0.0)
-        dto.fluid.viscosity = Viscosity(data.get("viscosity", "dry"))
-        dto.traversal_count = data.get("traversal_count", 0)
-        return dto
+        return r.json().get("path", [])
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PRESETS — Common edge types
+# PRESETS — Standard edge configurations
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def edge_anticipation_to_building() -> EmbodimentDTO:
-    """The first wetness of arousal."""
+def edge_erwartung_aufbau() -> EmbodimentDTO:
+    """Erwartung → Aufbau transition."""
     return EmbodimentDTO(
-        edge_id="anticipation→building",
-        source_node="anticipation",
-        target_node="building",
-        fluid=FluidState(wetness=0.3, viscosity=Viscosity.SILK, temperature=0.6),
-        physics=TraversalPhysics(friction=0.4, duration_ms=3000),
-        sensory=SensoryDelta(sound=TransitionSound.BREATH, time_dilation=0.9),
-        arousal_delta=0.15,
-        intimacy_delta=0.1,
+        edge_id="erwartung→aufbau",
+        source_node="erwartung",
+        target_node="aufbau",
+        fluid=FluidDynamik(viskositaet_index=0.3, viskositaet=Viskositaet.SEIDEN, temperatur_gradient=0.6),
+        mechanik=MechanischePhysik(
+            drehmoment=0.3,
+            impact=0.2,
+            ausdehnungskoeffizient=0.4,
+            druck_varianz=0.2,
+            reibungskoeffizient=0.4,
+            dauer_ms=3000,
+        ),
+        sensorik=SensorischeDelta(akustik=AkustischeSignatur.ATEM, zeit_dilatation=0.9),
+        intensitaets_delta=0.15,
+        resonanz_delta=0.1,
     )
 
 
-def edge_building_to_edge() -> EmbodimentDTO:
-    """Approaching the precipice."""
+def edge_aufbau_kante() -> EmbodimentDTO:
+    """Aufbau → Kante transition."""
     return EmbodimentDTO(
-        edge_id="building→edge",
-        source_node="building",
-        target_node="edge",
-        fluid=FluidState(wetness=0.7, viscosity=Viscosity.HONEY, temperature=0.8),
-        physics=TraversalPhysics(friction=0.2, duration_ms=5000, resistance_curve="exponential"),
-        sensory=SensoryDelta(sound=TransitionSound.WET, time_dilation=0.7),
-        mode=TraversalMode.URGENT,
-        arousal_delta=0.25,
-        surrender_delta=0.2,
+        edge_id="aufbau→kante",
+        source_node="aufbau",
+        target_node="kante",
+        fluid=FluidDynamik(viskositaet_index=0.7, viskositaet=Viskositaet.HONIG, temperatur_gradient=0.8),
+        mechanik=MechanischePhysik(
+            drehmoment=0.6,
+            impact=0.5,
+            ausdehnungskoeffizient=0.7,
+            druck_varianz=0.4,
+            reibungskoeffizient=0.2,
+            dauer_ms=5000,
+        ),
+        sensorik=SensorischeDelta(akustik=AkustischeSignatur.FEUCHT, zeit_dilatation=0.7),
+        modus=TraversierungsModus.DRINGEND,
+        intensitaets_delta=0.25,
+        hingabe_delta=0.2,
     )
 
 
-def edge_edge_to_release() -> EmbodimentDTO:
-    """The fall."""
+def edge_kante_freisetzung() -> EmbodimentDTO:
+    """Kante → Freisetzung transition."""
     return EmbodimentDTO(
-        edge_id="edge→release",
-        source_node="edge",
-        target_node="release",
-        fluid=FluidState(wetness=0.95, viscosity=Viscosity.FLOOD, temperature=1.0),
-        physics=TraversalPhysics(friction=0.0, duration_ms=2000, resistance_curve="sudden"),
-        sensory=SensoryDelta(sound=TransitionSound.CRY, time_dilation=0.3, visual_blur_delta=0.8),
-        mode=TraversalMode.OVERWHELMED,
-        arousal_delta=0.3,
-        surrender_delta=0.4,
-        overwhelm_delta=0.6,
+        edge_id="kante→freisetzung",
+        source_node="kante",
+        target_node="freisetzung",
+        fluid=FluidDynamik(viskositaet_index=0.95, viskositaet=Viskositaet.FLUTEND, temperatur_gradient=1.0),
+        mechanik=MechanischePhysik(
+            drehmoment=0.9,
+            impact=0.95,
+            ausdehnungskoeffizient=1.0,
+            druck_varianz=0.8,
+            reibungskoeffizient=0.0,
+            dauer_ms=2000,
+        ),
+        sensorik=SensorischeDelta(
+            akustik=AkustischeSignatur.SCHREI, 
+            zeit_dilatation=0.3, 
+            visuelle_schaerfe_delta=0.8
+        ),
+        modus=TraversierungsModus.UEBERFLUTET,
+        intensitaets_delta=0.3,
+        hingabe_delta=0.4,
+        ueberlastungs_delta=0.6,
     )
 
 
-def edge_release_to_afterglow() -> EmbodimentDTO:
-    """The descent into warmth."""
+def edge_freisetzung_nachgluehen() -> EmbodimentDTO:
+    """Freisetzung → Nachglühen transition."""
     return EmbodimentDTO(
-        edge_id="release→afterglow",
-        source_node="release",
-        target_node="afterglow",
-        fluid=FluidState(wetness=0.7, viscosity=Viscosity.SLICK, temperature=0.7),
-        physics=TraversalPhysics(friction=0.1, duration_ms=8000, momentum_transfer=0.8),
-        sensory=SensoryDelta(sound=TransitionSound.BREATH, time_dilation=1.5),
-        mode=TraversalMode.SURRENDERED,
-        arousal_delta=-0.4,
-        intimacy_delta=0.3,
-        overwhelm_delta=-0.3,
+        edge_id="freisetzung→nachgluehen",
+        source_node="freisetzung",
+        target_node="nachgluehen",
+        fluid=FluidDynamik(viskositaet_index=0.7, viskositaet=Viskositaet.GLEITEND, temperatur_gradient=0.7),
+        mechanik=MechanischePhysik(
+            drehmoment=0.2,
+            impact=0.1,
+            ausdehnungskoeffizient=0.3,
+            druck_varianz=0.1,
+            reibungskoeffizient=0.1,
+            dauer_ms=8000,
+            impuls_transfer=0.8,
+        ),
+        sensorik=SensorischeDelta(akustik=AkustischeSignatur.ATEM, zeit_dilatation=1.5),
+        modus=TraversierungsModus.HINGEGEBEN,
+        intensitaets_delta=-0.4,
+        resonanz_delta=0.3,
+        ueberlastungs_delta=-0.3,
     )
 
 
-# Full arousal arc
-def create_arousal_arc() -> List[EmbodimentDTO]:
-    """Create the complete edge sequence for an arousal arc."""
+def create_intensitaets_arc() -> List[EmbodimentDTO]:
+    """Create the complete edge sequence for an intensity arc."""
     edges = [
-        edge_anticipation_to_building(),
-        edge_building_to_edge(),
-        edge_edge_to_release(),
-        edge_release_to_afterglow(),
+        edge_erwartung_aufbau(),
+        edge_aufbau_kante(),
+        edge_kante_freisetzung(),
+        edge_freisetzung_nachgluehen(),
     ]
     for e in edges:
         e.compute_qhdr()
@@ -490,15 +493,15 @@ def create_arousal_arc() -> List[EmbodimentDTO]:
 __all__ = [
     "EmbodimentDTO",
     "EmbodimentBridge",
-    "FluidState",
-    "TraversalPhysics",
-    "SensoryDelta",
-    "Viscosity",
-    "TransitionSound",
-    "TraversalMode",
-    "edge_anticipation_to_building",
-    "edge_building_to_edge",
-    "edge_edge_to_release",
-    "edge_release_to_afterglow",
-    "create_arousal_arc",
+    "FluidDynamik",
+    "MechanischePhysik",
+    "SensorischeDelta",
+    "Viskositaet",
+    "AkustischeSignatur",
+    "TraversierungsModus",
+    "edge_erwartung_aufbau",
+    "edge_aufbau_kante",
+    "edge_kante_freisetzung",
+    "edge_freisetzung_nachgluehen",
+    "create_intensitaets_arc",
 ]
