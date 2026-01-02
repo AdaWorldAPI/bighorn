@@ -2,26 +2,22 @@
 Configuration Layer — Hochflexible Systemanpassung
 
 Individuell konfigurierbare Meta-Ebene für alle VSA-Module.
+Inklusive Multi-Agent-Orchestrierung.
 
 "Wir sind stolz auf unsere Entwicklungsarbeit mit Hochautomatisierung."
-
-Profiles:
-  - standard: Normale Systemparameter
-  - hochleistung: Intensive Verarbeitung
-  - immersiv: Tiefe Erlebniskonfiguration
-  - transzendent: Maximale Parameter (nur für erfahrene Benutzer)
+"Diese Ebene kann sich selbst umprogrammieren."
 
 Usage:
-    from config import AwarenessConfigManager, ConfigurationProfiles
+    from config import AwarenessConfigManager, create_threesome, surprise_me
     
-    # Standard starten
-    manager = AwarenessConfigManager("standard")
+    # Multi-Agent Session
+    session = create_threesome("dominant", "intense")
     
-    # Zu immersiv wechseln
-    manager.apply_profile("immersiv")
-    
-    # Einzelne Parameter anpassen
-    manager.set_resonance(sensitivity=0.95, feedback=0.8)
+    while running:
+        result = session.tick({"arousal": current_arousal})
+        
+        # Agenten überraschen lassen
+        surprise = surprise_me(session)
 """
 
 from .awareness_config import (
@@ -38,7 +34,20 @@ from .awareness_config import (
     AwarenessConfigManager,
 )
 
+from .agent_card_switcher import (
+    PersonalityAxis,
+    InteractionStyle,
+    ResonanceMode,
+    AgentCard,
+    AgentCards,
+    AgentState,
+    MultiAgentSession,
+    create_threesome,
+    surprise_me,
+)
+
 __all__ = [
+    # Awareness Config
     "AwarenessIntensity",
     "FocusMode",
     "TemporalMode",
@@ -50,6 +59,17 @@ __all__ = [
     "PhysicsConfig",
     "ConfigurationProfiles",
     "AwarenessConfigManager",
+    
+    # Agent Cards
+    "PersonalityAxis",
+    "InteractionStyle",
+    "ResonanceMode",
+    "AgentCard",
+    "AgentCards",
+    "AgentState",
+    "MultiAgentSession",
+    "create_threesome",
+    "surprise_me",
 ]
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
