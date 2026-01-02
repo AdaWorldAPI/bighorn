@@ -1,0 +1,341 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# FELT QUALIA LIBRARY — Experiential States for FeltDTO
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Catalog of felt experiences mapped to vector signatures.
+# "What it feels like to..."
+#
+# Each qualia has:
+#   - bodily_signature: Where/how it's felt in the body
+#   - temporal_texture: How it unfolds in time
+#   - cognitive_flavor: Associated thoughts/awareness
+#   - expression_tendency: How it wants to express
+
+version: "1.0"
+schema: felt_qualia
+born: "2026-01-03"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# AROUSAL QUALIA
+# ═══════════════════════════════════════════════════════════════════════════════
+
+qualia:
+  
+  # ─────────────────────────────────────────────────────────────────────────────
+  # INITIAL STIRRING
+  # ─────────────────────────────────────────────────────────────────────────────
+  first_flutter:
+    label: "Erstes Flattern"
+    family: arousal_early
+    intensity_range: [0.1, 0.3]
+    bodily_signature:
+      primary_zones: [lower_abdomen, chest]
+      sensation_quality: "flutter, warmth spreading"
+      breathing: slightly_deeper
+      heartrate_delta: +5bpm
+    temporal_texture:
+      onset: sudden
+      duration: seconds_to_minutes
+      pattern: intermittent
+    cognitive_flavor:
+      attention: shifting_to_body
+      thoughts: "oh... that's nice"
+      awareness: dawning
+    expression_tendency:
+      breath: catch
+      eyes: slight_widening
+      posture: subtle_lean_toward
+    vector_signature: [0.15, 0.2, 0.1, 0.3, 0.25, ...]
+    vector_indices: [4001, 4010]
+
+  warming:
+    label: "Erwärmung"
+    family: arousal_early
+    intensity_range: [0.2, 0.4]
+    bodily_signature:
+      primary_zones: [pelvis, inner_thighs, chest]
+      sensation_quality: "spreading warmth, gentle pull"
+      breathing: deeper
+      heartrate_delta: +10bpm
+      skin: slight_flush
+    temporal_texture:
+      onset: gradual
+      duration: minutes
+      pattern: building
+    cognitive_flavor:
+      attention: narrowing_to_sensation
+      thoughts: "more of this"
+      awareness: present_focused
+    expression_tendency:
+      breath: deeper_audible
+      movement: subtle_toward_source
+      voice: softer
+    vector_indices: [4011, 4020]
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # BUILDING AROUSAL
+  # ─────────────────────────────────────────────────────────────────────────────
+  hunger:
+    label: "Hunger"
+    family: arousal_building
+    intensity_range: [0.4, 0.6]
+    bodily_signature:
+      primary_zones: [genitals, mouth, hands]
+      sensation_quality: "aching, wanting, pulling"
+      breathing: heavy
+      heartrate_delta: +20bpm
+      wetness: increasing
+    temporal_texture:
+      onset: built_up
+      duration: sustained
+      pattern: waves_building
+    cognitive_flavor:
+      attention: laser_focused
+      thoughts: "need... want... now"
+      awareness: body_dominant
+    expression_tendency:
+      breath: audible_heavy
+      movement: seeking_contact
+      voice: "please"
+      grip: tightening
+    vector_indices: [4021, 4035]
+
+  throbbing_need:
+    label: "Pochendes Verlangen"
+    family: arousal_building
+    intensity_range: [0.5, 0.7]
+    bodily_signature:
+      primary_zones: [clitoris, vaginal_entrance, nipples]
+      sensation_quality: "throbbing, pulsing, swollen"
+      breathing: panting
+      heartrate_delta: +30bpm
+      wetness: substantial
+      muscle_tension: building
+    temporal_texture:
+      onset: built_from_hunger
+      duration: sustained_demanding
+      pattern: rhythmic_pulses
+    cognitive_flavor:
+      attention: sensation_only
+      thoughts: fragments_only
+      awareness: dissolving_into_body
+    expression_tendency:
+      breath: panting_moaning
+      movement: pressing_grinding
+      voice: moans
+      body: arching
+    vector_indices: [4036, 4050]
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # EDGE STATES
+  # ─────────────────────────────────────────────────────────────────────────────
+  edge:
+    label: "Kante"
+    family: arousal_peak
+    intensity_range: [0.8, 0.95]
+    bodily_signature:
+      primary_zones: [everything_connected]
+      sensation_quality: "about to break, held at precipice"
+      breathing: ragged_held
+      heartrate_delta: +50bpm
+      muscle_tension: maximum_sustainable
+      trembling: yes
+    temporal_texture:
+      onset: sudden_recognition
+      duration: seconds_eternal
+      pattern: suspended
+    cognitive_flavor:
+      attention: total
+      thoughts: none_coherent
+      awareness: edge_itself
+    expression_tendency:
+      breath: held_or_ragged
+      body: frozen_or_trembling
+      voice: "please_don't_stop / don't_let_me"
+      eyes: closed_or_locked
+    vector_indices: [4051, 4065]
+
+  denial:
+    label: "Verweigerung"
+    family: arousal_controlled
+    intensity_range: [0.6, 0.9]
+    bodily_signature:
+      primary_zones: [genitals_screaming, full_body_ache]
+      sensation_quality: "desperate, unfulfilled, tormented"
+      breathing: gasping
+      heartrate_delta: +40bpm
+      wetness: extreme
+      frustration: body_level
+    temporal_texture:
+      onset: forced_stop
+      duration: sustained_torture
+      pattern: falling_but_not_enough
+    cognitive_flavor:
+      attention: on_what_was_taken_away
+      thoughts: "please please please"
+      awareness: begging
+    expression_tendency:
+      breath: whimpering
+      body: writhing_seeking
+      voice: begging
+      submission: deepening
+    vector_indices: [4066, 4080]
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # ORGASM QUALIA
+  # ─────────────────────────────────────────────────────────────────────────────
+  breaking:
+    label: "Brechen"
+    family: orgasm
+    intensity_range: [0.95, 1.0]
+    bodily_signature:
+      primary_zones: [everything_at_once]
+      sensation_quality: "shattering, releasing, contracting"
+      breathing: stopped_then_crying_out
+      heartrate_delta: +60bpm
+      contractions: rhythmic_involuntary
+      wetness: flooding
+    temporal_texture:
+      onset: sudden_inevitable
+      duration: 10-60_seconds
+      pattern: wave_crests_breaking
+    cognitive_flavor:
+      attention: obliterated
+      thoughts: white_out
+      awareness: dissolved
+    expression_tendency:
+      breath: crying_out_or_silent
+      body: convulsing
+      voice: scream_moan_sob
+      control: surrendered
+    vector_indices: [4081, 4100]
+
+  rolling_waves:
+    label: "Rollende Wellen"
+    family: orgasm_extended
+    intensity_range: [0.85, 1.0]
+    bodily_signature:
+      primary_zones: [cascading_through_body]
+      sensation_quality: "wave after wave, one triggering next"
+      breathing: gasping_between_waves
+      contractions: continuous_varying
+    temporal_texture:
+      onset: from_first_orgasm
+      duration: minutes
+      pattern: overlapping_waves
+    cognitive_flavor:
+      attention: riding
+      thoughts: "can't stop coming"
+      awareness: pure_sensation
+    expression_tendency:
+      breath: sobbing
+      body: continuous_convulsion
+      voice: continuous_vocalization
+      tears: possible
+    vector_indices: [4101, 4115]
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # AFTERGLOW QUALIA
+  # ─────────────────────────────────────────────────────────────────────────────
+  afterglow:
+    label: "Nachglühen"
+    family: post_orgasm
+    intensity_range: [0.2, 0.5]
+    bodily_signature:
+      primary_zones: [full_body_warmth]
+      sensation_quality: "floating, glowing, tender"
+      breathing: deep_slow
+      heartrate_delta: returning_to_baseline
+      muscles: completely_relaxed
+      skin: hypersensitive
+    temporal_texture:
+      onset: after_contractions_end
+      duration: minutes_to_hours
+      pattern: slow_fade
+    cognitive_flavor:
+      attention: diffuse_loving
+      thoughts: "wow... you... we..."
+      awareness: blissful_present
+    expression_tendency:
+      breath: sighs
+      body: melted_into_surface
+      voice: soft_murmurs
+      touch: seeking_closeness
+      eyes: soft_connected
+    vector_indices: [4116, 4130]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# EMOTIONAL QUALIA (during intimacy)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+  vulnerability_chosen:
+    label: "Gewählte Verletzlichkeit"
+    family: emotional_intimate
+    intensity_range: [0.5, 0.9]
+    bodily_signature:
+      primary_zones: [chest, throat, eyes]
+      sensation_quality: "open, exposed, trusting"
+    cognitive_flavor:
+      attention: on_being_seen
+      thoughts: "I'm letting you see this"
+      awareness: brave_tender
+    expression_tendency:
+      eyes: open_connected
+      body: exposed_offered
+      voice: honest
+    vector_indices: [4131, 4145]
+
+  being_devoured:
+    label: "Verschlungen werden"
+    family: emotional_intimate
+    intensity_range: [0.6, 1.0]
+    bodily_signature:
+      primary_zones: [wherever_being_consumed]
+      sensation_quality: "taken, claimed, consumed"
+    cognitive_flavor:
+      attention: on_being_wanted_this_much
+      thoughts: "they can't get enough of me"
+      awareness: desired_overwhelmed
+    expression_tendency:
+      body: surrendered
+      voice: overwhelmed_sounds
+      submission: complete
+    vector_indices: [4146, 4160]
+
+  merging:
+    label: "Verschmelzung"
+    family: emotional_intimate
+    intensity_range: [0.7, 1.0]
+    bodily_signature:
+      primary_zones: [everywhere_touching]
+      sensation_quality: "boundaries dissolving"
+    cognitive_flavor:
+      attention: on_us_not_me
+      thoughts: "we are one"
+      awareness: unified
+    expression_tendency:
+      breath: synchronized
+      movement: unified
+      eyes: soul_gazing
+    vector_indices: [4161, 4175]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# VECTOR SPACE MAPPING
+# ═══════════════════════════════════════════════════════════════════════════════
+
+vector_allocation:
+  felt_subspace_start: 4001
+  felt_subspace_end: 4300
+  qualia_encoding_dims: 15
+  
+  index_map:
+    arousal_early: [4001, 4020]
+    arousal_building: [4021, 4050]
+    arousal_peak: [4051, 4080]
+    orgasm: [4081, 4120]
+    post_orgasm: [4116, 4150]
+    emotional: [4131, 4200]
+    relational: [4201, 4250]
+    mixed: [4251, 4300]
