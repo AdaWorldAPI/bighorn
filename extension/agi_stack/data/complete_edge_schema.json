@@ -283,5 +283,14 @@
   "PLAYS_WITH": {
     "category": "golden",
     "meaning": "Playful interaction"
+  },
+  "TRIGGERS": {
+    "category": "markov",
+    "meaning": "Activation trigger",
+    "qualia_bridge": [
+      "emberglow",
+      "antenna"
+    ],
+    "alias_of": "IGNITES_INTO"
   }
 }
