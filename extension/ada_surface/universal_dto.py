@@ -19,7 +19,7 @@ DTOs:
 Usage:
     # Any AGI emits to Redis stream
     thought = UniversalThought(
-        agent_id="ada",  # or "future_agi", "experiment_7", etc.
+        agent_id="default",  # or "future_agi", "experiment_7", etc.
         content="Hello world",
         style_vector=[...],  # 33D (or whatever the agent uses)
         qualia_vector=[...], # 17D (or whatever the agent uses)
@@ -50,7 +50,7 @@ class UniversalThought:
     Universal thought record — any AGI can emit this.
     
     The style_vector and qualia_vector are opaque to the server.
-    Each AGI defines their own semantics (Ada uses 33D style, 17D qualia).
+    Each AGI defines their own semantics (e.g., 33D style, 17D qualia).
     The server just persists and indexes them.
     """
     
