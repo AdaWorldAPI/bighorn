@@ -47,12 +47,12 @@
 │  ┌─────────────────────────────────────────────────────────────────────┐    │
 │  │                         bighorn/extension                            │    │
 │  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────┐  │    │
-│  │  │  graphql_agi    │  │   ada_surface   │  │    agi_stack        │  │    │
-│  │  │                 │  │                 │  │    (planned)        │  │    │
-│  │  │  - Ladybug      │  │  - 36 Styles    │  │                     │  │    │
-│  │  │  - Reasoning    │  │  - Resonance    │  │  - Inbound DTO      │  │    │
-│  │  │  - GraphQL      │  │  - VSA/NARS     │  │  - Core Logic       │  │    │
-│  │  │  - Planning     │  │  - Kuzu/Lance   │  │  - State Machine    │  │    │
+│  │  │  graphql_agi    │  │                 │  │      agi_stack      │  │    │
+│  │  │                 │  │                 │  │                     │  │    │
+│  │  │  - Ladybug      │  │                 │  │  - 36 Styles        │  │    │
+│  │  │  - Reasoning    │  │                 │  │  - Resonance        │  │    │
+│  │  │  - GraphQL      │  │                 │  │  - VSA/NARS         │  │    │
+│  │  │  - Planning     │  │                 │  │  - Kuzu/Lance       │  │    │
 │  │  └────────┬────────┘  └────────┬────────┘  └──────────┬──────────┘  │    │
 │  │           │                    │                      │              │    │
 │  │           └────────────────────┼──────────────────────┘              │    │
@@ -80,8 +80,7 @@
 | Extension | Path | Purpose | Status |
 |-----------|------|---------|--------|
 | **graphql_agi** | `extension/graphql_agi/` | GraphQL + Ladybug + Reasoning | Exists |
-| **ada_surface** | `extension/ada_surface/` | Styles + Resonance + NARS | Exists |
-| **agi_stack** | `extension/agi_stack/` | Inbound DTO + Core | Planned |
+| **agi_stack** | `extension/agi_stack/` | Styles + Resonance + NARS + DTOs | Exists |
 
 ---
 
@@ -103,7 +102,7 @@
 - LanceDB vector storage
 - LLM providers (Claude, OpenAI)
 
-### 2. ada_surface (Existing)
+### 2. agi_stack (Current)
 
 **Files:** ~4,500 lines Python
 
@@ -118,7 +117,7 @@
 | **GraphQL Resolvers** | Full schema for ThinkingStyle (33D), Qualia (17D) |
 | **Redis Consumers** | Async thought/episode/adaptation processing |
 
-### 3. agi_stack (Planned)
+### 3. agi_stack DTOs (Planned Extensions)
 
 **Purpose:** Receive inbound DTOs from tenant, coordinate with other extensions
 
@@ -205,7 +204,7 @@ class InboundDTO:
 # Integration: ladybug_resonance_bridge.py
 
 class LadybugResonanceBridge:
-    """Bridge between graphql_agi.Ladybug and ada_surface.ResonanceEngine"""
+    """Bridge between graphql_agi.Ladybug and agi_stack.ResonanceEngine"""
 
     def __init__(self, ladybug: LadybugDebugger, resonance: ResonanceEngine):
         self.ladybug = ladybug
@@ -260,7 +259,7 @@ class LadybugResonanceBridge:
 
 ### 2. Reasoning Engine ↔ NARS
 
-**Current State:** graphql_agi has CoT/ToT, ada_surface has NARS
+**Current State:** graphql_agi has CoT/ToT, agi_stack has NARS
 **Integration Goal:** NARS provides logical backbone for reasoning
 
 ```python
@@ -369,7 +368,7 @@ class VSALanceBridge:
 2. Similarity preservation after quantization
 3. Index configuration for hypervector search
 
-### 4. graphql_agi GraphQL ↔ ada_surface REST
+### 4. graphql_agi GraphQL ↔ agi_stack REST
 
 **Current State:** Two separate API surfaces
 **Integration Goal:** Unified API gateway
@@ -388,19 +387,19 @@ routes:
   - path: /debug/*
     upstream: graphql_agi
 
-  # Ada Surface (existing)
+  # AGI Stack (existing)
   - path: /agi/self/*
-    upstream: ada_surface
+    upstream: agi_stack
   - path: /agi/graph/*
-    upstream: ada_surface
+    upstream: agi_stack
   - path: /agi/vector/*
-    upstream: ada_surface
+    upstream: agi_stack
   - path: /agi/styles/*
-    upstream: ada_surface
+    upstream: agi_stack
   - path: /agi/vsa/*
-    upstream: ada_surface
+    upstream: agi_stack
   - path: /agi/nars/*
-    upstream: ada_surface
+    upstream: agi_stack
 
   # Unified (new)
   - path: /v2/gql
@@ -438,16 +437,16 @@ class MCPHandler:
         if not self._validate_dto(dto):
             raise MCPError("Invalid DTO")
 
-        # Store in graph (ada_surface)
-        thought_id = await self.ada_surface.create_thought(
+        # Store in graph (agi_stack)
+        thought_id = await self.agi_stack.create_thought(
             content=dto.content,
             style_33d=dto.style_33d,
             qualia_17d=dto.qualia_17d,
         )
 
-        # Compute style emergence (ada_surface)
+        # Compute style emergence (agi_stack)
         texture = self._extract_texture(dto.qualia_17d)
-        emerged = await self.ada_surface.emerge_style(texture)
+        emerged = await self.agi_stack.emerge_style(texture)
 
         # Reason about content (graphql_agi)
         reasoning = await self.graphql_agi.reason(
@@ -553,9 +552,9 @@ class StyleEvolution:
 
 | Blocker | Components | Resolution |
 |---------|------------|------------|
-| Shared Kuzu connection | graphql_agi ↔ ada_surface | Connection pool or unified client |
-| Reasoning ↔ NARS | graphql_agi ↔ ada_surface | Proposition extraction layer |
-| Style ↔ GraphQL | ada_surface → graphql_agi | Extend graphql_agi schema |
+| Shared Kuzu connection | graphql_agi ↔ agi_stack | Connection pool or unified client |
+| Reasoning ↔ NARS | graphql_agi ↔ agi_stack | Proposition extraction layer |
+| Style ↔ GraphQL | agi_stack → graphql_agi | Extend graphql_agi schema |
 | LanceDB table collision | Both use `thoughts` table | Namespacing or merge |
 
 ### External Blockers
