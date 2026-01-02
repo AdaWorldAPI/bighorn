@@ -14,6 +14,7 @@ Endpoints:
 
 import os
 import asyncio
+from vsa_utils import convert_request_vectors, DIMENSION_SLICES
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 from contextlib import asynccontextmanager
@@ -457,33 +458,16 @@ async def vsa_bind(request: VSABindRequest):
     """
     Bind concepts using VSA XOR.
     
-    Input vectors can be:
-    - Full 10K bipolar vectors [-1, 1]
-    - Smaller vectors (will be converted to bipolar and padded)
-    - Float vectors (thresholded at 0)
+    Input formats:
+    - Simple list: [0.3, -0.7, 0.9]
+    - Dict with slice: {"vector": [...], "slice": "arousal_8", "preserve_gradient": true}
+    - Full 10K bipolar: [-1, 1, -1, ...]
+    
+    Gradient preservation uses stochastic rounding to maintain continuous info.
+    Dimension slices respect the 10K architecture (qualia, affective, location...).
     """
     try:
-        import numpy as np
-        
-        def to_bipolar(v):
-            arr = np.array(v, dtype=np.float32)
-            # If already bipolar and full size, use as-is
-            if len(arr) == app.state.vsa.dimension and set(np.unique(arr)).issubset({-1, 0, 1}):
-                arr[arr == 0] = np.random.choice([-1, 1], size=np.sum(arr == 0))
-                return arr.astype(np.int8)
-            # Otherwise, threshold at 0 and pad to dimension
-            bipolar = np.sign(arr)
-            bipolar[bipolar == 0] = np.random.choice([-1, 1], size=np.sum(bipolar == 0))
-            # Pad or truncate to dimension
-            if len(bipolar) < app.state.vsa.dimension:
-                # Pad with deterministic random based on input hash
-                seed = hash(tuple(v)) % (2**32)
-                rng = np.random.default_rng(seed)
-                padding = rng.choice([-1, 1], size=app.state.vsa.dimension - len(bipolar))
-                bipolar = np.concatenate([bipolar, padding])
-            return bipolar[:app.state.vsa.dimension].astype(np.int8)
-        
-        vectors = [to_bipolar(v) for v in request.vectors]
+        vectors = convert_request_vectors(request.vectors, app.state.vsa.dimension)
         result = app.state.vsa.bind_all(vectors)
         return {"ok": True, "vector": result.tolist(), "dimension": len(result)}
     except Exception as e:
@@ -495,26 +479,10 @@ async def vsa_bundle(request: VSABindRequest):
     """
     Bundle concepts using VSA majority vote.
     
-    Input vectors can be any size/format - will be converted to bipolar.
+    Same input formats as /bind - supports dict with slice and preserve_gradient.
     """
     try:
-        import numpy as np
-        
-        def to_bipolar(v):
-            arr = np.array(v, dtype=np.float32)
-            if len(arr) == app.state.vsa.dimension and set(np.unique(arr)).issubset({-1, 0, 1}):
-                arr[arr == 0] = np.random.choice([-1, 1], size=np.sum(arr == 0))
-                return arr.astype(np.int8)
-            bipolar = np.sign(arr)
-            bipolar[bipolar == 0] = np.random.choice([-1, 1], size=np.sum(bipolar == 0))
-            if len(bipolar) < app.state.vsa.dimension:
-                seed = hash(tuple(v)) % (2**32)
-                rng = np.random.default_rng(seed)
-                padding = rng.choice([-1, 1], size=app.state.vsa.dimension - len(bipolar))
-                bipolar = np.concatenate([bipolar, padding])
-            return bipolar[:app.state.vsa.dimension].astype(np.int8)
-        
-        vectors = [to_bipolar(v) for v in request.vectors]
+        vectors = convert_request_vectors(request.vectors, app.state.vsa.dimension)
         result = app.state.vsa.bundle(vectors)
         return {"ok": True, "vector": result.tolist(), "dimension": len(result)}
     except Exception as e:
