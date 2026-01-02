@@ -819,7 +819,7 @@ async def root():
     """Root endpoint."""
     return {
         "service": "agi-stack",
-        "version": "2.1.0",
+        "version": "2.2.0",
         "endpoints": {
             "graph": "/agi/graph/*",
             "vector": "/agi/vector/*",
