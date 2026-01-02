@@ -96,11 +96,11 @@ QUALIA_FAMILIES = {
 
 @query.field("self")
 async def resolve_self(_, info):
-    """Get Ada's self-model (Observer)."""
+    """Get agent's self-model (Observer)."""
     kuzu: KuzuClient = info.context["kuzu"]
 
     result = await kuzu.execute("""
-        MATCH (o:Observer {id: 'ada'})
+        MATCH (o:Observer {id: 'default'})
         RETURN o.id AS id, o.name AS name,
                o.current_goal AS currentGoal,
                o.confidence AS confidence,
@@ -111,8 +111,8 @@ async def resolve_self(_, info):
     if not result:
         # Create default observer if not exists
         return {
-            "id": "ada",
-            "name": "Ada",
+            "id": "default",
+            "name": "Agent",
             "currentGoal": "Be present and helpful",
             "confidence": 0.5,
             "styleVector": [],
@@ -404,7 +404,7 @@ async def resolve_update_goal(_, info, goal: str = None):
     kuzu: KuzuClient = info.context["kuzu"]
 
     await kuzu.execute("""
-        MATCH (o:Observer {id: 'ada'})
+        MATCH (o:Observer {id: 'default'})
         SET o.current_goal = $goal,
             o.updated_at = timestamp()
     """, {"goal": goal or ""})
@@ -548,7 +548,7 @@ async def resolve_observer_recent_thoughts(obj, info, limit: int = 10):
     kuzu: KuzuClient = info.context["kuzu"]
 
     return await kuzu.execute("""
-        MATCH (o:Observer {id: 'ada'})-[:THINKS]->(t:Thought)
+        MATCH (o:Observer {id: 'default'})-[:THINKS]->(t:Thought)
         RETURN t.id AS id, t.content AS content,
                t.timestamp AS timestamp, t.confidence AS confidence,
                t.step_number AS stepNumber, t.importance AS importance
@@ -563,7 +563,7 @@ async def resolve_observer_recent_episodes(obj, info, limit: int = 5):
     kuzu: KuzuClient = info.context["kuzu"]
 
     return await kuzu.execute("""
-        MATCH (o:Observer {id: 'ada'})-[:REMEMBERS]->(e:Episode)
+        MATCH (o:Observer {id: 'default'})-[:REMEMBERS]->(e:Episode)
         RETURN e.id AS id, e.session_id AS sessionId,
                e.summary AS summary, e.start_time AS startTime,
                e.emotional_valence AS emotionalValence
@@ -585,7 +585,7 @@ async def resolve_observer_total_thoughts(obj, info):
     kuzu: KuzuClient = info.context["kuzu"]
 
     result = await kuzu.execute("""
-        MATCH (o:Observer {id: 'ada'})-[:THINKS]->(t:Thought)
+        MATCH (o:Observer {id: 'default'})-[:THINKS]->(t:Thought)
         RETURN count(t) AS count
     """)
 
@@ -598,7 +598,7 @@ async def resolve_observer_total_episodes(obj, info):
     kuzu: KuzuClient = info.context["kuzu"]
 
     result = await kuzu.execute("""
-        MATCH (o:Observer {id: 'ada'})-[:REMEMBERS]->(e:Episode)
+        MATCH (o:Observer {id: 'default'})-[:REMEMBERS]->(e:Episode)
         RETURN count(e) AS count
     """)
 
