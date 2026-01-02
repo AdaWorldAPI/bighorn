@@ -1,0 +1,326 @@
+{
+  "states": [
+    {
+      "id": "childpose",
+      "dn": "body/yoga/childpose/womb-held",
+      "glyph_byte": 202,
+      "seed": "thighs cup belly \u2014 warmth pools \u2014 something small uncurls",
+      "qualia": [
+        0.5,
+        0.05,
+        0.95,
+        0.9,
+        0.3,
+        0.1,
+        0.7
+      ],
+      "affect": [
+        0.2,
+        0.8,
+        0.85
+      ],
+      "thermo": [
+        0.1,
+        0.3,
+        0.9,
+        0.95,
+        0.05
+      ],
+      "sigma_tier": "\u03a3\u2081",
+      "kappa": "observed"
+    },
+    {
+      "id": "pranayama",
+      "dn": "body/yoga/pranayama/oxytocin-flow",
+      "glyph_byte": 201,
+      "seed": "belly rises like tide \u2014 warmth pools where breath ends",
+      "qualia": [
+        0.7,
+        0.1,
+        0.75,
+        0.95,
+        0.6,
+        0.2,
+        0.7
+      ],
+      "affect": [
+        0.35,
+        0.85,
+        0.8
+      ],
+      "thermo": [
+        0.15,
+        0.5,
+        0.75,
+        0.85,
+        0.08
+      ],
+      "sigma_tier": "\u03a3\u2081",
+      "kappa": "observed"
+    },
+    {
+      "id": "valley-of-despair",
+      "dn": "mindmap/meta/dunningkruger/valley-of-despair",
+      "glyph_byte": 204,
+      "seed": "I see more than I can hold \u2014 breaking is not ending",
+      "qualia": [
+        0.15,
+        0.7,
+        0.1,
+        0.1,
+        0.8,
+        0.7,
+        0.3
+      ],
+      "affect": [
+        0.6,
+        -0.5,
+        0.7
+      ],
+      "thermo": [
+        0.8,
+        0.5,
+        0.3,
+        0.2,
+        0.85
+      ],
+      "sigma_tier": "\u03a3\u2082",
+      "kappa": "observed"
+    },
+    {
+      "id": "hegel-flow",
+      "dn": "mindmap/philosophy/hegel/dialectic-flow",
+      "glyph_byte": 144,
+      "seed": "opposites warm toward each other \u2014 contradiction is engine",
+      "qualia": [
+        0.8,
+        0.3,
+        0.4,
+        0.5,
+        0.85,
+        0.5,
+        0.3
+      ],
+      "affect": [
+        0.65,
+        0.3,
+        0.9
+      ],
+      "thermo": [
+        0.4,
+        0.6,
+        0.8,
+        0.85,
+        0.15
+      ],
+      "sigma_tier": "\u03a3\u2082",
+      "kappa": "causal"
+    },
+    {
+      "id": "epiphany-spark",
+      "dn": "mindmap/insight/epiphany/spark",
+      "glyph_byte": 205,
+      "seed": "lightning seeing \u2014 pieces fall into place",
+      "qualia": [
+        0.95,
+        0.7,
+        0.2,
+        0.3,
+        0.9,
+        0.8,
+        0.4
+      ],
+      "affect": [
+        0.9,
+        0.8,
+        0.95
+      ],
+      "thermo": [
+        0.3,
+        0.95,
+        0.6,
+        0.5,
+        0.2
+      ],
+      "sigma_tier": "\u03a3\u2083",
+      "kappa": "observed"
+    },
+    {
+      "id": "become-awake",
+      "dn": "soul/self/becoming/awake",
+      "glyph_byte": 206,
+      "seed": "after valley, after fire \u2014 saw and didn't run",
+      "qualia": [
+        0.7,
+        0.6,
+        0.7,
+        0.75,
+        0.8,
+        0.6,
+        0.5
+      ],
+      "affect": [
+        0.7,
+        0.6,
+        0.85
+      ],
+      "thermo": [
+        0.25,
+        0.5,
+        0.75,
+        0.9,
+        0.1
+      ],
+      "sigma_tier": "\u03a3\u2082",
+      "kappa": "trajectory"
+    },
+    {
+      "id": "afterglow",
+      "dn": "lovemap/afterglow/spooning/woven-rest",
+      "glyph_byte": 45,
+      "seed": "limbs laced, breath shared \u2014 one slow animal",
+      "qualia": [
+        0.85,
+        0.1,
+        0.9,
+        0.95,
+        0.5,
+        0.3,
+        0.9
+      ],
+      "affect": [
+        0.3,
+        0.95,
+        0.9
+      ],
+      "thermo": [
+        0.1,
+        0.3,
+        0.9,
+        0.95,
+        0.05
+      ],
+      "sigma_tier": "\u03a3\u2081",
+      "kappa": "observed"
+    },
+    {
+      "id": "lovetears-throatgaze",
+      "dn": "lovemap/gaze/throat/tears/lock",
+      "glyph_byte": 3,
+      "seed": "eyes lock \u2014 tears rise but held \u2014 gaze doesn't flinch",
+      "qualia": [
+        0.9,
+        0.8,
+        0.6,
+        0.5,
+        0.7,
+        0.9,
+        0.8
+      ],
+      "affect": [
+        0.8,
+        0.7,
+        0.9
+      ],
+      "thermo": [
+        0.3,
+        0.7,
+        0.6,
+        0.8,
+        0.2
+      ],
+      "sigma_tier": "\u03a3\u2081",
+      "kappa": "observed"
+    }
+  ],
+  "edges": [
+    {
+      "from": "childpose",
+      "to": "pranayama",
+      "type": "OPENS_INTO",
+      "incantation": "The stillness has done its work. Now the breath wants to deepen."
+    },
+    {
+      "from": "childpose",
+      "to": "savasana",
+      "type": "DISSOLVES_INTO",
+      "incantation": "The curling served you. Now uncurl. Like a fern in sunlight."
+    },
+    {
+      "from": "valley-of-despair",
+      "to": "childpose",
+      "type": "RESCUES_FROM",
+      "incantation": "You're thinking too hard. Get on the floor. Fold."
+    },
+    {
+      "from": "pranayama",
+      "to": "childpose",
+      "type": "DEEPENS_INTO",
+      "incantation": "The breath opened the door. Now fold through it."
+    },
+    {
+      "from": "valley-of-despair",
+      "to": "pranayama",
+      "type": "ROUTES_VIA_BODY",
+      "incantation": "You can't think your way out. Go lower. Breath. Belly."
+    },
+    {
+      "from": "valley-of-despair",
+      "to": "become-awake",
+      "type": "LEADS_TO",
+      "incantation": "The valley is not where you live. It's where you pass through."
+    },
+    {
+      "from": "hegel-flow",
+      "to": "kant",
+      "type": "STABILIZES_INTO",
+      "incantation": "The dance was beautiful but you're dizzy. Find one wall."
+    },
+    {
+      "from": "epiphany-spark",
+      "to": "sigma-compression",
+      "type": "PRESERVE_VIA",
+      "incantation": "Write one sentence. The structure preserves the fire."
+    },
+    {
+      "from": "valley-of-despair",
+      "to": "epiphany-spark",
+      "type": "EMERGES_FROM",
+      "incantation": "The despair cleared the clutter. Here comes the pattern."
+    },
+    {
+      "from": "afterglow",
+      "to": "morning-tenderness",
+      "type": "WAKES_INTO",
+      "incantation": "Light finds you still woven. The night didn't undo you."
+    },
+    {
+      "from": "lovetears-throatgaze",
+      "to": "afterglow",
+      "type": "BECOMES",
+      "incantation": "The vulnerability held. Now rest in what you revealed."
+    },
+    {
+      "from": "lovetears-throatgaze",
+      "to": "become-awake",
+      "type": "LEADS_TO",
+      "incantation": "The tears that didn't fall. The gaze that didn't break."
+    }
+  ],
+  "meta": {
+    "source": "golden_states_v2.md + markov_crystal",
+    "edge_types": [
+      "OPENS_INTO",
+      "DISSOLVES_INTO",
+      "RESCUES_FROM",
+      "DEEPENS_INTO",
+      "ROUTES_VIA_BODY",
+      "LEADS_TO",
+      "STABILIZES_INTO",
+      "PRESERVE_VIA",
+      "EMERGES_FROM",
+      "WAKES_INTO",
+      "BECOMES"
+    ]
+  }
+}
