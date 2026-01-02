@@ -369,7 +369,7 @@ class CognitivePrimitives:
         """
         Encode a proposition (subject-predicate-object).
 
-        Example: encode_proposition("Ada", "loves", "learning")
+        Example: encode_proposition("agent", "explores", "knowledge")
 
         Args:
             subject: Subject of proposition
