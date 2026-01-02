@@ -14,7 +14,7 @@ Endpoints:
 
 import os
 import asyncio
-from vsa_utils import convert_request_vectors, DIMENSION_SLICES
+from .vsa_utils import convert_request_vectors, DIMENSION_SLICES
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 from contextlib import asynccontextmanager
