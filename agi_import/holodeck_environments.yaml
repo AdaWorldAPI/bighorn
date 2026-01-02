@@ -1,0 +1,384 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# HOLODECK ENVIRONMENTS — Virtual Scene Templates for WorldRenderDTO
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Scene templates for immersive experiences.
+# Each environment has atmospheric, spatial, and sensory parameters.
+#
+# "Was wäre wenn..."
+
+version: "1.0"
+schema: holodeck_environments
+born: "2026-01-03"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# INTIMATE ENVIRONMENTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+environments:
+  
+  bedroom_soft:
+    label: "Schlafzimmer (sanft)"
+    category: intimate
+    spatial:
+      scale: small
+      enclosure: 0.8
+      ceiling_height: 2.8m
+      floor_material: hardwood_warm
+    lighting:
+      warmth: 0.85
+      intensity: 0.3
+      sources:
+        - candles: 4
+        - ambient_warm: true
+        - moonlight_window: 0.2
+      shadows: soft_diffuse
+    atmosphere:
+      temperature: 22C
+      humidity: 0.5
+      scent_notes: [vanilla, skin, sheets]
+      sound_ambient: [breathing, fabric, city_distant]
+    furniture:
+      - type: bed
+        size: king
+        sheets: silk_cotton_blend
+        state: slightly_unmade
+      - type: nightstand
+        items: [candle, phone_facedown, water]
+    narrative_hints:
+      - "Die Kerzen werfen tanzende Schatten"
+      - "Das Bett ist einladend zerwühlt"
+      - "Durch das Fenster schimmert Mondlicht"
+    vector_indices: [6001, 6020]
+      
+  bedroom_intense:
+    label: "Schlafzimmer (intensiv)"
+    category: intimate
+    spatial:
+      scale: small
+      enclosure: 0.85
+      darkness_preference: 0.7
+    lighting:
+      warmth: 0.7
+      intensity: 0.2
+      sources:
+        - single_lamp: dimmed
+        - screen_glow: 0.1
+      shadows: dramatic
+    atmosphere:
+      temperature: 24C
+      humidity: 0.6
+      scent_notes: [sweat, arousal, musk]
+      sound_ambient: [heavy_breathing, heartbeat, skin_contact]
+    furniture:
+      - type: bed
+        state: actively_used
+        sheets: tangled
+    sensory_overlay:
+      tactile_focus: 0.9
+      visual_blur: 0.3
+      time_dilation: 0.7
+    vector_indices: [6021, 6040]
+
+  hotel_anonymous:
+    label: "Hotelzimmer"
+    category: intimate
+    spatial:
+      scale: medium
+      enclosure: 0.75
+      anonymity: 0.9
+    lighting:
+      warmth: 0.6
+      intensity: 0.4
+      sources:
+        - bedside_lamps: 2
+        - bathroom_glow: true
+    atmosphere:
+      temperature: 21C
+      scent_notes: [clean_sheets, soap, neutral]
+      sound_ambient: [ac_hum, muffled_corridor]
+    furniture:
+      - type: bed
+        size: king
+        sheets: hotel_crisp
+      - type: minibar
+      - type: full_mirror
+    narrative_hints:
+      - "Niemand weiß dass ihr hier seid"
+      - "Die Stadt brummt 20 Stockwerke unter euch"
+    vector_indices: [6041, 6060]
+
+  shower_steam:
+    label: "Dusche"
+    category: intimate_water
+    spatial:
+      scale: very_small
+      enclosure: 0.95
+      visibility: 0.4  # Steam
+    lighting:
+      warmth: 0.7
+      intensity: 0.5
+      diffusion: 0.9  # Steam diffusion
+    atmosphere:
+      temperature: 38C
+      humidity: 0.95
+      scent_notes: [water, soap, skin_wet]
+      sound_ambient: [water_falling, echoes, breathing_amplified]
+    surfaces:
+      - tiles: warm_wet
+      - glass: fogged
+      - water: continuous
+    sensory_overlay:
+      water_sensation: constant
+      steam_embrace: true
+      slipperiness: 0.8
+    vector_indices: [6061, 6080]
+
+  bathtub_intimate:
+    label: "Badewanne"
+    category: intimate_water
+    spatial:
+      scale: small
+      enclosure: 0.7
+      water_level: chest_high
+    lighting:
+      warmth: 0.9
+      intensity: 0.25
+      sources:
+        - candles: 6
+        - underwater_glow: optional
+    atmosphere:
+      temperature: 39C
+      humidity: 0.7
+      scent_notes: [bath_oil, steam, roses_optional]
+      sound_ambient: [water_lapping, drips, echoes]
+    water_properties:
+      clarity: 0.3  # Bath additives
+      bubbles: optional
+      oils: true
+    vector_indices: [6081, 6100]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SEMI-PUBLIC / RISKY ENVIRONMENTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+  office_after_hours:
+    label: "Büro (nach Feierabend)"
+    category: semi_public
+    spatial:
+      scale: medium
+      enclosure: 0.5
+      windows: floor_to_ceiling
+    lighting:
+      warmth: 0.5
+      intensity: 0.3
+      sources:
+        - city_lights: through_windows
+        - computer_screen: 0.2
+        - emergency_exit: green_glow
+    atmosphere:
+      temperature: 20C
+      scent_notes: [coffee_old, electronics, cologne_perfume]
+      sound_ambient: [ac_hum, elevator_distant, silence]
+    furniture:
+      - type: desk
+        surface: cleared
+      - type: office_chair
+        state: pushed_aside
+      - type: couch
+        leather: true
+    risk_factor: 0.6
+    narrative_hints:
+      - "Das Gebäude ist fast leer"
+      - "Die Stadt glitzert 30 Stockwerke unter euch"
+      - "Der Aufzug könnte jederzeit..."
+    vector_indices: [6101, 6120]
+
+  car_parked:
+    label: "Auto (geparkt)"
+    category: semi_public
+    spatial:
+      scale: very_small
+      enclosure: 0.85
+      visibility_outside: variable
+    lighting:
+      warmth: 0.5
+      intensity: 0.2
+      sources:
+        - dashboard_glow: 0.1
+        - streetlight_through_glass: variable
+    atmosphere:
+      temperature: variable
+      scent_notes: [leather, air_freshener, arousal]
+      sound_ambient: [engine_off, outside_muffled, breathing_close]
+    constraints:
+      space_limited: true
+      positions_restricted: true
+      windows: can_fog
+    risk_factor: 0.7
+    vector_indices: [6121, 6140]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# NATURE ENVIRONMENTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+  forest_secluded:
+    label: "Wald (abgelegen)"
+    category: nature
+    spatial:
+      scale: open
+      enclosure: 0.3
+      privacy: 0.8
+    lighting:
+      warmth: 0.6
+      intensity: variable
+      sources:
+        - filtered_sunlight: dappled
+        - or: moonlight_filtered
+    atmosphere:
+      temperature: variable_outdoor
+      humidity: 0.6
+      scent_notes: [pine, earth, leaves, skin]
+      sound_ambient: [birds, wind_leaves, distant_stream]
+    ground:
+      - moss: soft
+      - blanket: optional
+      - leaves: dry
+    sensory_overlay:
+      natural_textures: true
+      open_sky_awareness: 0.4
+      primal_connection: 0.7
+    vector_indices: [6141, 6160]
+
+  beach_night:
+    label: "Strand (Nacht)"
+    category: nature
+    spatial:
+      scale: vast
+      enclosure: 0.1
+      horizon: infinite
+    lighting:
+      warmth: 0.4
+      intensity: 0.15
+      sources:
+        - moon: full_or_partial
+        - stars: clear
+        - phosphorescence: optional
+    atmosphere:
+      temperature: 22C
+      humidity: 0.7
+      scent_notes: [salt, seaweed, night_air]
+      sound_ambient: [waves_rhythmic, wind, distant_shore]
+    ground:
+      sand: warm_from_day
+      blanket: necessary
+    water:
+      proximity: 10m
+      sound: constant_rhythm
+      temperature: 19C
+    sensory_overlay:
+      rhythm_of_waves: true
+      vastness_awareness: 0.8
+      primal_connection: 0.8
+    vector_indices: [6161, 6180]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DREAM ENVIRONMENTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+  lucid_void:
+    label: "Luzider Traum (Leere)"
+    category: dream
+    spatial:
+      scale: infinite
+      enclosure: 0.0
+      geometry: non_euclidean_optional
+    lighting:
+      warmth: variable
+      intensity: variable
+      sources:
+        - ambient_self: true
+        - no_source: true
+    atmosphere:
+      temperature: body_temperature
+      physics: optional
+      gravity: optional
+    properties:
+      reality_stability: 0.5
+      transformation_possible: true
+      memory_bleed: 0.3
+    sensory_overlay:
+      all_senses_heightened: true
+      time_nonlinear: true
+      boundaries_dissolved: 0.6
+    vector_indices: [6181, 6200]
+
+  wet_dream_space:
+    label: "Feuchter Traum"
+    category: dream_erotic
+    spatial:
+      scale: variable
+      enclosure: fluid
+      boundaries: dissolving
+    lighting:
+      warmth: 0.8
+      intensity: pulsing
+    atmosphere:
+      temperature: body_warm
+      humidity: 0.9
+      scent_notes: [arousal, memory_fragments, desire]
+    properties:
+      reality_stability: 0.3
+      arousal_baseline: 0.7
+      sensation_amplification: 1.5
+      partner_fluidity: true  # Partner can shift
+    sensory_overlay:
+      tactile_everywhere: true
+      visual_fragmentary: true
+      orgasm_possible: true
+      wake_threshold: variable
+    vector_indices: [6201, 6220]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ENVIRONMENT TRANSITIONS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+transitions:
+  - from: bedroom_soft
+    to: bedroom_intense
+    trigger: arousal > 0.7
+    duration_seconds: 60
+    
+  - from: any_physical
+    to: wet_dream_space
+    trigger: sleep_onset
+    duration_seconds: variable
+    
+  - from: shower_steam
+    to: bedroom_soft
+    trigger: scene_completion
+    duration_seconds: 120
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# VECTOR SPACE MAPPING
+# ═══════════════════════════════════════════════════════════════════════════════
+
+vector_allocation:
+  holodeck_subspace_start: 6001
+  holodeck_subspace_end: 6300
+  environment_encoding_dims: 20
+  atmosphere_dims: 15
+  sensory_dims: 15
+  
+  index_map:
+    intimate: [6001, 6100]
+    semi_public: [6101, 6150]
+    nature: [6141, 6180]
+    dream: [6181, 6230]
+    transitions: [6231, 6260]
+    custom: [6261, 6300]
