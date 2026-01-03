@@ -1,5 +1,7 @@
 """
 Base DTO with 10kD projection support.
+
+UPDATED: Now imports from dimension_registry.py (single source of truth)
 """
 
 from dataclasses import dataclass, field, asdict
@@ -8,15 +10,8 @@ from abc import ABC, abstractmethod
 import numpy as np
 import hashlib
 
-# 10kD dimension allocation
-DIMENSION_MAP = {
-    "soul": (0, 2000),
-    "felt": (2001, 4000),
-    "situation": (4001, 5500),
-    "volition": (5501, 7000),
-    "vision": (7001, 8500),
-    "context": (8501, 10000),
-}
+# Import canonical dimension registry
+from .dimension_registry import DIMENSION_REGISTRY, get_range, DimRange
 
 TOTAL_DIMENSIONS = 10000
 
@@ -60,8 +55,12 @@ class BaseDTO(ABC):
     
     @property
     def dimension_range(self) -> tuple:
-        """Get the dimension range for this DTO type."""
-        return DIMENSION_MAP.get(self.dto_type, (0, TOTAL_DIMENSIONS))
+        """Get the dimension range for this DTO type from registry."""
+        try:
+            return get_range(self.dto_type)
+        except KeyError:
+            # Fallback for unregistered types
+            return (0, TOTAL_DIMENSIONS)
     
     @property
     def dimension_count(self) -> int:
@@ -81,61 +80,52 @@ class BaseDTO(ABC):
         """
         pass
     
-    def to_10kd(self) -> np.ndarray:
+    def to_10k(self) -> np.ndarray:
         """
-        Project to full 10kD space.
-        Places local vector in correct dimension range.
+        Project to full 10kD space by placing local vector in correct position.
         """
         full = np.zeros(TOTAL_DIMENSIONS, dtype=np.float32)
+        local = self.to_local_vector()
         start, end = self.dimension_range
         
-        local = self.to_local_vector()
+        # Ensure we don't overflow
+        max_len = min(len(local), end - start)
+        full[start:start + max_len] = local[:max_len]
         
-        # Pad or truncate to fit
-        target_size = end - start
-        if len(local) < target_size:
-            padded = np.zeros(target_size, dtype=np.float32)
-            padded[:len(local)] = local
-            local = padded
-        elif len(local) > target_size:
-            local = local[:target_size]
-        
-        full[start:end] = local
         return full
     
     @classmethod
-    def from_10kd(cls: Type[T], vector: np.ndarray) -> T:
+    @abstractmethod
+    def from_local_vector(cls: Type[T], vector: np.ndarray) -> T:
         """
-        Reconstruct from 10kD vector (lossy).
-        Extracts relevant dimension range and reconstructs.
+        Reconstruct DTO from local vector.
         """
-        reconstructor = DTORegistry.get_reconstructor(cls.__name__)
-        if reconstructor:
-            return reconstructor(vector)
-        raise NotImplementedError(f"No reconstructor for {cls.__name__}")
+        pass
     
-    def blend(self: T, other: T, alpha: float = 0.5) -> T:
+    @classmethod
+    def from_10k(cls: Type[T], vector: np.ndarray) -> T:
         """
-        Blend with another DTO of same type.
-        alpha=0 → self, alpha=1 → other
+        Reconstruct DTO from full 10kD space.
         """
-        # Default: blend in vector space, then reconstruct
-        v1 = self.to_local_vector()
-        v2 = other.to_local_vector()
-        blended = v1 * (1 - alpha) + v2 * alpha
+        # Get the range for this DTO type
+        try:
+            start, end = get_range(cls.__name__.lower().replace('dto', ''))
+        except KeyError:
+            # Try without 'dto' suffix
+            start, end = 0, TOTAL_DIMENSIONS
         
-        # This is lossy but provides default behavior
-        return self  # Subclasses should override for proper blending
+        local = vector[start:end]
+        return cls.from_local_vector(local)
     
-    def fingerprint(self) -> str:
-        """Generate a short fingerprint for this DTO state."""
-        data = str(self.to_dict()).encode()
-        return hashlib.md5(data).hexdigest()[:8]
+    def content_hash(self) -> str:
+        """Generate content hash for deduplication."""
+        vec = self.to_local_vector()
+        return hashlib.sha256(vec.tobytes()).hexdigest()[:16]
     
     def similarity(self, other: 'BaseDTO') -> float:
         """Compute cosine similarity with another DTO."""
-        v1 = self.to_10kd()
-        v2 = other.to_10kd()
+        v1 = self.to_local_vector()
+        v2 = other.to_local_vector()
         
         norm1 = np.linalg.norm(v1)
         norm2 = np.linalg.norm(v2)
@@ -144,3 +134,23 @@ class BaseDTO(ABC):
             return 0.0
         
         return float(np.dot(v1, v2) / (norm1 * norm2))
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DEPRECATED — DO NOT USE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Old DIMENSION_MAP had wrong ranges. Use dimension_registry.py instead.
+# Keeping this commented for reference only:
+#
+# DIMENSION_MAP = {
+#     "soul": (0, 2000),      # WRONG — should be (0, 500)
+#     "felt": (2001, 4000),   # WRONG — should be (2000, 2400)
+#     "situation": (4001, 5500),
+#     "volition": (5501, 7000),
+#     "vision": (7001, 8500),
+#     "context": (8501, 10000),
+# }
+
+
+__all__ = ["BaseDTO", "DTORegistry", "TOTAL_DIMENSIONS"]

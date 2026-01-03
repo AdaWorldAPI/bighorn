@@ -10,6 +10,7 @@ Endpoints:
     /agi/nars/*      -> NARS inference
     /health          -> Health check
     /agi/mul/*       -> Meta-Uncertainty Layer
+    /agi/dto/*      -> DTO exchange (soul, felt, moment, etc.)
 """
 
 import os
@@ -32,6 +33,7 @@ from .nars import NARSReasoner
 from .thinking_styles import ResonanceEngine, STYLES, get_style, all_styles, RI
 from .meta_uncertainty import MetaUncertaintyEngine, TrustTexture, CompassMode
 from .persona import PersonaEngine, PersonaPriors, SoulField, OntologicalMode, InternalModel
+from .dto_endpoints import router as dto_router
 
 # =============================================================================
 # CONFIGURATION
@@ -240,6 +242,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# Include DTO router
+app.include_router(dto_router)
 
 # =============================================================================
 # KUZU ENDPOINTS
@@ -843,6 +848,7 @@ async def root():
             "styles": "/agi/styles/*",
             "mul": "/agi/mul/*",
             "persona": "/agi/persona/*",
+            "dto": "/agi/dto/*",
         },
         "docs": "/docs",
     }
