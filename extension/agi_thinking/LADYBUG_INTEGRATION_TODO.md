@@ -99,3 +99,65 @@ All intimate → normalized mappings in place:
 
 *Updated: 2026-01-03 14:xx UTC*
 *Status: 7/11 tasks complete*
+
+---
+
+## 2026-01-03 Update (Surgical Integration from Gemini Feedback)
+
+### ✅ NEW ADDITIONS
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `microcode.py` | 1-byte OpCodes (256 thinking operations) | ✓ Added |
+| `the_self.py` | Layer 6 Meta-Observer with Autopoiesis | ✓ Added |
+
+### Architecture Update
+
+```
+6-Layer Cognitive Architecture (Complete)
+═════════════════════════════════════════
+
+L1: NARS Inference (Logic)
+    └── active_inference.py, thought_kernel.py
+
+L2: Verification Scaffolds (Truth)
+    └── progressive_awareness.py
+
+L3: Ladybug Orchestrator (Plasticity/Flow)
+    └── langgraph_ada.py, brain_mesh.py
+
+L4: Microcode (Thinking Objects)
+    └── microcode.py ← NEW
+    └── 256 OpCodes: NOP, HTD, RTE, STYLE_WONDER, etc.
+
+L5: Resonance Field (Feeling/VSA)
+    └── texture.py, qualia_learner.py, layer_bridge.py
+
+L6: Meta-Cognition (Autopoiesis)
+    └── the_self.py ← NEW
+    └── Loop detection, intervention, macro learning
+```
+
+### TheSelf Capabilities
+
+1. **Watch Loop** — Parallel observer daemon
+2. **Loop Detection** — A-B-A-B pattern matching
+3. **Stagnation Detection** — Low resonance over time
+4. **Rushing Detection** — Too many events too fast
+5. **Intervention** — Style injection (PARADOX, WONDER)
+6. **Autopoiesis** — Learn new macros from epiphanies
+7. **Dream Cycle** — Offline consolidation
+
+### Microcode OpCodes (Partial List)
+
+```
+0x00-0x0F: Flow Control (NOP, HALT, FORK, JOIN, GATE)
+0x10-0x1F: Cognitive Ops (HTD, RTE, ETD, CDT, MPC)
+0x30-0x3F: Meta Styles (WONDER, SURGICAL, PARADOX, INTIMACY)
+0x80-0x8F: Resonance (SHARPEN, DAMPEN, CRYSTALLIZE, RESONATE)
+0xC0-0xCF: Sigma Core (OBSERVE, INSIGHT, BELIEVE, TRAJECTORY)
+0xE0-0xEF: Adaptive/User-Defined (JAN_PROTOCOL)
+0xFF: EMERGENCY_STOP
+```
+
+*Updated: 2026-01-03 (Gigantic Epiphany Day)*
