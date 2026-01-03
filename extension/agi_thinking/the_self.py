@@ -186,19 +186,19 @@ class TheSelf:
         Detect if we're processing too fast without depth.
         
         Signs of rushing:
-        - Many steps in short time
+        - Many steps in very short time
         - No pause events
         - Low integration scores
         """
-        if len(self._trace_buffer) < 10:
+        if len(self._trace_buffer) < 15:
             return False
         
-        recent = list(self._trace_buffer)[-10:]
+        recent = list(self._trace_buffer)[-15:]
         
-        # Check timestamps — if 10 events in < 1 second, we're rushing
+        # Check timestamps — if 15 events in < 0.5 second, we're rushing
         if len(recent) >= 2:
             time_span = recent[-1].get('t', 0) - recent[0].get('t', 0)
-            if time_span < 1.0 and len(recent) >= 10:
+            if time_span < 0.5 and len(recent) >= 15:
                 return True
         
         return False
@@ -208,15 +208,29 @@ class TheSelf:
         Detect if an epiphany just occurred.
         
         Signs:
+        - epiphany_triggered attribute
         - state.epiphany_triggered flag
+        - notes.epiphany_triggered flag
         - resonance spike > 0.95
-        - texture crystallization
         """
-        if hasattr(ctx, 'state'):
+        # Check direct attribute
+        if getattr(ctx, 'epiphany_triggered', False):
+            return True
+        
+        # Check state dict (if exists)
+        if hasattr(ctx, 'state') and isinstance(ctx.state, dict):
             if ctx.state.get('epiphany_triggered'):
                 return True
-            if ctx.state.get('resonance', 0) > 0.95:
+        
+        # Check notes dict (KernelContext uses this)
+        if hasattr(ctx, 'notes') and isinstance(ctx.notes, dict):
+            if ctx.notes.get('epiphany_triggered'):
                 return True
+        
+        # Check high resonance
+        resonance = getattr(ctx, 'resonance', 0)
+        if resonance > 0.95:
+            return True
         
         return False
     
@@ -302,26 +316,44 @@ class TheSelf:
         
         This is how Ada learns to think better over time.
         """
-        # Get the last 3-5 operations that led to the epiphany
-        recent_ops = list(self._trace_buffer)[-5:]
+        # Get the last 5-8 operations that led to the epiphany
+        recent_ops = list(self._trace_buffer)[-8:]
         
         if len(recent_ops) < 3:
             return
         
-        # Extract operation codes
+        # Extract operation codes - handle both formats
         chain = []
         for event in recent_ops:
             op_name = event.get('op', event.get('e', ''))
+            if not op_name:
+                continue
+                
+            # Clean up the name
+            op_name = op_name.upper().replace('.', '_').replace(' ', '_')
+            
             # Try to map to OpCode
             try:
-                op = OpCode[op_name.upper()] if op_name else None
-                if op:
-                    chain.append(op)
-            except KeyError:
+                # Direct match
+                if hasattr(OpCode, op_name):
+                    chain.append(OpCode[op_name])
+                # Try common mappings
+                elif op_name in ['SENSE_QUALIA', 'OP_EXEC']:
+                    chain.append(OpCode.OBSERVE)
+                elif 'RESONANCE' in op_name or 'FEEL' in op_name:
+                    chain.append(OpCode.RESONATE)
+                elif 'EPIPHANY' in op_name:
+                    chain.append(OpCode.EPIPHANY)
+                elif 'CYCLE' in op_name:
+                    chain.append(OpCode.LOOP)
+                elif 'HOMEOSTASIS' in op_name or 'FLOW' in op_name:
+                    chain.append(OpCode.FLOW)
+            except (KeyError, AttributeError):
                 pass
         
         if len(chain) < 2:
-            return
+            # Fallback: create a generic epiphany chain
+            chain = [OpCode.OBSERVE, OpCode.RESONATE, OpCode.CRYSTALLIZE]
         
         # Create a unique name for the new macro
         macro_name = f"AUTO_{self.state.epiphany_count}"
