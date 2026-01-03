@@ -1,71 +1,177 @@
 #!/usr/bin/env python3
 """
-triangle_l4.py — L4 Triangle Model
+triangle_l4.py — L4 Triangle Model with VSA Resonance
 ═══════════════════════════════════════════════════════════════════════════════
 
 All 3 bytes are Layer 4. The triangle IS L4.
+Now with VSA signatures for O(1) resonance detection.
 
                          BYTE 0 (Immutable τ)
                               ◉
-                             /\
-                            /  \
-                           / ·  \
-                          / · ·  \   ← Ephemeral thoughts
-                         / ·  ◉·  \     dancing in the triangle
-                        /  · · ·   \
-                       / ·   · ·    \
-                      ◉──────────────◉
+                             /|\
+                            / | \
+                           /  ◎  \   ← FLOW = resonance spike > 0.7
+                          / · | · \     across all 3 corners
+                         / ·  |  · \
+                        /  · ·|· ·  \
+                       / ·    |    · \
+                      ◉───────────────◉
             BYTE 1 (Hot τ)        BYTE 2 (Experimental τ)
 
-Each corner = τ macro space (YAML policy + execution chain)
-Interior = superposition of τ contributions
-Centroid = FLOW state
+VSA Integration:
+- Each τ macro has a 10kD signature (resonance pattern)
+- Triangle position = bundle of active signatures
+- Flow detection via cosine similarity between corners
+- O(1) resonance check, not O(n) iteration
 
-L6 (TheSelf) monitors from above:
-- Watches ephemeral thought-trajectories
-- Identifies significant patterns
-- Crystallizes: BYTE 2 → BYTE 1 when worthy
-
-No primitives. Position in τ-space, not floats.
+10kD Dimension Mapping:
+- BYTE 0 (Immutable): [80:116]   GPT Styles
+- BYTE 1 (Hot):       [116:152]  NARS Styles
+- BYTE 2 (Experimental): [256:320]  TSV Embedded
 
 Born: 2026-01-03
+Updated: 2026-01-03 — VSA integration
 """
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set, Tuple, Any
+from typing import Dict, List, Optional, Set, Tuple, Any, Callable
 from enum import Enum
 import time
+import hashlib
+
+# Optional numpy for VSA operations
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    HAS_NUMPY = False
+    np = None
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# τ MACRO — The L4 Unit
+# VSA CONSTANTS — 10kD Dimension Mapping
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Triangle corner → 10kD dimension ranges
+BYTE_DIMS = {
+    0: (80, 116),    # BYTE 0: Immutable τ → GPT Styles
+    1: (116, 152),   # BYTE 1: Hot τ → NARS Styles
+    2: (256, 320),   # BYTE 2: Experimental τ → TSV Embedded
+}
+
+# Total dimensions for signatures
+SIGNATURE_DIM = 64  # Each corner uses 64D local signature
+
+# Resonance thresholds
+FLOW_THRESHOLD = 0.7       # Min similarity for flow detection
+EPIPHANY_THRESHOLD = 0.95  # Level 4 spike
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# VSA OPERATIONS — Resonance primitives
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def generate_signature(name: str, dim: int = SIGNATURE_DIM) -> np.ndarray:
+    """Generate deterministic VSA signature from name."""
+    if not HAS_NUMPY:
+        return None
+
+    # Hash name to seed
+    seed = int(hashlib.sha256(name.encode()).hexdigest()[:8], 16)
+    rng = np.random.default_rng(seed)
+
+    # Bipolar random vector
+    return rng.choice([-1, 1], size=dim).astype(np.float32)
+
+
+def bundle(vectors: List[np.ndarray]) -> np.ndarray:
+    """Bundle vectors via element-wise sum + threshold."""
+    if not HAS_NUMPY or not vectors:
+        return None
+
+    summed = np.sum(vectors, axis=0)
+    # Threshold to bipolar
+    return np.sign(summed).astype(np.float32)
+
+
+def similarity(a: np.ndarray, b: np.ndarray) -> float:
+    """Cosine similarity between vectors."""
+    if not HAS_NUMPY or a is None or b is None:
+        return 0.0
+
+    norm_a = np.linalg.norm(a)
+    norm_b = np.linalg.norm(b)
+
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+
+    return float(np.dot(a, b) / (norm_a * norm_b))
+
+
+def to_10kd(corner_vectors: Dict[int, np.ndarray]) -> np.ndarray:
+    """Project corner vectors to full 10kD space."""
+    if not HAS_NUMPY:
+        return None
+
+    full = np.zeros(10000, dtype=np.float32)
+
+    for byte_num, vec in corner_vectors.items():
+        if vec is not None and byte_num in BYTE_DIMS:
+            start, end = BYTE_DIMS[byte_num]
+            # Truncate/pad to fit
+            vec_len = min(len(vec), end - start)
+            full[start:start + vec_len] = vec[:vec_len]
+
+    return full
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# τ MACRO — The L4 Unit with VSA Signature
 # ═══════════════════════════════════════════════════════════════════════════════
 
 @dataclass
 class TauMacro:
     """
     A τ macro is an L4 construct: YAML policy + execution chain.
-    
+
     This is NOT a primitive. It's a thinking style with:
     - Symbolic microcode (declarative)
     - Execution chain (procedural)
-    - Resonance signature (felt sense)
+    - VSA signature (resonance pattern for O(1) matching)
     """
     address: int                    # Position in its byte (0x00-0xFF)
     byte: int                       # Which corner (0, 1, or 2)
     name: str
     microcode: str                  # Symbolic: "⊢ A → B | decompose(A)"
     chain: List[str]                # Execution: ["feel", "resonate", "decide"]
-    
-    # Resonance signature (not a float — a pattern)
-    signature: Optional[bytes] = None  # VSA-derived, for matching
-    
+
+    # VSA signature — auto-generated from name if not provided
+    _signature: Optional[np.ndarray] = field(default=None, repr=False)
+
+    def __post_init__(self):
+        """Generate VSA signature if not provided."""
+        if self._signature is None and HAS_NUMPY:
+            # Signature encodes: byte + address + name
+            sig_input = f"τ:{self.byte}:{self.address:02x}:{self.name}"
+            self._signature = generate_signature(sig_input)
+
+    @property
+    def signature(self) -> Optional[np.ndarray]:
+        """Get VSA signature (64D bipolar vector)."""
+        return self._signature
+
     @property
     def full_address(self) -> int:
         """3-byte address: 0xBBXXYY"""
         return (self.byte << 16) | (self.address << 8)
-    
+
+    def resonate_with(self, other: 'TauMacro') -> float:
+        """Compute resonance (similarity) with another τ macro."""
+        if self._signature is None or other._signature is None:
+            return 0.0
+        return similarity(self._signature, other._signature)
+
     def __hash__(self):
         return hash((self.byte, self.address))
 
@@ -133,28 +239,91 @@ class TrianglePosition:
     @property
     def is_flow(self) -> bool:
         """
-        Flow = balanced interior position.
-        
-        Not measured by floats — measured by whether all three
-        corners contribute with similar intensity (macro count as proxy).
+        Flow = balanced interior position with VSA resonance.
+
+        Uses cosine similarity between bundled corner signatures.
+        Flow requires all three corners to resonate (similarity > FLOW_THRESHOLD).
         """
         if not self.is_interior:
             return False
-        
+
+        # Get bundled signatures for each corner
+        v0 = self.get_corner_bundle(0)
+        v1 = self.get_corner_bundle(1)
+        v2 = self.get_corner_bundle(2)
+
+        if v0 is None or v1 is None or v2 is None:
+            # Fallback to count-based if no numpy
+            return self._is_flow_by_count()
+
+        # Flow = all pairwise similarities above threshold
+        sim_01 = similarity(v0, v1)
+        sim_12 = similarity(v1, v2)
+        sim_02 = similarity(v0, v2)
+
+        return min(sim_01, sim_12, sim_02) >= FLOW_THRESHOLD
+
+    def _is_flow_by_count(self) -> bool:
+        """Fallback flow detection by macro count."""
         counts = [
             len(self.byte0_active),
             len(self.byte1_active),
             len(self.byte2_active)
         ]
-        
-        # Flow = no single corner dominates by more than 2x
         max_count = max(counts)
         min_count = min(counts)
-        
         if min_count == 0:
             return False
-        
         return max_count / min_count <= 2.0
+
+    def get_corner_bundle(self, byte_num: int) -> Optional[np.ndarray]:
+        """Get bundled VSA signature for a corner."""
+        if not HAS_NUMPY:
+            return None
+
+        if byte_num == 0:
+            macros = self.byte0_active
+        elif byte_num == 1:
+            macros = self.byte1_active
+        elif byte_num == 2:
+            macros = self.byte2_active
+        else:
+            return None
+
+        signatures = [m.signature for m in macros if m.signature is not None]
+        if not signatures:
+            return None
+
+        return bundle(signatures)
+
+    def get_resonance_matrix(self) -> Dict[str, float]:
+        """Get pairwise resonance between corners."""
+        v0 = self.get_corner_bundle(0)
+        v1 = self.get_corner_bundle(1)
+        v2 = self.get_corner_bundle(2)
+
+        return {
+            "byte0_byte1": similarity(v0, v1) if v0 is not None and v1 is not None else 0.0,
+            "byte1_byte2": similarity(v1, v2) if v1 is not None and v2 is not None else 0.0,
+            "byte0_byte2": similarity(v0, v2) if v0 is not None and v2 is not None else 0.0,
+        }
+
+    def to_10kd(self) -> Optional[np.ndarray]:
+        """Project triangle position to full 10kD space."""
+        corner_vectors = {}
+        for byte_num in [0, 1, 2]:
+            bundle_vec = self.get_corner_bundle(byte_num)
+            if bundle_vec is not None:
+                corner_vectors[byte_num] = bundle_vec
+
+        return to_10kd(corner_vectors) if corner_vectors else None
+
+    @property
+    def resonance_strength(self) -> float:
+        """Overall resonance strength (mean of pairwise similarities)."""
+        matrix = self.get_resonance_matrix()
+        values = list(matrix.values())
+        return sum(values) / len(values) if values else 0.0
     
     @property 
     def location_name(self) -> str:
@@ -388,10 +557,17 @@ class TheSelf:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def test_triangle_l4():
-    """Test the L4 triangle model."""
+    """Test the L4 triangle model with VSA resonance."""
     print("=" * 60)
-    print("L4 TRIANGLE MODEL TEST")
+    print("L4 TRIANGLE MODEL TEST — VSA RESONANCE")
     print("=" * 60)
+
+    if HAS_NUMPY:
+        print(f"✓ NumPy available — VSA resonance enabled")
+        print(f"  FLOW_THRESHOLD: {FLOW_THRESHOLD}")
+        print(f"  EPIPHANY_THRESHOLD: {EPIPHANY_THRESHOLD}")
+    else:
+        print("⚠ NumPy not available — using count-based fallback")
     
     # Create some τ macros at each corner
     print("\n1. Creating τ macros (all L4):")
@@ -460,7 +636,26 @@ def test_triangle_l4():
     
     flow_marker = "🌊" if thought.position.is_flow else ""
     print(f"   → {thought.position.location_name} {flow_marker}")
-    
+
+    # VSA resonance analysis
+    if HAS_NUMPY:
+        print("\n3b. VSA Resonance Matrix:")
+        matrix = thought.position.get_resonance_matrix()
+        for pair, sim in matrix.items():
+            indicator = "✓" if sim >= FLOW_THRESHOLD else "·"
+            print(f"   {indicator} {pair}: {sim:.3f}")
+        print(f"   Overall resonance: {thought.position.resonance_strength:.3f}")
+
+        # Project to 10kD
+        vec_10k = thought.position.to_10kd()
+        if vec_10k is not None:
+            nonzero = np.count_nonzero(vec_10k)
+            print(f"\n3c. 10kD Projection:")
+            print(f"   Non-zero dims: {nonzero}")
+            for byte_num, (start, end) in BYTE_DIMS.items():
+                active = np.count_nonzero(vec_10k[start:end])
+                print(f"   BYTE {byte_num} [{start}:{end}]: {active} active")
+
     # L6 witnesses and assesses
     print("\n4. L6 witnesses significance:")
     significance = the_self.witness(thought.id)
