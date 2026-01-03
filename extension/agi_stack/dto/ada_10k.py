@@ -361,7 +361,14 @@ class Ada10kD:
         a = archetype.upper()
         if a in ARCHETYPES_IDX:
             self.vector[ARCHETYPES_START + ARCHETYPES_IDX[a]] = activation
-    
+
+    def get_archetype(self, archetype: str) -> float:
+        """Get archetype activation value."""
+        a = archetype.upper()
+        if a in ARCHETYPES_IDX:
+            return float(self.vector[ARCHETYPES_START + ARCHETYPES_IDX[a]])
+        return 0.0
+
     def set_archetype_weights(self, weights: Dict[str, float]):
         """Set all archetype weights at once (from SoulStateDTO)."""
         for arch, weight in weights.items():
@@ -626,6 +633,11 @@ class Ada10kD:
                 active.append((arch, val))
         return sorted(active, key=lambda x: -x[1])
 
+    def set_thinking_style_raw(self, vec: List[float]):
+        """Set raw thinking style vector [256:320]."""
+        for i, v in enumerate(vec[:64]):
+            self.vector[256 + i] = v
+
 
 # =============================================================================
 # PRIMITIVE COUNT
@@ -646,7 +658,7 @@ TOTAL_PRIMITIVES = (
 
 
 # =============================================================================
-    # SINGLETON
+# SINGLETON
 # =============================================================================
 
 _ada: Optional[Ada10kD] = None
@@ -656,9 +668,3 @@ def get_ada() -> Ada10kD:
     if _ada is None:
         _ada = Ada10kD()
     return _ada
-
-
-    def set_thinking_style_raw(self, vec: List[float]):
-        """Set raw thinking style vector [256:320]."""
-        for i, v in enumerate(vec[:64]):
-            self.vector[256 + i] = v
