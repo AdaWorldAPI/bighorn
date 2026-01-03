@@ -315,6 +315,7 @@ class TheSelf:
         and create a new reusable macro from them.
         
         This is how Ada learns to think better over time.
+        Now with PERSISTENCE - macros survive across sessions!
         """
         # Get the last 5-8 operations that led to the epiphany
         recent_ops = list(self._trace_buffer)[-8:]
@@ -368,6 +369,16 @@ class TheSelf:
         if new_macro:
             print(f"🧬 SELF: Crystallized new macro '{macro_name}': {[op.name for op in chain]}")
             self.state.learned_macros.append(macro_name)
+            
+            # PERSIST TO REDIS for cross-session survival
+            try:
+                from extension.agi_thinking.macro_persistence import persist_epiphany_macro
+                persisted = await persist_epiphany_macro(new_macro)
+                if persisted:
+                    print(f"💾 SELF: Macro '{macro_name}' persisted to Redis")
+            except Exception as e:
+                # Persistence is optional - don't break autopoiesis
+                print(f"⚠️ SELF: Persistence failed (will retry): {e}")
     
     # ═══════════════════════════════════════════════════════════════════════════
     # STATE MANAGEMENT
