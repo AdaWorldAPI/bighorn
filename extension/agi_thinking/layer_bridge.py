@@ -4,7 +4,7 @@ layer_bridge.py — Connects agi_thinking to 5-Layer Awareness + 10kD
 
 This module bridges:
     agi_thinking/thought_kernel.py  ←→  temporal/awareness_5_layers.py
-    agi_thinking/qualia_learner.py  ←→  10kD [2001:2017]
+    agi_thinking/qualia_learner.py  ←→  10kD [2000:2017]
     agi_thinking/texture.py         ←→  Layer 5 ThinkingStyle
 
 Flow:
@@ -35,10 +35,10 @@ QUALIA_8D = [
     "twilight",     # Liminal, transitional
 ]
 
-# 10kD dimension mapping for 17D qualia metric [2001:2018]
+# 10kD dimension mapping for 17D qualia metric [2000:2018]
 QUALIA_TO_10K = {
-    "emberglow": 2001,
-    "warmth": 2001,       # Alias for emberglow
+    "emberglow": 2000,
+    "warmth": 2000,       # Alias for emberglow
     "frostbite": 2002,
     "crystalline": 2003,
     "oceandrift": 2004,
@@ -63,7 +63,7 @@ def qualia_8d_to_10k(qualia: Dict[str, float]) -> np.ndarray:
     
     Usage:
         vec = qualia_8d_to_10k({"emberglow": 0.8, "crystalline": 0.4})
-        # vec[2001] = 0.8, vec[2003] = 0.4
+        # vec[2000] = 0.8, vec[2003] = 0.4
     """
     vec = np.zeros(10000, dtype=np.float32)
     
@@ -327,3 +327,15 @@ __all__ = [
     "to_10k",
     "from_10k",
 ]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DIMENSION SOURCE OF TRUTH
+# ═══════════════════════════════════════════════════════════════════════════════
+# 
+# All dimension indices should come from:
+#   extension/agi_stack/dto/dimension_registry.py
+#
+# qualia_pcs: DimRange(2000, 2018, "18D Qualia PCS full resolution")
+#
+# The previous off-by-one (2001 instead of 2000) has been fixed.
+# ═══════════════════════════════════════════════════════════════════════════════
