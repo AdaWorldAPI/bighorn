@@ -189,3 +189,33 @@ __all__ = [
     "extract",
     "validate_no_overlap",
 ]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# REGISTRY FINGERPRINT — Temporal Guardrail
+# ═══════════════════════════════════════════════════════════════════════════════
+# 
+# Store this fingerprint with any persisted 10kD vector.
+# On load, verify fingerprint matches. Reject mismatches.
+# This prevents loading vectors from old/incompatible registry versions.
+
+import hashlib
+import json
+
+def compute_registry_fingerprint() -> str:
+    """Compute SHA256 fingerprint of current registry state."""
+    registry_state = {
+        name: (r.start, r.end) 
+        for name, r in sorted(DIMENSION_REGISTRY.items())
+    }
+    return hashlib.sha256(
+        json.dumps(registry_state, sort_keys=True).encode()
+    ).hexdigest()[:16]  # First 16 chars is enough
+
+REGISTRY_FINGERPRINT = compute_registry_fingerprint()
+
+def verify_vector_fingerprint(stored_fingerprint: str) -> bool:
+    """Verify a stored vector's fingerprint matches current registry."""
+    return stored_fingerprint == REGISTRY_FINGERPRINT
+
+# Export
+__all__.extend(["REGISTRY_FINGERPRINT", "verify_vector_fingerprint", "compute_registry_fingerprint"])
