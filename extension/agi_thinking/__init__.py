@@ -17,6 +17,7 @@ Cross-cutting:
   TheSelf: Meta-observer that watches ALL layers (not a layer itself)
   MUL Agency: Meta-Uncertainty Layer gates Free Will as uncertainty-aware agency
   Dreamer: Pandas-based sleep cycle for pattern discovery (Autopoiesis)
+  Ladybug: Governance gate for cognitive transitions (rung gating)
 
 All layers operate in 10000D VSA space.
 1024D exists only for derived artifacts after L5.
@@ -33,9 +34,10 @@ Core Modules:
   triangle_l4.py      — L4 Triangle Model with VSA resonance
   mul_agency.py       — MUL-Gated Friston Agency (Free Will as uncertainty)
   dreamer_pandas.py   — Pandas Dreamer (Sleep cycle pattern discovery)
+  ladybug_engine.py   — Ladybug orchestrator (rung gating, workflow execution)
 """
 
-__version__ = "0.4.0"  # MUL Agency + Dreamer
+__version__ = "0.5.0"  # Ladybug Engine
 
 # Core exports
 from extension.agi_thinking.microcode import OpCode, ThinkingMacro, MACRO_REGISTRY
@@ -72,7 +74,27 @@ try:
     from extension.agi_thinking.triangle_l4 import (
         TauMacro,
         TrianglePosition,
-        EphemeralThought
+        EphemeralThought,
+        update_ladybug_from_triangle
+    )
+except ImportError:
+    pass
+
+# Ladybug Engine exports (optional)
+try:
+    from extension.agi_thinking.ladybug_engine import (
+        LadybugEngine,
+        LadybugState,
+        Workflow,
+        WorkflowStep,
+        Rung,
+        SymbolicOp,
+        TransitionDecision,
+        TransitionResult,
+        get_ladybug,
+        ladybug_boot,
+        ladybug_tick,
+        ladybug_status,
     )
 except ImportError:
     pass

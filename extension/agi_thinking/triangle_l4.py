@@ -680,5 +680,78 @@ def test_triangle_l4():
     print("\n" + "=" * 60)
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# LADYBUG INTEGRATION
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def update_ladybug_from_triangle(
+    position: TrianglePosition,
+    ladybug_state: Optional[Any] = None,
+) -> Dict[str, Any]:
+    """
+    Update Ladybug state based on triangle position.
+    
+    Triangle State → Rung Auto-Adjust:
+    - stagnant (all corners < 0.3): Rung decays
+    - exploring (1-2 corners > 0.5): Rung holds  
+    - flow (all corners > 0.7): Rung can advance
+    - epiphany (peak > 0.95): Rung leaps
+    
+    Returns: Dict with triangle state and recommended rung action
+    """
+    # Get resonance matrix
+    resonance = position.get_resonance_matrix()
+    
+    # Calculate corner resonances
+    byte0_res = resonance.get("byte0_byte1", 0) + resonance.get("byte0_byte2", 0)
+    byte1_res = resonance.get("byte0_byte1", 0) + resonance.get("byte1_byte2", 0)
+    byte2_res = resonance.get("byte0_byte2", 0) + resonance.get("byte1_byte2", 0)
+    
+    # Normalize (each corner appears in 2 pairs)
+    byte0_res /= 2
+    byte1_res /= 2
+    byte2_res /= 2
+    
+    # Determine triangle state
+    peak = position.resonance_strength
+    all_resonances = [byte0_res, byte1_res, byte2_res]
+    
+    if peak > 0.95:
+        triangle_state = "epiphany"
+        rung_action = "leap"  # Jump 2 rungs
+    elif position.is_flow:
+        triangle_state = "flow"
+        rung_action = "advance"  # Advance 1 rung
+    elif any(r > 0.5 for r in all_resonances):
+        triangle_state = "exploring"
+        rung_action = "hold"  # No change
+    else:
+        triangle_state = "stagnant"
+        rung_action = "decay"  # Drop 1 rung
+    
+    result = {
+        "triangle_state": triangle_state,
+        "rung_action": rung_action,
+        "resonances": {
+            "byte0": byte0_res,
+            "byte1": byte1_res,
+            "byte2": byte2_res,
+            "peak": peak,
+        },
+        "is_flow": position.is_flow,
+        "location": position.location_name,
+    }
+    
+    # If ladybug_state provided, update it directly
+    if ladybug_state is not None:
+        ladybug_state.byte0_resonance = byte0_res
+        ladybug_state.byte1_resonance = byte1_res
+        ladybug_state.byte2_resonance = byte2_res
+        ladybug_state.triangle_peak = peak
+        ladybug_state.is_flow_state = position.is_flow
+    
+    return result
+
+
 if __name__ == "__main__":
     test_triangle_l4()
