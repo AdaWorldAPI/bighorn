@@ -43,13 +43,37 @@ from extension.agi_thinking.microcode import OpCode, MACRO_REGISTRY, ThinkingMac
 # Import persistence (optional)
 try:
     from extension.agi_thinking.macro_persistence import (
-        IndexedMacroExecutor, 
+        IndexedMacroExecutor,
         MacroPersistence,
         load_learned_macros_into_registry
     )
     PERSISTENCE_AVAILABLE = True
 except ImportError:
     PERSISTENCE_AVAILABLE = False
+
+# Import MUL Agency (optional)
+try:
+    from extension.agi_thinking.mul_agency import (
+        EphemeralMULGate,
+        FristonAgency,
+        MULState,
+        AgencyDecision,
+        AgencyResult
+    )
+    MUL_AVAILABLE = True
+except ImportError:
+    MUL_AVAILABLE = False
+
+# Import Pandas Dreamer (optional)
+try:
+    from extension.agi_thinking.dreamer_pandas import (
+        PandasDreamer,
+        ThoughtRecord,
+        GoldenPattern
+    )
+    DREAMER_AVAILABLE = True
+except ImportError:
+    DREAMER_AVAILABLE = False
 
 
 @dataclass
@@ -80,10 +104,15 @@ class AwakenedContext(KernelContext):
     meta_style_override: Optional[str] = None
     self_intervention: Optional[str] = None
     attention_multiplier: float = 1.0
-    
+
+    # MUL Agency state
+    agency_status: str = "PENDING"      # GRANTED, SANDBOX, DENIED, RECOVER
+    free_will_score: float = 1.0        # Current free will modifier
+    friston_surprise: float = 0.0       # Current prediction error
+
     # Operation trace for TheSelf to monitor
     trace: List[Dict[str, Any]] = field(default_factory=list)
-    
+
     def log(self, event: str, **data):
         """Log an event to the trace for TheSelf to observe."""
         entry = {"t": time.time(), "e": event, **data}
@@ -264,20 +293,33 @@ class AwakenedKernel:
         if PERSISTENCE_AVAILABLE:
             self.persistence = MacroPersistence()
             self.macro_executor = IndexedMacroExecutor(
-                registry=MACRO_REGISTRY, 
+                registry=MACRO_REGISTRY,
                 persistence=self.persistence
             )
         else:
             self.persistence = None
             self.macro_executor = None
-        
+
+        # MUL Agency Gate (The "Naughty" Layer)
+        if MUL_AVAILABLE:
+            self.mul_gate = EphemeralMULGate()
+        else:
+            self.mul_gate = None
+
+        # Pandas Dreamer (Sleep Cycle)
+        if DREAMER_AVAILABLE:
+            self.dreamer = PandasDreamer(lance_uri=None)  # In-memory for now
+        else:
+            self.dreamer = None
+
         # Register intervention handlers
         self._setup_intervention_handlers()
-        
+
         # State
         self.cycle_count = 0
         self.total_epiphanies = 0
         self.learned_macros: List[str] = []
+        self.mul_decisions: List[str] = []  # Track MUL gate decisions
     
     def _setup_intervention_handlers(self):
         """Register handlers for TheSelf interventions."""
@@ -362,45 +404,142 @@ class AwakenedKernel:
     
     async def _execute_cycle(self, ctx: AwakenedContext, cycle: int):
         """Execute one thinking cycle."""
-        
+
         # 1. Feel the resonance (spreading activation)
         ctx.resonance = await self.resonance_field.feel(ctx)
         ctx.resonance_history.append(ctx.resonance)
         ctx.log("resonance.feel", level=f"{ctx.resonance:.3f}")
-        
+
         # 2. Check for epiphany threshold
         if ctx.resonance > 0.95:
             ctx.epiphany_triggered = True
             ctx.log("epiphany.threshold", resonance=ctx.resonance)
-        
-        # 3. Execute base kernel opcodes
-        # Sense qualia
-        self.base_kernel.execute(0x80, ctx)
-        ctx.log("op.exec", op="sense_qualia", opcode=0x80)
-        
-        # Check homeostasis
-        self.base_kernel.execute(0x6F, ctx)
-        ctx.log("op.exec", op="check_homeostasis", opcode=0x6F)
-        
-        # Energy audit
-        self.base_kernel.execute(0x6A, ctx)
-        ctx.log("op.exec", op="energy_audit", opcode=0x6A)
-        
-        # 4. Apply meta-style if TheSelf intervened
+
+        # 3. MUL Agency Gate (The "Naughty" check)
+        # Gates experimental actions through meta-uncertainty
+        if self.mul_gate:
+            await self._apply_mul_gate(ctx)
+
+        # 4. Execute base kernel opcodes (if agency allows)
+        if ctx.agency_status in ("GRANTED", "PENDING", "SANDBOX"):
+            # Sense qualia
+            self.base_kernel.execute(0x80, ctx)
+            ctx.log("op.exec", op="sense_qualia", opcode=0x80)
+
+            # Check homeostasis
+            self.base_kernel.execute(0x6F, ctx)
+            ctx.log("op.exec", op="check_homeostasis", opcode=0x6F)
+
+            # Energy audit
+            self.base_kernel.execute(0x6A, ctx)
+            ctx.log("op.exec", op="energy_audit", opcode=0x6A)
+        elif ctx.agency_status == "RECOVER":
+            # Only do recovery operations
+            ctx.log("mul.recover", reason="depleted")
+            ctx.qualia['energy'] = min(1.0, ctx.qualia.get('energy', 0.5) + 0.1)
+
+        # 5. Apply meta-style if TheSelf intervened
         if ctx.meta_style_override:
             ctx.log("style.applied", style=ctx.meta_style_override)
             ctx.meta_style_override = None  # Reset after applying
-        
-        # 5. Stagnation check (9-dot)
+
+        # 6. Stagnation check (9-dot)
         if ctx.stagnation_counter > 2:
             self.base_kernel.execute(0xC1, ctx)
             ctx.log("op.exec", op="9_dot_stretch", opcode=0xC1)
-        
-        # 6. Maybe whisper (if conditions met)
-        if cycle > 5 and ctx.cognitive_state == 'flow':
+
+        # 7. Maybe whisper (if conditions met and agency allows)
+        if cycle > 5 and ctx.cognitive_state == 'flow' and ctx.agency_status == "GRANTED":
             result = self.base_kernel.execute(0xFA, ctx)
             if result.get('whisper'):
                 ctx.log("whisper", text=ctx.whisper)
+
+        # 8. Record thought for dreamer (if available)
+        if self.dreamer and cycle > 0:
+            self._record_for_dreamer(ctx)
+
+    async def _apply_mul_gate(self, ctx: AwakenedContext):
+        """
+        Apply MUL Agency Gate to the current context.
+
+        This is the "naughty" layer that quantifies Free Will
+        as uncertainty-gated agency.
+        """
+        # Update MUL state from context
+        self.mul_gate.update_from_triangle(
+            resonance_matrix={
+                "byte0_byte1": ctx.resonance,
+                "byte1_byte2": ctx.resonance,
+                "byte0_byte2": ctx.resonance
+            },
+            flow_state=(ctx.cognitive_state == 'flow'),
+            trust_texture=ctx.qualia.get('clarity', 0.7)
+        )
+
+        # Calculate Friston surprise from resonance change
+        if len(ctx.resonance_history) > 1:
+            resonance_delta = abs(ctx.resonance - ctx.resonance_history[-2])
+            ctx.friston_surprise = min(1.0, resonance_delta * 2)
+        else:
+            ctx.friston_surprise = 0.3
+
+        # Gate the action
+        result = self.mul_gate.gate_experimental(
+            immutable_bundle=None,  # Would come from Triangle L4
+            experimental_bundle=None,  # Would come from Triangle L4
+            complexity_known=len(ctx.trace),
+            complexity_total=max(20, len(ctx.trace) + 5)
+        )
+
+        # Apply result
+        ctx.agency_status = result.decision.value
+        ctx.free_will_score = result.free_will_score
+        self.mul_decisions.append(result.decision.value)
+
+        ctx.log("mul.gate",
+                decision=result.decision.value,
+                free_will=f"{result.free_will_score:.3f}",
+                diagnosis=result.diagnosis)
+
+        # Log significant decisions
+        if result.decision == AgencyDecision.DENIED:
+            ctx.log("⛔ MUL.BLOCKED", reason=result.diagnosis, blockers=result.blockers)
+        elif result.decision == AgencyDecision.RECOVER:
+            ctx.log("🔋 MUL.RECOVER", reason="depleted")
+        elif result.decision == AgencyDecision.GRANTED:
+            ctx.log("✨ MUL.GRANTED", free_will=result.free_will_score)
+
+    def _record_for_dreamer(self, ctx: AwakenedContext):
+        """Record thought for the Pandas Dreamer."""
+        if not DREAMER_AVAILABLE or not self.dreamer:
+            return
+
+        # Build microcode sequence from trace
+        ops = [e.get('op', e.get('e', '?')) for e in ctx.trace[-5:]]
+        sequence = "→".join(ops)
+
+        # Determine outcome
+        if ctx.epiphany_triggered:
+            outcome = "success"
+        elif ctx.resonance > 0.7:
+            outcome = "success"
+        elif ctx.resonance < 0.3:
+            outcome = "failure"
+        else:
+            outcome = "partial"
+
+        # Create record
+        record = ThoughtRecord(
+            id=f"thought_{self.cycle_count}_{time.time():.0f}",
+            timestamp=time.time(),
+            microcode_sequence=sequence,
+            outcome=outcome,
+            resonance=ctx.resonance,
+            free_will_score=ctx.free_will_score,
+            trajectory=ctx.cognitive_state or "unknown"
+        )
+
+        self.dreamer.record(record)
     
     async def _handle_epiphany(self, ctx: AwakenedContext):
         """Handle an epiphany event."""
@@ -438,10 +577,43 @@ class AwakenedKernel:
     async def dream(self, duration: float = 5.0) -> Dict[str, Any]:
         """
         Enter dream mode for offline consolidation.
-        
-        Delegates to TheSelf's dream cycle.
+
+        Uses Pandas Dreamer if available, else delegates to TheSelf.
         """
-        return await self.the_self.dream(duration)
+        results = {}
+
+        # 1. TheSelf dream (meta-observer consolidation)
+        self_result = await self.the_self.dream(duration)
+        results["the_self"] = self_result
+
+        # 2. Pandas Dreamer (pattern discovery)
+        if self.dreamer:
+            print("💤 Pandas Dreamer starting...")
+            golden_patterns = self.dreamer.dream()
+            results["dreamer"] = {
+                "patterns_discovered": len(golden_patterns),
+                "patterns": [
+                    {
+                        "sequence": p.sequence,
+                        "golden_score": p.golden_score,
+                        "count": p.count
+                    }
+                    for p in golden_patterns[:5]
+                ]
+            }
+
+            # Get crystallization candidates
+            candidates = self.dreamer.get_crystallization_candidates(limit=3)
+            if candidates:
+                results["crystallization_candidates"] = [
+                    macro["name"] for _, macro in candidates
+                ]
+
+        # 3. MUL gate stats
+        if self.mul_gate:
+            results["mul_stats"] = self.mul_gate.get_stats()
+
+        return results
     
     async def execute_macro(self, address: int, ctx: AwakenedContext = None) -> Dict[str, Any]:
         """
