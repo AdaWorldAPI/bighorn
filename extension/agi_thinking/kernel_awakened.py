@@ -40,6 +40,17 @@ from extension.agi_thinking.thought_kernel import ThoughtKernel, KernelContext
 from extension.agi_thinking.the_self import TheSelf
 from extension.agi_thinking.microcode import OpCode, MACRO_REGISTRY, ThinkingMacro
 
+# Import persistence (optional)
+try:
+    from extension.agi_thinking.macro_persistence import (
+        IndexedMacroExecutor, 
+        MacroPersistence,
+        load_learned_macros_into_registry
+    )
+    PERSISTENCE_AVAILABLE = True
+except ImportError:
+    PERSISTENCE_AVAILABLE = False
+
 
 @dataclass
 class AwakenedContext(KernelContext):
@@ -249,6 +260,17 @@ class AwakenedKernel:
         # Layer 6: TheSelf (Meta-Observer)
         self.the_self = TheSelf(kernel_ref=self)
         
+        # Macro Persistence & Indexed Execution
+        if PERSISTENCE_AVAILABLE:
+            self.persistence = MacroPersistence()
+            self.macro_executor = IndexedMacroExecutor(
+                registry=MACRO_REGISTRY, 
+                persistence=self.persistence
+            )
+        else:
+            self.persistence = None
+            self.macro_executor = None
+        
         # Register intervention handlers
         self._setup_intervention_handlers()
         
@@ -420,6 +442,45 @@ class AwakenedKernel:
         Delegates to TheSelf's dream cycle.
         """
         return await self.the_self.dream(duration)
+    
+    async def execute_macro(self, address: int, ctx: AwakenedContext = None) -> Dict[str, Any]:
+        """
+        Execute a macro by hex address (O(1) indexed execution).
+        
+        This allows direct invocation of learned or core macros
+        without re-deriving the chain.
+        
+        Args:
+            address: Hex address (e.g., 0xE2 for AUTO_1)
+            ctx: Optional context (creates new if not provided)
+            
+        Returns:
+            Execution result dict
+        """
+        if not self.macro_executor:
+            return {"error": "Macro executor not available"}
+        
+        if ctx is None:
+            ctx = AwakenedContext(text="macro_execution")
+        
+        return await self.macro_executor.execute(
+            address, 
+            ctx, 
+            kernel=self.base_kernel
+        )
+    
+    async def load_learned_macros(self) -> int:
+        """
+        Load all learned macros from persistence into registry.
+        
+        Call this at startup to restore cross-session learning.
+        
+        Returns:
+            Number of macros loaded
+        """
+        if PERSISTENCE_AVAILABLE:
+            return await load_learned_macros_into_registry()
+        return 0
     
     def get_learned_macros(self) -> List[str]:
         """Get list of macros learned through autopoiesis."""
