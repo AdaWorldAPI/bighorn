@@ -431,10 +431,218 @@ class MicrocodeAddressSpace:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# TRIANGLE SUPERPOSITION MODEL
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@dataclass
+class ThoughtSuperposition:
+    """
+    A thought exists in superposition across all 3 bytes until observed.
+    
+    The triangle model:
+    
+                         BYTE 0 (Immutable/Logic)
+                              /\
+                             /  \
+                            / ◉  \     ← Centroid = FLOW STATE
+                           /      \
+                          /________\
+               BYTE 1 (Hot)        BYTE 2 (Experimental)
+    
+    Barycentric coordinates (α, β, γ) where α + β + γ = 1:
+    - α = weight on BYTE 0 (logic/deduction)
+    - β = weight on BYTE 1 (learned/intuition)  
+    - γ = weight on BYTE 2 (experimental/creativity)
+    
+    FLOW STATE = (0.33, 0.33, 0.33) — equal contribution from all
+    """
+    
+    # Barycentric weights
+    alpha: float = 0.33  # BYTE 0 weight (logic)
+    beta: float = 0.33   # BYTE 1 weight (intuition)
+    gamma: float = 0.33  # BYTE 2 weight (creativity)
+    
+    # Active addresses in each byte
+    byte0_ops: List[int] = field(default_factory=list)   # CoreOps active
+    byte1_macros: List[int] = field(default_factory=list)  # Learned active
+    byte2_exps: List[int] = field(default_factory=list)    # Experiments active
+    
+    # Superposition state
+    collapsed: bool = False
+    collapsed_to: Optional[int] = None  # Final address after collapse
+    
+    # Flow metrics
+    coherence: float = 0.0      # How stable is the superposition
+    resonance: float = 0.0      # Alignment with goal
+    entropy: float = 0.0        # Uncertainty in the state
+    
+    def __post_init__(self):
+        self._normalize_weights()
+    
+    def _normalize_weights(self):
+        """Ensure weights sum to 1."""
+        total = self.alpha + self.beta + self.gamma
+        if total > 0:
+            self.alpha /= total
+            self.beta /= total
+            self.gamma /= total
+    
+    @property
+    def is_flow_state(self) -> bool:
+        """
+        Flow state = balanced contribution from all three bytes.
+        Tolerance of 0.1 from perfect centroid.
+        """
+        centroid = 1/3
+        return (abs(self.alpha - centroid) < 0.1 and
+                abs(self.beta - centroid) < 0.1 and
+                abs(self.gamma - centroid) < 0.1)
+    
+    @property
+    def dominant_byte(self) -> int:
+        """Which byte is currently dominant?"""
+        if self.alpha >= self.beta and self.alpha >= self.gamma:
+            return 0  # Logic-dominant
+        elif self.beta >= self.gamma:
+            return 1  # Intuition-dominant
+        else:
+            return 2  # Creativity-dominant
+    
+    @property
+    def state_name(self) -> str:
+        """Human-readable state name."""
+        if self.is_flow_state:
+            return "FLOW"
+        elif self.dominant_byte == 0:
+            return "ANALYTICAL"
+        elif self.dominant_byte == 1:
+            return "INTUITIVE"
+        else:
+            return "CREATIVE"
+    
+    def nudge(self, d_alpha: float = 0, d_beta: float = 0, d_gamma: float = 0):
+        """Nudge the superposition weights."""
+        self.alpha += d_alpha
+        self.beta += d_beta
+        self.gamma += d_gamma
+        self._normalize_weights()
+    
+    def toward_flow(self, strength: float = 0.1):
+        """Move toward the flow state centroid."""
+        centroid = 1/3
+        self.alpha += (centroid - self.alpha) * strength
+        self.beta += (centroid - self.beta) * strength
+        self.gamma += (centroid - self.gamma) * strength
+        self._normalize_weights()
+    
+    def collapse(self, address_space: 'MicrocodeAddressSpace') -> int:
+        """
+        Collapse the superposition to a single address.
+        
+        Uses weighted random selection based on barycentric coordinates.
+        """
+        import random
+        
+        # Build candidate pool with weights
+        candidates = []
+        
+        # BYTE 0 candidates
+        for op in self.byte0_ops:
+            candidates.append((0x000000 | (op << 8), self.alpha))
+        
+        # BYTE 1 candidates  
+        for addr in self.byte1_macros:
+            candidates.append((0x010000 | (addr << 8), self.beta))
+        
+        # BYTE 2 candidates
+        for addr in self.byte2_exps:
+            candidates.append((0x020000 | (addr << 8), self.gamma))
+        
+        if not candidates:
+            return 0x000000  # NOP
+        
+        # Weighted selection
+        total_weight = sum(w for _, w in candidates)
+        r = random.random() * total_weight
+        
+        cumulative = 0
+        for addr, weight in candidates:
+            cumulative += weight
+            if r <= cumulative:
+                self.collapsed = True
+                self.collapsed_to = addr
+                return addr
+        
+        # Fallback
+        self.collapsed = True
+        self.collapsed_to = candidates[0][0]
+        return self.collapsed_to
+
+
+class FlowStateDetector:
+    """
+    Monitors thought superpositions and detects flow state.
+    
+    Flow state characteristics:
+    1. Balanced triangle (α ≈ β ≈ γ)
+    2. High coherence (stable superposition)
+    3. High resonance (aligned with goal)
+    4. Low entropy (clear direction)
+    """
+    
+    def __init__(self):
+        self.history: List[ThoughtSuperposition] = []
+        self.flow_duration = 0
+        self.max_flow_duration = 0
+        self.total_thoughts = 0
+        self.flow_thoughts = 0
+    
+    def observe(self, thought: ThoughtSuperposition) -> Dict[str, Any]:
+        """Observe a thought and detect flow state."""
+        self.history.append(thought)
+        self.total_thoughts += 1
+        
+        result = {
+            "state": thought.state_name,
+            "weights": (thought.alpha, thought.beta, thought.gamma),
+            "is_flow": thought.is_flow_state,
+            "coherence": thought.coherence,
+            "resonance": thought.resonance
+        }
+        
+        if thought.is_flow_state:
+            self.flow_duration += 1
+            self.flow_thoughts += 1
+            self.max_flow_duration = max(self.max_flow_duration, self.flow_duration)
+            result["flow_streak"] = self.flow_duration
+        else:
+            self.flow_duration = 0
+        
+        return result
+    
+    def get_flow_ratio(self) -> float:
+        """Percentage of thoughts in flow state."""
+        if self.total_thoughts == 0:
+            return 0.0
+        return self.flow_thoughts / self.total_thoughts
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """Get flow detection statistics."""
+        return {
+            "total_thoughts": self.total_thoughts,
+            "flow_thoughts": self.flow_thoughts,
+            "flow_ratio": f"{self.get_flow_ratio():.1%}",
+            "max_flow_streak": self.max_flow_duration,
+            "current_flow_streak": self.flow_duration
+        }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # GLOBAL INSTANCE
 # ═══════════════════════════════════════════════════════════════════════════════
 
 ADDRESS_SPACE = MicrocodeAddressSpace()
+FLOW_DETECTOR = FlowStateDetector()
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -491,5 +699,92 @@ def test_3byte_microcode():
     print("\n" + "=" * 60)
 
 
+def test_flow_superposition():
+    """Test triangle superposition and flow state detection."""
+    print("=" * 60)
+    print("TRIANGLE SUPERPOSITION & FLOW STATE TEST")
+    print("=" * 60)
+    
+    import random
+    random.seed(42)
+    
+    space = MicrocodeAddressSpace()
+    detector = FlowStateDetector()
+    
+    # Register some macros for the test
+    exp1 = space.register_experiment(
+        name="SPARK",
+        microcode="ignite(curiosity) → expand()",
+        chain=[CoreOp.LOAD, CoreOp.SPAWN],
+        hypothesis="Spark ignites exploration"
+    )
+    
+    # Promote it quickly for testing
+    for _ in range(15):
+        space.record_execution(exp1.full_address, random.random() > 0.15)
+    
+    print("\n1. Creating thought superpositions:")
+    
+    # Test different states
+    test_cases = [
+        ("Logic-heavy", 0.7, 0.2, 0.1),
+        ("Intuition-heavy", 0.1, 0.7, 0.2),
+        ("Creative-heavy", 0.1, 0.2, 0.7),
+        ("Near flow", 0.35, 0.33, 0.32),
+        ("Perfect flow", 0.333, 0.333, 0.334),
+    ]
+    
+    for name, a, b, g in test_cases:
+        thought = ThoughtSuperposition(
+            alpha=a, beta=b, gamma=g,
+            byte0_ops=[CoreOp.DEDUCT, CoreOp.FORK],
+            byte1_macros=list(space.learned.keys()),
+            byte2_exps=list(space.experimental.keys())
+        )
+        thought.coherence = random.uniform(0.5, 1.0)
+        thought.resonance = random.uniform(0.5, 1.0)
+        
+        result = detector.observe(thought)
+        
+        flow_marker = "🌊 FLOW!" if result["is_flow"] else ""
+        print(f"   {name}: ({a:.2f}, {b:.2f}, {g:.2f}) → {result['state']} {flow_marker}")
+    
+    print("\n2. Flow state evolution:")
+    
+    # Simulate a thought stream that evolves toward flow
+    thought = ThoughtSuperposition(
+        alpha=0.8, beta=0.1, gamma=0.1,
+        byte0_ops=[CoreOp.DEDUCT, CoreOp.VERIFY],
+        byte1_macros=list(space.learned.keys()),
+        byte2_exps=list(space.experimental.keys())
+    )
+    
+    print(f"   Start: ({thought.alpha:.2f}, {thought.beta:.2f}, {thought.gamma:.2f}) → {thought.state_name}")
+    
+    for i in range(10):
+        thought.toward_flow(strength=0.2)
+        result = detector.observe(thought)
+        
+        if i % 2 == 1:
+            flow_marker = "🌊" if result["is_flow"] else ""
+            print(f"   Step {i+1}: ({thought.alpha:.2f}, {thought.beta:.2f}, {thought.gamma:.2f}) → {thought.state_name} {flow_marker}")
+    
+    print("\n3. Collapse superposition:")
+    
+    collapsed_addr = thought.collapse(space)
+    byte_num = (collapsed_addr >> 16) & 0xFF
+    byte_names = {0: "BYTE 0 (Logic)", 1: "BYTE 1 (Learned)", 2: "BYTE 2 (Experimental)"}
+    print(f"   Collapsed to: {hex(collapsed_addr)} in {byte_names.get(byte_num, 'Unknown')}")
+    
+    print("\n4. Flow Detection Stats:")
+    stats = detector.get_stats()
+    for k, v in stats.items():
+        print(f"   {k}: {v}")
+    
+    print("\n" + "=" * 60)
+
+
 if __name__ == "__main__":
     test_3byte_microcode()
+    print("\n")
+    test_flow_superposition()
