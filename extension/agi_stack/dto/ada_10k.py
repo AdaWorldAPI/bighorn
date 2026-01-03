@@ -361,6 +361,13 @@ class Ada10kD:
         a = archetype.upper()
         if a in ARCHETYPES_IDX:
             self.vector[ARCHETYPES_START + ARCHETYPES_IDX[a]] = activation
+
+    def get_archetype(self, archetype: str) -> float:
+        """Get archetype activation value."""
+        a = archetype.upper()
+        if a in ARCHETYPES_IDX:
+            return float(self.vector[ARCHETYPES_START + ARCHETYPES_IDX[a]])
+        return 0.0
     
     def set_archetype_weights(self, weights: Dict[str, float]):
         """Set all archetype weights at once (from SoulStateDTO)."""
@@ -480,6 +487,15 @@ class Ada10kD:
             "protective": float(self.vector[PRESENCE_MODE_START + 2]),
             "absent": float(self.vector[PRESENCE_MODE_START + 3]),
         }
+
+    def set_thinking_style_raw(self, vec: List[float]):
+        """Set raw thinking style vector [256:320]."""
+        for i, v in enumerate(vec[:64]):
+            self.vector[256 + i] = v
+
+    def get_thinking_style_raw(self) -> List[float]:
+        """Get raw thinking style vector [256:320]."""
+        return list(self.vector[256:320])
     
     # =========================================================================
     # DTO SPACE [320:500]
@@ -646,7 +662,7 @@ TOTAL_PRIMITIVES = (
 
 
 # =============================================================================
-    # SINGLETON
+# SINGLETON
 # =============================================================================
 
 _ada: Optional[Ada10kD] = None
@@ -656,9 +672,3 @@ def get_ada() -> Ada10kD:
     if _ada is None:
         _ada = Ada10kD()
     return _ada
-
-
-    def set_thinking_style_raw(self, vec: List[float]):
-        """Set raw thinking style vector [256:320]."""
-        for i, v in enumerate(vec[:64]):
-            self.vector[256 + i] = v

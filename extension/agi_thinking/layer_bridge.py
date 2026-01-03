@@ -4,7 +4,7 @@ layer_bridge.py — Connects agi_thinking to 5-Layer Awareness + 10kD
 
 This module bridges:
     agi_thinking/thought_kernel.py  ←→  temporal/awareness_5_layers.py
-    agi_thinking/qualia_learner.py  ←→  10kD [2000:2017]
+    agi_thinking/qualia_learner.py  ←→  10kD [2000:2016]
     agi_thinking/texture.py         ←→  Layer 5 ThinkingStyle
 
 Flow:
@@ -36,24 +36,25 @@ QUALIA_8D = [
 ]
 
 # 10kD dimension mapping for 17D qualia metric [2000:2018]
+# Aligned with ada_10k.py QUALIA_PCS_START = 2000
 QUALIA_TO_10K = {
     "emberglow": 2000,
     "warmth": 2000,       # Alias for emberglow
-    "frostbite": 2002,
-    "crystalline": 2003,
-    "oceandrift": 2004,
-    "steelwind": 2005,
-    "groundswell": 2006,
-    "twilight": 2007,
-    "viscosity": 2008,    # Material property (wetness proxy)
-    "temperature": 2009,  # Thermal qualia
-    "density": 2010,
-    "luminance": 2011,
-    "texture": 2012,
-    "resonance": 2013,
-    "flow": 2014,
-    "edge": 2015,
-    "depth": 2016,
+    "frostbite": 2001,
+    "crystalline": 2002,
+    "oceandrift": 2003,
+    "steelwind": 2004,
+    "groundswell": 2005,
+    "twilight": 2006,
+    "viscosity": 2007,    # Material property (wetness proxy)
+    "temperature": 2008,  # Thermal qualia
+    "density": 2009,
+    "luminance": 2010,
+    "texture": 2011,
+    "resonance": 2012,
+    "flow": 2013,
+    "edge": 2014,
+    "depth": 2015,
 }
 
 
