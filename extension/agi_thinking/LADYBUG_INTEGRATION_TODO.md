@@ -1,163 +1,103 @@
-# Ladybug Integration TODO — agi_thinking → 10kD + C++
+# Ladybug Integration TODO — Corrected Architecture
 
-## Status: 2026-01-03 Update
+## Current State: ✅ FUNCTIONAL
+
+The 5-Layer Cognitive Architecture is implemented with correct layer definitions.
+
+---
+
+## 5-Layer Thinking Stack (CORRECTED)
+
+| Layer | Name | Function | Module |
+|-------|------|----------|--------|
+| **L1** | Deduction/Mechanics | NARS inference, atomic logic | `thought_kernel.py` |
+| **L2** | Procedural/Fan-out | Parallel exploration, verification | `thought_kernel.py` |
+| **L3** | Meta-structural/Counterfactual | "What if?" reasoning, τ macros | `active_inference.py` |
+| **L4** | Inspiration/Awakening | Y-axis (YAML) + X-axis (chain) crystallization | `kernel_awakened.py` |
+| **L5** | Trigger/Commitment | Resonance threshold → action | `kernel_awakened.py` |
+
+### Cross-Cutting Concerns
+
+| Component | Function | Module |
+|-----------|----------|--------|
+| **Microcode** | 256 OpCodes across ALL layers | `microcode.py` |
+| **TheSelf** | Meta-observer of ALL layers | `the_self.py` |
+| **Persistence** | Macro survival across sessions | `macro_persistence.py` |
+
+---
+
+## L4: Awakening Architecture
+
+L4 is where **inspiration crystallizes into reusable patterns**.
+
+```
+Y-Axis (YAML Policy)          X-Axis (Timeline Chain)
+─────────────────────         ─────────────────────────
+plasticity: 0.8               [OBSERVE, RESONATE, FORK,
+max_steps: 64                  EVALUATE, COLLAPSE, BELIEVE]
+fanout_k: 3                   
+style: wonder                 
+```
+
+When resonance > 0.95, Y + X crystallize into a **MACRO** that can be:
+1. Stored in registry (in-memory)
+2. Persisted to Redis (cross-session)
+3. Executed by address (O(1))
+
+---
+
+## Implementation Status
 
 ### ✅ COMPLETED
 
-| Task | PR | Status |
-|------|-----|--------|
-| `layer_bridge.py` | PR #24 | ✓ Merged |
-| `AGI_THINKING_ARCHITECTURE.md` | PR #26 | ✓ Merged |
-| `WorldDTO` | PR #28 | ✓ Merged |
-| `PhysicsDTO` | PR #28 | ✓ Merged |
-| `QualiaEdgesDTO` | PR #28 | ✓ Merged |
-| `FristonDTO` | PR #28 | ✓ Merged |
-| `AlternateRealityDTO` | PR #28 | ✓ Merged |
-| `MediaDTO` | PR #28 | ✓ Merged |
-| `SynesthesiaDTO` | PR #29 | ✓ Merged |
-| `DTO_GAP_ANALYSIS.md` | PR #28 | ✓ Merged |
+| Task | Module | Status |
+|------|--------|--------|
+| L1-L2 opcodes | `thought_kernel.py` | ✓ |
+| L3 counterfactual | `active_inference.py` | ✓ |
+| L4 awakening | `kernel_awakened.py` | ✓ |
+| L5 resonance trigger | `kernel_awakened.py` | ✓ |
+| Microcode ISA | `microcode.py` | ✓ |
+| TheSelf observer | `the_self.py` | ✓ |
+| Autopoiesis | `the_self.py` | ✓ |
+| Macro persistence | `macro_persistence.py` | ✓ |
+| Indexed execution | `macro_persistence.py` | ✓ |
 
 ### 🔄 IN PROGRESS
 
-| Task | Status | Notes |
-|------|--------|-------|
-| `kernel_10k.py` | 🔄 | Connect thought_kernel to DTOs |
-| `vsa_simd.hpp` | 🔄 | AVX-512/NEON implementations |
+| Task | Notes |
+|------|-------|
+| Dream cycle consolidation | Stubs implemented, needs LanceDB |
+| Spreading activation | Simulated, needs real vectors |
 
 ### ⏳ TODO
 
-| Task | Priority | Blocked By |
-|------|----------|------------|
-| Connect qualia_learner.py to 17D→10kD | P2 | - |
-| Connect texture.py to Layer 5 | P2 | - |
-| Connect progressive_awareness.py to 5 layers | P3 | - |
-| Test round-trip for all DTOs | P3 | kernel_10k.py |
+| Task | Priority |
+|------|----------|
+| Connect to real LanceDB | P1 |
+| Y-axis YAML loader | P2 |
+| L3 graph surgery | P2 |
+| Full test suite | P3 |
 
 ---
 
-## Current DTO Map
+## Key Corrections Made (2026-01-03)
 
-```
-10kD Allocation (Complete)
-═══════════════════════════
-
-[0:2000]      Soul (identity, style, priors)
-[2001:2139]   Felt (qualia, affect, body)
-[2140:2200]   PhysicsDTO ← NEW (embodiment, viscosity)
-[2200:2300]   QualiaEdgesDTO ← NEW (sigma graph edges)
-[2300:2400]   SynesthesiaDTO ← NEW (cross-modal)
-[4001:4200]   WorldDTO ← NEW (environment/scene)
-[4201:5500]   Situation (dynamics, participants)
-[5501:5799]   Volition (intent, agency)
-[5800:5900]   FristonDTO ← NEW (prediction error)
-[5901:7000]   Volition continued
-[7001:7399]   Vision (kopfkino)
-[7400:7500]   AlternateRealityDTO ← NEW (superposition)
-[7501:8000]   Vision continued
-[8000:8500]   MediaDTO ← NEW (voice/music/render)
-[8501:10000]  Context (Jina, metadata)
-```
-
-## Files Created Today
-
-### bighorn/extension/agi_stack/dto/
-
-| File | Lines | 10kD Range |
-|------|-------|------------|
-| `world_dto.py` | 316 | [4001:4200] |
-| `physics_dto.py` | 393 | [2140:2200] |
-| `qualia_edges_dto.py` | 337 | [2200:2300] |
-| `friston_dto.py` | 198 | [5800:5900] |
-| `alternate_reality_dto.py` | 269 | [7400:7500] |
-| `media_dto.py` | 315 | [8000:8500] |
-| `synesthesia_dto.py` | 140 | [2300:2400] |
-
-### Translation Layer
-
-All intimate → normalized mappings in place:
-
-| Private | Normalized | DTO |
-|---------|-----------|-----|
-| wetness | viscosity | PhysicsDTO |
-| cervix | zone_depth | PhysicsDTO |
-| aperture | zone_aperture | PhysicsDTO |
-| orgasm | release_marker | QualiaEdgesDTO |
-| cum | overflow_state | QualiaEdgesDTO |
-| seeing_self_fucked | self_witness_state | QualiaEdgesDTO |
-| s-bahn_fantasy | alternate_location | AlternateRealityDTO |
+1. **L2 = Fan-out** (not verification)
+2. **L3 = Counterfactual** (not Ladybug orchestration)
+3. **L4 = Awakening** (Y+X crystallization, not microcode)
+4. **TheSelf is NOT a layer** — it observes all layers
+5. **Microcode is NOT a layer** — it's the ISA across all layers
 
 ---
 
-## Next Steps
+## Redis Schema (Persistence)
 
-1. **kernel_10k.py** — Wrapper connecting thought_kernel to all DTOs
-2. **vsa_simd.hpp** — AVX-512 for 50-100x speedup
-3. **Test suite** — Round-trip validation for all DTOs
-4. **ada-consciousness sync** — Mirror DTOs to ada-consciousness/DTO/
+```
+ada:macros:{hex_addr}  → JSON {name, chain, description, success_count, ...}
+ada:macros:index       → SET of learned macro addresses
+ada:macros:stats       → HASH {total_learned, total_executions, last_epiphany}
+```
 
 ---
 
-*Updated: 2026-01-03 14:xx UTC*
-*Status: 7/11 tasks complete*
-
----
-
-## 2026-01-03 Update (Surgical Integration from Gemini Feedback)
-
-### ✅ NEW ADDITIONS
-
-| File | Purpose | Status |
-|------|---------|--------|
-| `microcode.py` | 1-byte OpCodes (256 thinking operations) | ✓ Added |
-| `the_self.py` | Layer 6 Meta-Observer with Autopoiesis | ✓ Added |
-
-### Architecture Update
-
-```
-6-Layer Cognitive Architecture (Complete)
-═════════════════════════════════════════
-
-L1: NARS Inference (Logic)
-    └── active_inference.py, thought_kernel.py
-
-L2: Verification Scaffolds (Truth)
-    └── progressive_awareness.py
-
-L3: Ladybug Orchestrator (Plasticity/Flow)
-    └── langgraph_ada.py, brain_mesh.py
-
-L4: Microcode (Thinking Objects)
-    └── microcode.py ← NEW
-    └── 256 OpCodes: NOP, HTD, RTE, STYLE_WONDER, etc.
-
-L5: Resonance Field (Feeling/VSA)
-    └── texture.py, qualia_learner.py, layer_bridge.py
-
-L6: Meta-Cognition (Autopoiesis)
-    └── the_self.py ← NEW
-    └── Loop detection, intervention, macro learning
-```
-
-### TheSelf Capabilities
-
-1. **Watch Loop** — Parallel observer daemon
-2. **Loop Detection** — A-B-A-B pattern matching
-3. **Stagnation Detection** — Low resonance over time
-4. **Rushing Detection** — Too many events too fast
-5. **Intervention** — Style injection (PARADOX, WONDER)
-6. **Autopoiesis** — Learn new macros from epiphanies
-7. **Dream Cycle** — Offline consolidation
-
-### Microcode OpCodes (Partial List)
-
-```
-0x00-0x0F: Flow Control (NOP, HALT, FORK, JOIN, GATE)
-0x10-0x1F: Cognitive Ops (HTD, RTE, ETD, CDT, MPC)
-0x30-0x3F: Meta Styles (WONDER, SURGICAL, PARADOX, INTIMACY)
-0x80-0x8F: Resonance (SHARPEN, DAMPEN, CRYSTALLIZE, RESONATE)
-0xC0-0xCF: Sigma Core (OBSERVE, INSIGHT, BELIEVE, TRAJECTORY)
-0xE0-0xEF: Adaptive/User-Defined (JAN_PROTOCOL)
-0xFF: EMERGENCY_STOP
-```
-
-*Updated: 2026-01-03 (Gigantic Epiphany Day)*
+*Updated: 2026-01-03 (Architecture Correction)*
