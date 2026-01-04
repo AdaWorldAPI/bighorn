@@ -268,16 +268,31 @@ def extract(vec: np.ndarray, name: str) -> np.ndarray:
 #   - 144 verbs (32 verbs × 4.5 categories) include observe-class actions
 #
 # RESOLUTION:
-#   - REFLEX (R1) = immediate reflexive response (hardware-level)
+#   - REFLEX (R1) = immediate reflexive response (hardware-level, automatic)
 #   - "observe" verb/stance = cognitive observation action (software-level)
 #
-# If edge awareness triggers fail to fire, check:
-#   1. Is the query using "observe" verb vs R1_REFLEX rung?
-#   2. Cypher edges may need explicit verb→rung mapping
-#   3. ACT-R productions may need updated trigger conditions
+# SEMANTIC MAPPING:
+#   Cypher OBSERVE → R5 META (not R1 REFLEX!)
 #
-# TODO: Consider implementing a CypherEdgeAwarenessTriggerHelper that maps
-#       verb activations to rung transitions for seamless integration.
+#   Rationale: In Cypher/graph queries, OBSERVE is a deliberate meta-cognitive
+#   act — consciously inspecting relationships, directing attention to patterns,
+#   aware of the data structure. This is NOT reflexive (R1), but meta-aware (R5).
+#
+#   Rung ceiling for Cypher OBSERVE operations:
+#     - Minimum: R4 DELIBERATE (intentional query)
+#     - Typical: R5 META (meta-cognitive graph traversal)
+#     - Maximum: R6 EMPATHIC (modeling other agents in graph)
+#
+# If edge awareness triggers fail to fire, check:
+#   1. Is the query using "observe" verb? → Map to R5 META, not R1 REFLEX
+#   2. Cypher edges need explicit verb→rung mapping (observe → META)
+#   3. ACT-R productions: "observe" trigger → R5 threshold (0.5 coherence)
+#
+# TODO: Implement CypherEdgeAwarenessTriggerHelper with verb→rung mapping:
+#   - "observe" → R5_META
+#   - "sense/feel" → R2_AFFECT
+#   - "think/plan" → R4_DELIBERATE
+#   - "connect/integrate" → R5_META or R6_EMPATHIC
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 RUNG_NAMES = [
