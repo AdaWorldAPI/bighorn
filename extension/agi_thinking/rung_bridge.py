@@ -6,15 +6,15 @@ RUNG is THE ONLY cognitive depth system.
 Canonical names from thinking_style.py RungLevel.
 
 9 Rungs (R1-R9):
-    R1: OBSERVE       — Passive witnessing, pure awareness
-    R2: REACT         — Stimulus-response
-    R3: RESOLVE       — Problem-solving
-    R4: DELIBERATE    — Deliberate reasoning
-    R5: META          — Meta-cognitive awareness
-    R6: SOVEREIGN     — Self-authoring consciousness
+    R1: OBSERVE       — Perceptual awareness
+    R2: REACT         — Stimulus-response (ACT-R procedural)
+    R3: RESOLVE       — Goal-directed problem solving
+    R4: DELIBERATE    — Deliberative reasoning (ACT-R declarative)
+    R5: META          — Metacognition
+    R6: EMPATHIC      — Theory of mind / agent modeling
     R7: COUNTERFACTUAL— Counterfactual reasoning
-    R8: PARADOX       — Paradox integration
-    R9: TRANSCEND     — Full AGI integration
+    R8: PARADOX       — Dialectical integration
+    R9: COMMUNION     — Multi-agent coherence
 
 Dimension Allocation [259:268] — Rung Profile (canonical)
 Dimension Allocation [360:400] — Rung State (extended)
@@ -49,15 +49,15 @@ class CognitiveRung(IntEnum):
 
     1-indexed for human clarity.
     """
-    OBSERVE = 1        # Passive witnessing
-    REACT = 2          # Stimulus-response
-    RESOLVE = 3        # Problem-solving
-    DELIBERATE = 4     # Deliberate reasoning
-    META = 5           # Meta-cognitive
-    SOVEREIGN = 6      # Self-authoring
+    OBSERVE = 1        # Perceptual awareness
+    REACT = 2          # Stimulus-response (ACT-R procedural)
+    RESOLVE = 3        # Goal-directed problem solving
+    DELIBERATE = 4     # Deliberative reasoning (ACT-R declarative)
+    META = 5           # Metacognition
+    EMPATHIC = 6       # Theory of mind
     COUNTERFACTUAL = 7 # Counterfactual reasoning
-    PARADOX = 8        # Paradox integration
-    TRANSCEND = 9      # Full AGI integration
+    PARADOX = 8        # Dialectical integration
+    COMMUNION = 9      # Multi-agent coherence
 
     @property
     def description(self) -> str:

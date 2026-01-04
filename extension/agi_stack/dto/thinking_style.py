@@ -41,10 +41,10 @@ class RungLevel(int, Enum):
     R3_RESOLVE = 3
     R4_DELIBERATE = 4
     R5_META = 5
-    R6_SOVEREIGN = 6
+    R6_EMPATHIC = 6
     R7_COUNTERFACTUAL = 7
     R8_PARADOX = 8
-    R9_TRANSCEND = 9
+    R9_COMMUNION = 9
 
 class SigmaNodeType(str, Enum):
     OMEGA_OBSERVE = "Ω"

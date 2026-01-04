@@ -284,7 +284,7 @@ def extract(vec: np.ndarray, name: str) -> np.ndarray:
 #   Rung ceiling for Cypher "observe" operations:
 #     - Minimum: R4 DELIBERATE (intentional query)
 #     - Typical: R5 META (meta-cognitive graph traversal)
-#     - Maximum: R6 SOVEREIGN (self-authoring query patterns)
+#     - Maximum: R6 EMPATHIC (theory of mind query patterns)
 #
 # If edge awareness triggers fail to fire, check:
 #   1. Is the query using "observe" verb? → Map to R5 META, not R1 OBSERVE
@@ -295,32 +295,32 @@ def extract(vec: np.ndarray, name: str) -> np.ndarray:
 #   - "observe" verb → R5_META
 #   - "sense/feel" → R2_REACT
 #   - "think/plan" → R4_DELIBERATE
-#   - "connect/integrate" → R5_META or R6_SOVEREIGN
+#   - "connect/integrate" → R5_META or R6_EMPATHIC
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 RUNG_NAMES = [
-    "OBSERVE",       # R1: Passive witnessing, awareness
-    "REACT",         # R2: Stimulus-response
-    "RESOLVE",       # R3: Problem-solving
-    "DELIBERATE",    # R4: Deliberate reasoning
-    "META",          # R5: Meta-cognitive
-    "SOVEREIGN",     # R6: Self-authoring
+    "OBSERVE",       # R1: Perceptual awareness
+    "REACT",         # R2: Stimulus-response (ACT-R procedural)
+    "RESOLVE",       # R3: Goal-directed problem solving
+    "DELIBERATE",    # R4: Deliberative reasoning (ACT-R declarative)
+    "META",          # R5: Metacognition
+    "EMPATHIC",      # R6: Theory of mind / agent modeling
     "COUNTERFACTUAL",# R7: Counterfactual reasoning
-    "PARADOX",       # R8: Paradox integration
-    "TRANSCEND",     # R9: AGI/Transcendent integration
+    "PARADOX",       # R8: Dialectical integration
+    "COMMUNION",     # R9: Multi-agent coherence
 ]
 
 # Rung descriptions for introspection
 RUNG_DESCRIPTIONS = {
-    1: "Observe - passive witnessing, pure awareness",
-    2: "React - stimulus-response processing",
-    3: "Resolve - practical problem-solving",
-    4: "Deliberate - deliberate reasoning and planning",
-    5: "Meta - meta-cognitive awareness",
-    6: "Sovereign - self-authoring consciousness",
+    1: "Observe - perceptual awareness",
+    2: "React - stimulus-response (ACT-R procedural)",
+    3: "Resolve - goal-directed problem solving",
+    4: "Deliberate - deliberative reasoning (ACT-R declarative)",
+    5: "Meta - metacognition",
+    6: "Empathic - theory of mind / agent modeling",
     7: "Counterfactual - counterfactual reasoning",
-    8: "Paradox - paradox integration and resolution",
-    9: "Transcend - full AGI integration",
+    8: "Paradox - dialectical integration",
+    9: "Communion - multi-agent coherence",
 }
 
 # Rung thresholds for transitions
