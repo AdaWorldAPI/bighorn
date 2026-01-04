@@ -36,12 +36,12 @@ class PearlMode(str, Enum):
     IMAGINE = "imagine"
 
 class RungLevel(int, Enum):
-    R1_REFLEX = 1
-    R2_AFFECT = 2
-    R3_PATTERN = 3
+    R1_OBSERVE = 1
+    R2_REACT = 2
+    R3_RESOLVE = 3
     R4_DELIBERATE = 4
     R5_META = 5
-    R6_EMPATHIC = 6
+    R6_SOVEREIGN = 6
     R7_COUNTERFACTUAL = 7
     R8_PARADOX = 8
     R9_TRANSCEND = 9

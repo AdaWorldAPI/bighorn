@@ -16,12 +16,12 @@ Core Functions:
 
 RUNG is THE ONLY cognitive depth system (1-9):
     Canonical names from thinking_style.py RungLevel.
-    R1: REFLEX        — Immediate reflexive response
-    R2: AFFECT        — Affective/emotional processing
-    R3: PATTERN       — Pattern recognition
+    R1: OBSERVE       — Passive witnessing, pure awareness
+    R2: REACT         — Stimulus-response
+    R3: RESOLVE       — Problem-solving
     R4: DELIBERATE    — Deliberate reasoning
     R5: META          — Meta-cognitive awareness
-    R6: EMPATHIC      — Empathic modeling
+    R6: SOVEREIGN     — Self-authoring consciousness
     R7: COUNTERFACTUAL— Counterfactual reasoning
     R8: PARADOX       — Paradox integration
     R9: TRANSCEND     — Full AGI integration
@@ -50,12 +50,12 @@ class CognitiveRung(IntEnum):
     """9 Cognitive Rungs — THE canonical cognitive depth system.
     Aligned with thinking_style.py RungLevel.
     """
-    REFLEX = 1         # Immediate reflexive response
-    AFFECT = 2         # Affective/emotional processing
-    PATTERN = 3        # Pattern recognition
+    OBSERVE = 1        # Passive witnessing
+    REACT = 2          # Stimulus-response
+    RESOLVE = 3        # Problem-solving
     DELIBERATE = 4     # Deliberate reasoning
     META = 5           # Meta-cognitive
-    EMPATHIC = 6       # Empathic modeling
+    SOVEREIGN = 6      # Self-authoring
     COUNTERFACTUAL = 7 # Counterfactual reasoning
     PARADOX = 8        # Paradox integration
     TRANSCEND = 9      # Full AGI integration

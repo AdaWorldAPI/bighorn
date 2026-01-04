@@ -268,40 +268,43 @@ def extract(vec: np.ndarray, name: str) -> np.ndarray:
 #   - 144 verbs (32 verbs × 4.5 categories) include observe-class actions
 #
 # RESOLUTION:
-#   - REFLEX (R1) = immediate reflexive response (hardware-level, automatic)
-#   - "observe" verb/stance = cognitive observation action (software-level)
+#   - OBSERVE (R1) = passive witnessing, pure awareness (hardware-level)
+#   - "observe" verb/stance = cognitive observation action (software-level, R5)
 #
 # SEMANTIC MAPPING:
-#   Cypher OBSERVE → R5 META (not R1 REFLEX!)
+#   Cypher "observe" verb → R5 META (not R1 OBSERVE rung!)
 #
-#   Rationale: In Cypher/graph queries, OBSERVE is a deliberate meta-cognitive
-#   act — consciously inspecting relationships, directing attention to patterns,
-#   aware of the data structure. This is NOT reflexive (R1), but meta-aware (R5).
+#   Rationale: In Cypher/graph queries, the "observe" verb is a deliberate
+#   meta-cognitive act — consciously inspecting relationships, directing
+#   attention to patterns. This is NOT passive R1 witnessing, but R5 meta-aware.
 #
-#   Rung ceiling for Cypher OBSERVE operations:
+#   R1 OBSERVE (rung) = passive witnessing, hardware-level awareness
+#   "observe" (verb) = deliberate inspection → R5 META
+#
+#   Rung ceiling for Cypher "observe" operations:
 #     - Minimum: R4 DELIBERATE (intentional query)
 #     - Typical: R5 META (meta-cognitive graph traversal)
-#     - Maximum: R6 EMPATHIC (modeling other agents in graph)
+#     - Maximum: R6 SOVEREIGN (self-authoring query patterns)
 #
 # If edge awareness triggers fail to fire, check:
-#   1. Is the query using "observe" verb? → Map to R5 META, not R1 REFLEX
+#   1. Is the query using "observe" verb? → Map to R5 META, not R1 OBSERVE
 #   2. Cypher edges need explicit verb→rung mapping (observe → META)
 #   3. ACT-R productions: "observe" trigger → R5 threshold (0.5 coherence)
 #
 # TODO: Implement CypherEdgeAwarenessTriggerHelper with verb→rung mapping:
-#   - "observe" → R5_META
-#   - "sense/feel" → R2_AFFECT
+#   - "observe" verb → R5_META
+#   - "sense/feel" → R2_REACT
 #   - "think/plan" → R4_DELIBERATE
-#   - "connect/integrate" → R5_META or R6_EMPATHIC
+#   - "connect/integrate" → R5_META or R6_SOVEREIGN
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 RUNG_NAMES = [
-    "REFLEX",        # R1: Immediate reflexive response
-    "AFFECT",        # R2: Affective/emotional processing
-    "PATTERN",       # R3: Pattern recognition
+    "OBSERVE",       # R1: Passive witnessing, awareness
+    "REACT",         # R2: Stimulus-response
+    "RESOLVE",       # R3: Problem-solving
     "DELIBERATE",    # R4: Deliberate reasoning
     "META",          # R5: Meta-cognitive
-    "EMPATHIC",      # R6: Empathic modeling
+    "SOVEREIGN",     # R6: Self-authoring
     "COUNTERFACTUAL",# R7: Counterfactual reasoning
     "PARADOX",       # R8: Paradox integration
     "TRANSCEND",     # R9: AGI/Transcendent integration
@@ -309,12 +312,12 @@ RUNG_NAMES = [
 
 # Rung descriptions for introspection
 RUNG_DESCRIPTIONS = {
-    1: "Reflex - immediate reflexive response",
-    2: "Affect - affective/emotional processing",
-    3: "Pattern - pattern recognition and matching",
+    1: "Observe - passive witnessing, pure awareness",
+    2: "React - stimulus-response processing",
+    3: "Resolve - practical problem-solving",
     4: "Deliberate - deliberate reasoning and planning",
     5: "Meta - meta-cognitive awareness",
-    6: "Empathic - empathic modeling of others",
+    6: "Sovereign - self-authoring consciousness",
     7: "Counterfactual - counterfactual reasoning",
     8: "Paradox - paradox integration and resolution",
     9: "Transcend - full AGI integration",
