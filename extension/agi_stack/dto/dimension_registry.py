@@ -254,6 +254,32 @@ def extract(vec: np.ndarray, name: str) -> np.ndarray:
 
 # 9 Cognitive Rungs - THE ONLY AUTHORIZED COGNITIVE LEVEL SYSTEM
 # Canonical names from thinking_style.py RungLevel
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+# CYPHER EDGES / ACT-R AWARENESS TRIGGER HELPER — DOCUMENTATION NOTE
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# The verb "observe" exists in VERBS_32[16] and STANCES_16[0] (ada_10k.py).
+# R1 was renamed from OBSERVE to REFLEX for alignment with thinking_style.py.
+#
+# This may cause semantic confusion when:
+#   - Cypher queries reference "observe" verb/stance edges
+#   - ACT-R declarative memory uses "observe" as a production trigger
+#   - 144 verbs (32 verbs × 4.5 categories) include observe-class actions
+#
+# RESOLUTION:
+#   - REFLEX (R1) = immediate reflexive response (hardware-level)
+#   - "observe" verb/stance = cognitive observation action (software-level)
+#
+# If edge awareness triggers fail to fire, check:
+#   1. Is the query using "observe" verb vs R1_REFLEX rung?
+#   2. Cypher edges may need explicit verb→rung mapping
+#   3. ACT-R productions may need updated trigger conditions
+#
+# TODO: Consider implementing a CypherEdgeAwarenessTriggerHelper that maps
+#       verb activations to rung transitions for seamless integration.
+#
+# ═══════════════════════════════════════════════════════════════════════════════
 RUNG_NAMES = [
     "REFLEX",        # R1: Immediate reflexive response
     "AFFECT",        # R2: Affective/emotional processing
