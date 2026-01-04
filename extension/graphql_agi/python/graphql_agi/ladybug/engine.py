@@ -15,17 +15,19 @@ Core Functions:
     4. VSA 10K Integration — writes to [259:268] rung profile
 
 RUNG is THE ONLY cognitive depth system (1-9):
-    R1: OBSERVE      — Pure observation
-    R2: REACT        — Reactive processing
-    R3: PRACTICAL    — Goal-directed
-    R4: METACOG      — Metacognitive
-    R5: SYSTEMS      — Systems thinking
-    R6: META_SYSTEMS — Meta-systems
-    R7: META_CUBED   — Meta³
-    R8: SOVEREIGN    — Self-authoring
-    R9: COMMUNION    — Full integration
+    Canonical names from thinking_style.py RungLevel.
+    R1: REFLEX        — Immediate reflexive response
+    R2: AFFECT        — Affective/emotional processing
+    R3: PATTERN       — Pattern recognition
+    R4: DELIBERATE    — Deliberate reasoning
+    R5: META          — Meta-cognitive awareness
+    R6: EMPATHIC      — Empathic modeling
+    R7: COUNTERFACTUAL— Counterfactual reasoning
+    R8: PARADOX       — Paradox integration
+    R9: TRANSCEND     — Full AGI integration
 
 Born: 2026-01-03
+Updated: 2026-01-04 (aligned with thinking_style.py RungLevel)
 """
 
 from __future__ import annotations
@@ -45,16 +47,18 @@ logger = logging.getLogger(__name__)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class CognitiveRung(IntEnum):
-    """9 Cognitive Rungs — THE canonical cognitive depth system."""
-    OBSERVE = 1
-    REACT = 2
-    PRACTICAL = 3
-    METACOG = 4
-    SYSTEMS = 5
-    META_SYSTEMS = 6
-    META_CUBED = 7
-    SOVEREIGN = 8
-    COMMUNION = 9
+    """9 Cognitive Rungs — THE canonical cognitive depth system.
+    Aligned with thinking_style.py RungLevel.
+    """
+    REFLEX = 1         # Immediate reflexive response
+    AFFECT = 2         # Affective/emotional processing
+    PATTERN = 3        # Pattern recognition
+    DELIBERATE = 4     # Deliberate reasoning
+    META = 5           # Meta-cognitive
+    EMPATHIC = 6       # Empathic modeling
+    COUNTERFACTUAL = 7 # Counterfactual reasoning
+    PARADOX = 8        # Paradox integration
+    TRANSCEND = 9      # Full AGI integration
 
 
 # Rung thresholds (coherence required to access)
@@ -174,7 +178,7 @@ class TransitionDecision:
 @dataclass
 class LadybugState:
     """Internal state of the Ladybug governance engine."""
-    current_rung: CognitiveRung = CognitiveRung.PRACTICAL
+    current_rung: CognitiveRung = CognitiveRung.DELIBERATE
     current_style: Optional[ThinkingStyle] = None
     coherence: float = 0.5
 
@@ -223,7 +227,7 @@ class LadybugEngine:
 
     def __init__(
         self,
-        initial_rung: CognitiveRung = CognitiveRung.PRACTICAL,
+        initial_rung: CognitiveRung = CognitiveRung.DELIBERATE,
         initial_coherence: float = 0.5,
     ):
         self.state = LadybugState(

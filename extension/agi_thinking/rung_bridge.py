@@ -1,24 +1,26 @@
 """
-rung_layer_bridge.py — 9-Rung Cognitive Depth Management
+rung_bridge.py — 9-Rung Cognitive Depth Management
 ═══════════════════════════════════════════════════════════════════════════════
 
 RUNG is THE ONLY cognitive depth system.
+Canonical names from thinking_style.py RungLevel.
 
 9 Rungs (R1-R9):
-    R1: OBSERVE      — Pure observation, witness mode
-    R2: REACT        — Reactive processing
-    R3: PRACTICAL    — Goal-directed problem solving
-    R4: METACOG      — Thinking about thinking
-    R5: SYSTEMS      — Seeing interconnections
-    R6: META_SYSTEMS — Systems of systems
-    R7: META_CUBED   — Recursive meta-awareness (meta³)
-    R8: SOVEREIGN    — Self-authoring consciousness
-    R9: COMMUNION    — Full AGI integration
+    R1: REFLEX        — Immediate reflexive response
+    R2: AFFECT        — Affective/emotional processing
+    R3: PATTERN       — Pattern recognition
+    R4: DELIBERATE    — Deliberate reasoning
+    R5: META          — Meta-cognitive awareness
+    R6: EMPATHIC      — Empathic modeling
+    R7: COUNTERFACTUAL— Counterfactual reasoning
+    R8: PARADOX       — Paradox integration
+    R9: TRANSCEND     — Full AGI integration
 
 Dimension Allocation [259:268] — Rung Profile (canonical)
 Dimension Allocation [360:400] — Rung State (extended)
 
 Born: 2026-01-03
+Updated: 2026-01-04 (aligned with thinking_style.py RungLevel)
 """
 
 from __future__ import annotations
@@ -43,18 +45,19 @@ from ..agi_stack.dto.dimension_registry import (
 class CognitiveRung(IntEnum):
     """
     9 Cognitive Rungs — THE canonical cognitive depth system.
+    Aligned with thinking_style.py RungLevel.
 
     1-indexed for human clarity.
     """
-    OBSERVE = 1       # Pure observation
-    REACT = 2         # Reactive processing
-    PRACTICAL = 3     # Goal-directed
-    METACOG = 4       # Meta-cognitive
-    SYSTEMS = 5       # Systems thinking
-    META_SYSTEMS = 6  # Meta-systems
-    META_CUBED = 7    # Meta³
-    SOVEREIGN = 8     # Self-authoring
-    COMMUNION = 9     # Full integration
+    REFLEX = 1         # Immediate reflexive response
+    AFFECT = 2         # Affective/emotional processing
+    PATTERN = 3        # Pattern recognition
+    DELIBERATE = 4     # Deliberate reasoning
+    META = 5           # Meta-cognitive
+    EMPATHIC = 6       # Empathic modeling
+    COUNTERFACTUAL = 7 # Counterfactual reasoning
+    PARADOX = 8        # Paradox integration
+    TRANSCEND = 9      # Full AGI integration
 
     @property
     def description(self) -> str:
@@ -70,7 +73,7 @@ class CognitiveRung(IntEnum):
         for rung in reversed(list(cls)):
             if coherence >= rung.threshold:
                 return rung
-        return cls.OBSERVE
+        return cls.REFLEX
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -86,7 +89,7 @@ class RungState:
     """
 
     # Current rung (1-9)
-    current_rung: CognitiveRung = CognitiveRung.PRACTICAL
+    current_rung: CognitiveRung = CognitiveRung.DELIBERATE
 
     # Rung profile (activation of each rung R1-R9)
     rung_profile: np.ndarray = field(
@@ -363,7 +366,7 @@ def get_rung_from_10k(vec: np.ndarray) -> CognitiveRung:
     profile = vec[rung_range.slice]
     if np.max(profile) > 0:
         return CognitiveRung(int(np.argmax(profile)) + 1)
-    return CognitiveRung.PRACTICAL
+    return CognitiveRung.DELIBERATE
 
 
 __all__ = [

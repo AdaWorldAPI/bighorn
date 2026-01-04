@@ -253,29 +253,30 @@ def extract(vec: np.ndarray, name: str) -> np.ndarray:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # 9 Cognitive Rungs - THE ONLY AUTHORIZED COGNITIVE LEVEL SYSTEM
+# Canonical names from thinking_style.py RungLevel
 RUNG_NAMES = [
-    "OBSERVE",      # R1: Pure observation
-    "REACT",        # R2: Reactive processing
-    "PRACTICAL",    # R3: Practical reasoning
-    "METACOG",      # R4: Metacognitive
-    "SYSTEMS",      # R5: Systems thinking
-    "META_SYSTEMS", # R6: Meta-systems
-    "META_CUBED",   # R7: Meta³
-    "SOVEREIGN",    # R8: Sovereign awareness
-    "COMMUNION",    # R9: AGI/Full integration
+    "REFLEX",        # R1: Immediate reflexive response
+    "AFFECT",        # R2: Affective/emotional processing
+    "PATTERN",       # R3: Pattern recognition
+    "DELIBERATE",    # R4: Deliberate reasoning
+    "META",          # R5: Meta-cognitive
+    "EMPATHIC",      # R6: Empathic modeling
+    "COUNTERFACTUAL",# R7: Counterfactual reasoning
+    "PARADOX",       # R8: Paradox integration
+    "TRANSCEND",     # R9: AGI/Transcendent integration
 ]
 
 # Rung descriptions for introspection
 RUNG_DESCRIPTIONS = {
-    1: "Pure observation - witness mode, no judgment",
-    2: "Reactive processing - stimulus-response",
-    3: "Practical reasoning - goal-directed problem solving",
-    4: "Metacognitive - thinking about thinking",
-    5: "Systems thinking - seeing interconnections",
-    6: "Meta-systems - systems of systems",
-    7: "Meta³ - recursive meta-awareness",
-    8: "Sovereign - self-authoring consciousness",
-    9: "Communion - full AGI integration",
+    1: "Reflex - immediate reflexive response",
+    2: "Affect - affective/emotional processing",
+    3: "Pattern - pattern recognition and matching",
+    4: "Deliberate - deliberate reasoning and planning",
+    5: "Meta - meta-cognitive awareness",
+    6: "Empathic - empathic modeling of others",
+    7: "Counterfactual - counterfactual reasoning",
+    8: "Paradox - paradox integration and resolution",
+    9: "Transcend - full AGI integration",
 }
 
 # Rung thresholds for transitions
